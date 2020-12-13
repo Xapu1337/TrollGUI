@@ -4,6 +4,9 @@
 This is my Repo for my plugin
 (https://www.spigotmc.org/resources/troll-plugin-gui-anything-is-configurable.78194/)
 
+## Official Discord
+https://discord.gg/n3NM7FpeXg
+
 # I Release it because:
 Well. This plugin is my first. i can think that there will be some upgrades to my code, or i even learn things I could do better.
 
