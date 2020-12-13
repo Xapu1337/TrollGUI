@@ -1,0 +1,134 @@
+#  /$$$$$$$$/$$$$$$$   /$$$$$$  /$$       /$$              /$$$$$$  /$$   /$$ /$$$$$$
+#    |__  $$__/ $$__   $$ /$$__  $$| $$  | $$            /$$__  $$| $$  | $$|_  $$_/
+#    | $$  | $$  \ $$| $$  \ $$| $$      | $$            | $$  \__/| $$  | $$  | $$
+#    | $$  | $$$$$$$/| $$  | $$| $$      | $$            | $$ /$$$$| $$  | $$  | $$
+#    | $$  | $$__  $$| $$  | $$| $$      | $$            | $$|_  $$| $$  | $$  | $$
+#    | $$  | $$  \ $$| $$  | $$| $$      | $$            | $$  \ $$| $$  | $$  | $$
+#    | $$  | $$  | $$|  $$$$$$/| $$$$$$$$| $$$$$$$$      |  $$$$$$/|  $$$$$$/ /$$$$$$
+#    |__/  |__/  |__/ \______/ |________/|________/       \______/  \______/ |______/
+                                                  # Thanks for using my TrollGUI I made it with <3
+                                                  # Also! if you create your own translation DM or PM Me on discord or Spigot!
+                                                  # For support add me on discord: Ram#1337
+prefix: '&b&lMS3 &8| &7'
+# For chat. + settings menu
+no-perms: '&cNo Permissions!'
+# Chat massages
+menu:
+  select-player: '&7Select a player'
+  settings: '&cSelect settings'
+  menu-title: '&8⨯ &b&lMS3 &8⨯'
+  # for the troll menu (Not settings!)
+  messages:
+    no-item-in-hand: '&7Player &b&l%player% &7Doesn''t have an item in the hand!'
+    restart: '&cReloaded the configuration.'
+    items-dropped-single: '&7Successfully dropped &b%ITEM_NAME%&7 (&b%ITEM_AMOUNT%&7) from &b%PLAYER%'
+# Item styling boyeeeee
+items:
+  launch-name: '&6Launch Player'
+  launch-lore: '&7Let the player touch the sky'
+  #^ Launch
+  scare-name: '&5Scare Player'
+  scare-lore: '&7Spooky Scary Skeletons'
+  #^ Scare
+  randomlook-name: '&cRandom look'
+  randomlook-lore: '&7Makes the Player look in random locations'
+  #^ Random Look
+  fakeclear-name: '&eFake clear players inventory'
+  fakeclear-lore: '&7Wipes the player inventory then after %TIME% seconds it returns all items'
+  #^ Fake Clear
+  demo-name: '&8Demo troll'
+  demo-lore: '&7Opens the "Buy Minecraft" dialog to the player (&c&l1.16 DONT WORK! I dont have the right packet name...&7)'
+  #^ Demo Troll
+  thunder-name: '&3Spawn a Lightning on the player'
+  thunder-lore: '&7The name says it?'
+  #^ Thunder
+  burn-name: '&6Burn the player'
+  burn-lore: '&7Summon ragnarok the fire king on the Player'
+  #^ Burn
+  explode-name: '&4Explode the player'
+  explode-lore: '&7Guess why the Player smells like Gunpowder'
+  #^ Explode
+  fakeoperator-name: '&bFake OP The player'
+  fakeoperator-lore: '&7Well, Every troll plugin have this feature though?'
+  #^ Fake Operator
+  dropitem-name: '&8Drop the item from players hand'
+  dropitem-lore: '&7Makes the hand from the Player slippy'
+  #^ Drop item
+  dropall-name: '&8Drop all items from Player'
+  dropall-lore: '&7Makes the Pockets from the Player slippy'
+    #^ Drop All item
+  invsee-name: '&6See the inventory from the player'
+  invsee-lore: '&7HAVE YOU STOLE MY DIAMONDS?!!!!!'
+  #^ InvSee
+  nobuild-name: '&7No Build'
+  nobuild-lore: '&7Ha, This triggers people hard.'
+  #^ NoBuild (This is toggleable!)
+  noplace-name: '&7No Place'
+  noplace-lore: '&7Ha, This is also funny xD.'
+  #^ NoPlace (This is toggleable!)
+  freezeplayer-name: '&bFreeze Player'
+  freezeplayer-lore: '&7An well known feature ;D'
+  #Reverse Message
+  reversemessage-name: '&9Reverse send message'
+  reversemessage-lore: '&7Do you have a Stroke?'
+  #fakeblocks
+  fakeblock-name: '&eFake Blocks (Clientside)'
+  fakeblock-lore: '&7HEY SOMEONE IS GRIEFING... ohh nvm.'
+  #^ Freeze Player (This is toggleable, well its an feature that every troll plugin has?)
+  closegui-name: '&cClose inventory'
+  closegui-lore: '&7Closes the inventory (Or any GUI) The player have open.'
+  #^ Close Inventory
+  restart-name: '&cRestart the plugin'
+  restart-lore: '&7Reloads the config.'
+  #^ Restart
+  # |
+  #\/ Next Page
+  nextpage-name: '&cNext Page.'
+  nextpage-lore: '&7-> Page 2'
+  # |
+  #\/ Main Page
+  mainpage-name: '&cMain Page.'
+  mainpage-lore: '&7-> Page 1'
+  #Selector
+  Playerselector-name: '&cOpen playerselector.'
+  Playerselector-lore: '&7Chose another player to troll.'
+  # Messages that will apply on item lore:
+  # Like if a player has OP.
+  messages:
+    isOP: '&7This player has &cOP'
+    enabled: '&7| &aENABLED &7|'
+    disabled: '&7| &cDISABLED &7|'
+
+values:
+  explode-item:
+    explode-radius: 1
+    EnableExplodeRandomness: true
+  burn-item:
+    burn-time: 7
+  #In seconds how long a player will burn.
+  using-no-perm: false
+  # Boye. you can Enable or Disable the no-perm message
+  # Disabling will send nothing. useful if you hide "/troll" from your users.
+  random-look:
+    random-look-time: 10
+  #In seconds how long the player will rotate (No limit, just don't make it more then 1 min its really annoying then...)
+  fake-clear:
+    fake-clear-delay: 10
+  # Guess in what time?, Yes. Seconds how long it takes until the person will get their items back.
+  using-uuid: true
+  # Using UUID For events (Its like a Unique value for an player, but if disabled. they Player name will be used for the events..)
+  # Disable if your server has online-mode: false
+  # (Basically, if you allow cracked players to join. They don't have any UUID.)
+  advanced-perms: # Normally the plugin just wants the permissions requirement "ms3.use" this option disables that. Just using the player name (Offline usually. if server is using uuid it also takes the UUID (Offline players beware)
+    enabled: false
+    playername: 'Steve' # NEEDED IF ENABLED!! This uses your player name for the permissions check! else you can't use anything.
+  # If enabled. you can sneak Right click a player it will open the player selector for this person
+  open-playersel-via-sneak-rclick: false
+  enable-crafting: true
+  # Is the playerskull selector craftable? (Reciept on the plugin page)
+#  joinmessage: true
+  fakeBlocks:
+    # Material in Full caps. Everything non existing will not count.
+    material: TNT
+    # Fake Block Radius. (Dont fucking go overboard. This will freeze. Crash. And can crash both. Client and Server.
+    radius: 10
