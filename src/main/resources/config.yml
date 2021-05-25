@@ -1,0 +1,93 @@
+
+#  /$$$$$$$$/$$$$$$$   /$$$$$$  /$$       /$$              /$$$$$$  /$$   /$$ /$$$$$$
+#    |__  $$__/ $$__   $$ /$$__  $$| $$  | $$            /$$__  $$| $$  | $$|_  $$_/
+#    | $$  | $$  \ $$| $$  \ $$| $$      | $$            | $$  \__/| $$  | $$  | $$
+#    | $$  | $$$$$$$/| $$  | $$| $$      | $$            | $$ /$$$$| $$  | $$  | $$
+#    | $$  | $$__  $$| $$  | $$| $$      | $$            | $$|_  $$| $$  | $$  | $$
+#    | $$  | $$  \ $$| $$  | $$| $$      | $$            | $$  \ $$| $$  | $$  | $$
+#    | $$  | $$  | $$|  $$$$$$/| $$$$$$$$| $$$$$$$$      |  $$$$$$/|  $$$$$$/ /$$$$$$
+#    |__/  |__/  |__/ \______/ |________/|________/       \______/  \______/ |______/
+
+
+Variables:
+  prefix: '&b&lMS3 &8| &7'
+  # Basically, this is an check that doesn't have to check if the player has the permission XYZ
+  # It checks if the player name has the name then it allows it. Useful if you have it as an troll for only you and no other person.
+  advancedPermission:
+    name: 'Steve' # Offline name of the player, he must join the server before though.
+    enabled: false
+
+Messages:
+  noPermissions: '&cYou don''t have the permissions for that.'
+  reloaded: '&cReloaded the configuration successfully.'
+  noItemInHand: '&7Player &b%PLAYER%&7 isn''t holding an item in their hand.'
+  extra:
+    missingPermissionsMessage: true
+    missingPermissions: '&cYou're missing the permissions "ms3.troll"'
+
+MenuItems: #Lores & Names
+  trollMenu:
+    items:
+      launchPlayer:
+        name: '&6Launch Player'
+        lore: '&7Let the player touch the sky'
+      scarePlayer:
+        name: '&5Scare Player'
+        lore: '&7Spooky scary skeletons'
+      randomLook:
+        name: '&cRandom look'
+        lore: '&7Makes the Player look in random locations'
+      fakeClear:
+        name: '&eFake clear players inventory'
+        lore: '&7Wipes the player inventory then after %TIME% seconds restores it'
+      thunder:
+        name: '&3Spawn a Lightning on the player'
+        lore: '&7Truly godlike powers!'
+      burnPlayer:
+        name: '&6Burn the player'
+        lore: '&7Summon Ragnarök the god of fire to punish him!'
+      explodePlayer:
+        explode-name: '&4Explode the player'
+        explode-lore: '&7Do you also smell gunpowder?'
+      fakeOperator:
+        name: '&bFake OP The player'
+        lore: '&7Old but gold'
+      dropItem:
+        name: '&8Drop the item from players hand'
+        lore: '&7Makes the hand from the player slippy'
+      dropAll:
+        name: '&8Drop all items from Player'
+        lore: '&7"Who did cut a hole in my pants?!"'
+      invSee:
+        name: '&6See the inventory from the player'
+        lore: '&7HAVE YOU STOLE MY DIAMONDS?!!'
+      noBuild:
+        name: '&7No Build'
+        lore: '&7Disables the building ability of the player'
+      noPlace:
+        name: '&7No Place'
+        lore: '&7Disables the placing ability of the player'
+      freezePlayer:
+        name: '&bFreeze Player'
+        lore: '&7When you going AFK involuntary'
+      reverseMessage:
+        name: '&9Reverse send message'
+        lore: '&7Do you are have a stroke'
+      fakeBlock:
+        name: '&eFake Blocks (Clientside)'
+        lore: '&7"HEY SOMEONES IS GRIEFING!" you hear them shout'
+        block: 'MATERIAL.TNT' # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html as a reference (If the custom block is invalid TNT will be the default)
+        radius: 5
+      closeGUI:
+        name: '&cClose inventory'
+        lore: '&7Closes the inventory (or any GUI) the player has open'
+    extras:
+      isEnabled: '&a✓'
+      isDisabled: '&c✕'
+  settingsMenu:
+    reload:
+      name: '&cReload the current configuration.'
+      lore: '&7This reloads the config without an need for an server restart.'
+  playerSelector:
+    extras:
+      hasOP: '&cThis player has operator.'
