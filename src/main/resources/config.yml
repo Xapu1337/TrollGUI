@@ -11,79 +11,93 @@
 
 Variables:
   prefix: '&b&lMS3 &8| &7'
-  # Basically, this is an check that doesn't have to check if the player has the permission XYZ
-  # It checks if the player name has the name then it allows it. Useful if you have it as an troll for only you and no other person.
+  enableSneakRightClickSelection: false # if true you can shift + Right click a player to open the troll menu.
   advancedPermission:
+    # Basically, this is an check that doesn't have to check if the player has the permission XYZ
+    # It checks if the player name has the name then it allows it. Useful if you have it as an troll for only you and no other person.
     name: 'Steve' # Offline name of the player, he must join the server before though.
     enabled: false
 
+MenuTitles:
+  trollGUI: "&8⨯ &b&lMS3 &8⨯"
+  selectPlayer: '&8⨯ &7Select a player &8⨯'
+  settings: '&8⨯ &cSelect settings &8⨯'
+
 Messages:
   noPermissions: '&cYou don''t have the permissions for that.'
+  missingPermissionsMessage: true
+  missingPermissions: '&cYou''re missing the permissions "ms3.troll"'
   reloaded: '&cReloaded the configuration successfully.'
   noItemInHand: '&7Player &b%PLAYER%&7 isn''t holding an item in their hand.'
-  extra:
-    missingPermissionsMessage: true
-    missingPermissions: '&cYou're missing the permissions "ms3.troll"'
 
-MenuItems: #Lores & Names
+MenuItems:
   trollMenu:
-    items:
-      launchPlayer:
-        name: '&6Launch Player'
-        lore: '&7Let the player touch the sky'
-      scarePlayer:
-        name: '&5Scare Player'
-        lore: '&7Spooky scary skeletons'
-      randomLook:
-        name: '&cRandom look'
-        lore: '&7Makes the Player look in random locations'
-      fakeClear:
-        name: '&eFake clear players inventory'
-        lore: '&7Wipes the player inventory then after %TIME% seconds restores it'
-      thunder:
-        name: '&3Spawn a Lightning on the player'
-        lore: '&7Truly godlike powers!'
       burnPlayer:
         name: '&6Burn the player'
         lore: '&7Summon Ragnarök the god of fire to punish him!'
-      explodePlayer:
-        explode-name: '&4Explode the player'
-        explode-lore: '&7Do you also smell gunpowder?'
-      fakeOperator:
-        name: '&bFake OP The player'
-        lore: '&7Old but gold'
-      dropItem:
-        name: '&8Drop the item from players hand'
-        lore: '&7Makes the hand from the player slippy'
+        options:
+          burnTime: 7 # x seconds until the player stops burning.
+      closeGUI:
+        name: '&cClose inventory'
+        lore: '&7Closes the inventory (or any GUI) the player has open'
       dropAll:
         name: '&8Drop all items from Player'
         lore: '&7"Who did cut a hole in my pants?!"'
+      dropItem:
+        name: '&8Drop the item from players hand'
+        lore: '&7Makes the hand from the player slippy'
+      explodePlayer:
+        name: '&4Explode the player'
+        lore: '&7Do you also smell gunpowder?'
+        options:
+          explodeRadius: 1 # the radius of the explosion (Please keep this value LOW! High values can easily crash the server usually anything > 200 crashes)
+          explodeRandomness: true # uses the value above as the highest value and 1 as the lowest value, Exploding radius is somewhere between 1 and explodeRadius
+      fakeBlock:
+        name: '&eFake Blocks (Clientside)'
+        lore: '&7"HEY SOMEONES IS GRIEFING!" you hear them shout'
+        options:
+          block: 'MATERIAL.TNT' # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html as a reference (If the custom block is invalid TNT will be the default)
+          radius: 5 # Same as explodeRadius, Keep this LOW! High values tend to either crash the server OR that the player gets disconnected due to a timeout.
+      fakeClear:
+        name: '&eFake clear players inventory'
+        lore: '&7Wipes the player inventory then after %TIME% seconds restores it'
+        options:
+          fakeClearDelay: 10 # x seconds until all items return to the inventory.
+      fakeOperator:
+        name: '&bFake OP The player'
+        lore: '&7Old but gold'
+      freezePlayer:
+        name: '&bFreeze Player'
+        lore: '&7When you going AFK involuntary'
       invSee:
         name: '&6See the inventory from the player'
         lore: '&7HAVE YOU STOLE MY DIAMONDS?!!'
+      launchPlayer:
+        name: '&6Launch Player'
+        lore: '&7Let the player touch the sky'
       noBuild:
         name: '&7No Build'
         lore: '&7Disables the building ability of the player'
       noPlace:
         name: '&7No Place'
         lore: '&7Disables the placing ability of the player'
-      freezePlayer:
-        name: '&bFreeze Player'
-        lore: '&7When you going AFK involuntary'
+      randomLook:
+        name: '&cRandom look'
+        lore: '&7Makes the Player look in random locations'
+        options:
+          randomLookTime: 10 # x seconds until the player stops the random looking
       reverseMessage:
         name: '&9Reverse send message'
         lore: '&7Do you are have a stroke'
-      fakeBlock:
-        name: '&eFake Blocks (Clientside)'
-        lore: '&7"HEY SOMEONES IS GRIEFING!" you hear them shout'
-        block: 'MATERIAL.TNT' # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html as a reference (If the custom block is invalid TNT will be the default)
-        radius: 5
-      closeGUI:
-        name: '&cClose inventory'
-        lore: '&7Closes the inventory (or any GUI) the player has open'
-    extras:
-      isEnabled: '&a✓'
-      isDisabled: '&c✕'
+      scarePlayer:
+        name: '&5Scare Player'
+        lore: '&7Spooky scary skeletons'
+      thunder:
+        name: '&3Spawn a Lightning on the player'
+        lore: '&7Truly godlike powers!'
+      extras:
+        isEnabled: '&a✓'
+        isDisabled: '&c✕'
   settingsMenu:
     reload:
       name: '&cReload the current configuration.'
