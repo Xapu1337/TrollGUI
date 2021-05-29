@@ -2,13 +2,16 @@ package me.xapu1337.recodes.trollgui.Commands;
 
 import me.xapu1337.recodes.trollgui.Cores.Core;
 import me.xapu1337.recodes.trollgui.Handlers.CommandHandler;
+import me.xapu1337.recodes.trollgui.Utilities.EnumCollection;
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Locale;
 import java.util.Set;
 
 public class TrollCommand extends CommandHandler {
@@ -38,7 +41,7 @@ public class TrollCommand extends CommandHandler {
         addDescription("");
         addUsage("");
         addPermission("ms3.use");
-        addPermissionMessage(Core.instance.config.getString("global.prefix")+ Core.instance.translateColorCodes(Core.instance.config.getString("no-perms")));
+        addPermissionMessage(EnumCollection.Messages.MISSING_PERMISSIONS.get());
         registerCommand(commandMap);
         addListTabbComplete(0, "settings", "giveskull", "credits", "update", "contact", "config");
         addListTabbComplete(1, convert(keys));
@@ -47,6 +50,29 @@ public class TrollCommand extends CommandHandler {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+        if(sender instanceof Player){
+            Player p = (Player)sender;
+            switch(args[0].toLowerCase(Locale.ROOT)){
+                case "settings":
+
+                    break;
+                case "giveskull":
+
+                    break;
+                case "credits":
+
+                    break;
+                case "update":
+
+                    break;
+                case "contact":
+
+                    break;
+                case "config":
+
+                    break;
+            }
+        }
         return false;
     }
 }

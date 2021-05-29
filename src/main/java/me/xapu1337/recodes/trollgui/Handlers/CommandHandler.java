@@ -205,11 +205,11 @@ public abstract class CommandHandler<T extends JavaPlugin> extends Command imple
             if (getPermission() != null) {
                 if (!Core.instance.advancedPermissionsChecker(p, getPermission())) {
                     if (getPermissionMessage() == null) {
-                        if(Core.instance.config.getBoolean("messages.extra.send-permissions-message")){
+                        if(Core.instance.config.getBoolean("Messages.extra.missingPermissionsMessage")){
                             commandSender.sendMessage(ChatColor.RED + "no permit!");
                         }
                     } else {
-                        if(Core.instance.config.getBoolean("messages.extra.send-permissions-message")){
+                        if(Core.instance.config.getBoolean("Messages.extra.missingPermissionsMessage")){
                             commandSender.sendMessage(getPermissionMessage());
                         }
                     }
