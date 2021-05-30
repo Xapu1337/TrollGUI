@@ -15,19 +15,16 @@ import java.lang.reflect.Field;
 public final class Core extends JavaPlugin {
 
     public static Core instance;
+//    public EnumCollection enumCollection = new EnumCollection();
     public FileConfiguration config = getConfig();
     Boolean usingUUID;
-    EnumCollection enumCollection = new EnumCollection();
 
 
     @Override
     public void onEnable() {
-
         reloadConfig();
-        if (Integer.parseInt(Bukkit.getServer().getVersion().split("MC: ")[1].replaceAll("\\)", "").trim().split("\\.")[1]) < 7) {
+        if (Integer.parseInt(Bukkit.getServer().getVersion().split("MC: ")[1].replaceAll("\\)", "").trim().split("\\.")[1]) < 7 || !Bukkit.getServer().getOnlineMode())
             usingUUID = false;
-            this.getServer().getLogger().info("using UUID disable because server is version " + Bukkit.getServer().getVersion().split("MC: ")[1].replaceAll("\\)", "").trim());
-        }
 
         try {
 
@@ -86,4 +83,10 @@ public final class Core extends JavaPlugin {
         if(instance == null)
             instance = this;
     }
+
+
+
+
+
+
 }

@@ -1,14 +1,12 @@
 package me.xapu1337.recodes.trollgui.Utilities;
 
-import com.cryptomorin.xseries.XMaterial;
 import me.xapu1337.recodes.trollgui.Cores.Core;
-import org.bukkit.Bukkit;
-import org.bukkit.inventory.ItemStack;
 
 public class EnumCollection {
 
 
-    String getStr(String path){
+
+    private static String getStr(String path){
         Core.instance.getServer().getLogger().warning(path);
         Core.instance.getServer().getLogger().warning(Core.instance.translateColorCodes(Core.instance.getConfig().getString(path)));
         return Core.instance.translateColorCodes(Core.instance.getConfig().getString(path));
@@ -75,7 +73,8 @@ public class EnumCollection {
     public enum Messages {
         NO_PERMISSIONS(getStr("Messages.noPermissions")),
         MISSING_PERMISSIONS(getStr("Messages.missingPermissions")),
-        SETTINGS(getStr("Messages.settings"));
+        NO_ITEM_IN_HAND(getStr("Messages.noPermissions")),
+        RELOADED(getStr("Messages.reloaded"));
 
         String string;
 
@@ -96,9 +95,7 @@ public class EnumCollection {
 
     public enum MenuTitles {
         TROLLGUI(getStr("MenuTitles.trollGUI")),
-        SELECT_PLAYER(getStr("MenuTitles.selectPlayer")),
-        RELOADED(getStr("MenuTitles.reloaded")),
-        NO_ITEM_IN_HAND(getStr("MenuTitles.noPermissions"));
+        SETTINGS(getStr("MenuTitles.settings"));
 
         String string;
 
@@ -135,9 +132,5 @@ public class EnumCollection {
             this.string = inp;
         }
     }
-
-
-
-
 
 }
