@@ -25,7 +25,7 @@ public class TrollGUI implements Listener, InventoryHolder {
     public TrollGUI(Player player) {
         this.player = player;
         Bukkit.getPluginManager().registerEvents(this, Core.instance);
-        GUI = Bukkit.createInventory(this, 53, centerTitle(EnumCollection.MenuTitles.TROLLGUI.get()));
+        GUI = Bukkit.createInventory(this, 54, centerTitle(EnumCollection.MenuTitles.TROLLGUI.get()));
         initializeItems();
     }
 

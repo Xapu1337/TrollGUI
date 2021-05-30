@@ -29,6 +29,8 @@ Messages:
   missingPermissions: '&cYou''re missing the permissions "ms3.troll"'
   reloaded: '&cReloaded the configuration successfully.'
   noItemInHand: '&7Player &b%PLAYER%&7 isn''t holding an item in their hand.'
+  alreadyInFirstPage: "&cYou are already on the first page."
+  alreadyInLastPage: "&cYou are already on the last page."
 
 MenuItems:
   trollMenu:
@@ -103,5 +105,14 @@ MenuItems:
       name: '&cReload the current configuration.'
       lore: '&7This reloads the config without an need for an server restart.'
   playerSelector:
+    close:
+      name: "&8⨯ &cCLOSE &8⨯"
+      lore: ""
+    left:
+      name: "&8← &7LEFT"
+      lore: ""
+    right:
+      name: "&7RIGHT →"
+      lore: ""
     extras:
       hasOP: '&cThis player has operator.'

@@ -16,8 +16,10 @@ public class Util {
             instance = this;
     }
 
-    public ItemStack createItem(final XMaterial XMaterial, final Boolean isEnchanted , final String name, final String... lore) {
-        final ItemStack item = new ItemStack(XMaterial.parseMaterial(), 1);
+
+
+    public static ItemStack createItem(final XMaterial xMat, final Boolean isEnchanted , final String name, final String... lore) {
+        final ItemStack item = new ItemStack(xMat.parseMaterial(), 1);
         final ItemMeta meta = item.getItemMeta();
 
         meta.setDisplayName(name);
@@ -32,4 +34,7 @@ public class Util {
 
         return item;
     }
+
+
+
 }
