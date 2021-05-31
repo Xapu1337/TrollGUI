@@ -3,6 +3,7 @@ package me.xapu1337.recodes.trollgui.Commands;
 import me.xapu1337.recodes.trollgui.Cores.Core;
 import me.xapu1337.recodes.trollgui.Handlers.CommandHandler;
 import me.xapu1337.recodes.trollgui.Inventorys.PlayerSelector;
+import me.xapu1337.recodes.trollgui.Inventorys.Settings;
 import me.xapu1337.recodes.trollgui.Utilities.EnumCollection;
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.command.Command;
@@ -53,10 +54,9 @@ public class TrollCommand extends CommandHandler {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if(sender instanceof Player){
             Player p = (Player)sender;
-            PlayerSelector playerSelector = new PlayerSelector();
             switch(args.length > 0 ? args[0].toLowerCase(Locale.ROOT) : ""){
                 case "settings":
-
+                        p.openInventory(new Settings().getInventory());
                     break;
                 case "giveskull":
 
@@ -72,9 +72,9 @@ public class TrollCommand extends CommandHandler {
                     break;
                 case "config":
 
-                break;
+                    break;
                 default:
-                    p.openInventory(playerSelector.getInventory());
+                        p.openInventory(new PlayerSelector(p).getInventory());
                     break;
             }
         }

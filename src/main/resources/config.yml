@@ -10,7 +10,7 @@
 
 
 Variables:
-  prefix: '&b&lMS3 &8| &7'
+  prefix: '&9&lMS3 &8| &7'
   enableSneakRightClickSelection: false # if true you can shift + Right click a player to open the troll menu.
   advancedPermission:
     # Basically, this is an check that doesn't have to check if the player has the permission XYZ
@@ -19,9 +19,9 @@ Variables:
     enabled: false
 
 MenuTitles:
-  trollGUI: "&8⨯ &b&lMS3 &8⨯"
-  selectPlayer: '&8⨯ &7Select a player &8⨯'
-  settings: '&8⨯ &cSelect settings &8⨯'
+  trollGUI: "&8⨯ &9&lMS3 &8⨯"
+  selectPlayer: '&8⨯ &9Select a player &8| &7[&6%CURRENT_PAGE% &8/ &6%MAX_PAGES%&7] &8⨯' #%CURRENT_PAGE% = The current page, %MAX_PAGES% the maximal number of pages.
+  settings: '&8⨯ &9Select settings &8⨯'
 
 Messages:
   noPermissions: '&cYou don''t have the permissions for that.'
@@ -29,8 +29,8 @@ Messages:
   missingPermissions: '&cYou''re missing the permissions "ms3.troll"'
   reloaded: '&cReloaded the configuration successfully.'
   noItemInHand: '&7Player &b%PLAYER%&7 isn''t holding an item in their hand.'
-  alreadyInFirstPage: "&cYou are already on the first page."
-  alreadyInLastPage: "&cYou are already on the last page."
+  alreadyOnFirstPage: "&cYou are already on the first page."
+  alreadyOnLastPage: "&cYou are already on the last page."
 
 MenuItems:
   trollMenu:
@@ -103,16 +103,16 @@ MenuItems:
   settingsMenu:
     reload:
       name: '&cReload the current configuration.'
-      lore: '&7This reloads the config without an need for an server restart.'
+      lore: '&7Reload the current config, Without needing to restart the server.'
   playerSelector:
     close:
-      name: "&8⨯ &cCLOSE &8⨯"
-      lore: ""
+      name: "&cCLOSE"
+      lore: "&7Close this menu" # &7 is just invisible, But just empty text will give a error.
     left:
-      name: "&8← &7LEFT"
-      lore: ""
+      name: "&8← &7BACK"
+      lore: "&7Go one back"
     right:
-      name: "&7RIGHT →"
-      lore: ""
+      name: "&7RIGHT &8→"
+      lore: "&7Go one to the right"
     extras:
       hasOP: '&cThis player has operator.'
