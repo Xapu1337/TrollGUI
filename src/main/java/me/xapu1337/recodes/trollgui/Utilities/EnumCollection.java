@@ -1,15 +1,16 @@
 package me.xapu1337.recodes.trollgui.Utilities;
 
 import me.xapu1337.recodes.trollgui.Cores.Core;
+import org.bukkit.ChatColor;
+
+import java.util.Objects;
 
 public class EnumCollection {
 
 
 
     private static String getStr(String path){
-        Core.instance.getServer().getLogger().warning(path);
-        Core.instance.getServer().getLogger().warning(Core.instance.translateColorCodes(Core.instance.getConfig().getString(path)));
-        return Core.instance.translateColorCodes(Core.instance.getConfig().getString(path));
+        return ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(Core.instance.getConfig().getString(path)));
     }
 
     public enum TrollGUIItems {
@@ -32,20 +33,13 @@ public class EnumCollection {
         ENABLED(getStr("MenuItems.trollMenu.extras.isEnabled"), getStr("MenuItems.trollMenu.extras.isEnabled")),
         DISABLED(getStr("MenuItems.trollMenu.extras.isDisabled"), getStr("MenuItems.trollMenu.extras.isDisabled"));
 
-        private final String name, lore;
+        public final String name, lore;
 
         TrollGUIItems(String name, String lore) {
             this.name = name;
             this.lore = lore;
         }
 
-        public String getName() {
-            return name;
-        }
-
-        public String getLore() {
-            return lore;
-        }
 
     }
 
@@ -53,19 +47,27 @@ public class EnumCollection {
     public enum SettingsItems {
         RELOAD(getStr("MenuItems.settingsMenu.reload.name"), getStr("MenuItems.settingsMenu.reload.lore"));
 
-        private final String name, lore;
+        public final String name, lore;
 
         SettingsItems(String name, String lore) {
             this.name = name;
             this.lore = lore;
         }
 
-        public String getName() {
-            return name;
-        }
 
-        public String getLore() {
-            return lore;
+    }
+
+
+    public enum PlayerSelectorItems {
+        CLOSE(getStr("MenuItems.playerSelector.close.name"), getStr("MenuItems.playerSelector.close.lore")),
+        LEFT(getStr("MenuItems.playerSelector.left.name"), getStr("MenuItems.playerSelector.left.lore")),
+        RIGHT(getStr("MenuItems.playerSelector.right.name"), getStr("MenuItems.playerSelector.right.lore"));
+
+        public final String name, lore;
+
+        PlayerSelectorItems(String name, String lore) {
+            this.name = name;
+            this.lore = lore;
         }
 
     }
@@ -74,6 +76,8 @@ public class EnumCollection {
         NO_PERMISSIONS(getStr("Messages.noPermissions")),
         MISSING_PERMISSIONS(getStr("Messages.missingPermissions")),
         NO_ITEM_IN_HAND(getStr("Messages.noPermissions")),
+        ALREADY_ON_FIRST_PAGE(getStr("Messages.alreadyOnFirstPage")),
+        ALREADY_ON_LAST_PAGE(getStr("Messages.alreadyOnLastPage")),
         RELOADED(getStr("Messages.reloaded"));
 
         String string;
@@ -95,6 +99,7 @@ public class EnumCollection {
 
     public enum MenuTitles {
         TROLLGUI(getStr("MenuTitles.trollGUI")),
+        PLAYER_SELECTOR(getStr("MenuTitles.selectPlayer")),
         SETTINGS(getStr("MenuTitles.settings"));
 
         String string;
