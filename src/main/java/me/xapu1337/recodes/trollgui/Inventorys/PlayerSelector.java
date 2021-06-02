@@ -2,12 +2,8 @@ package me.xapu1337.recodes.trollgui.Inventorys;
 
 import com.cryptomorin.xseries.XMaterial;
 import me.xapu1337.recodes.trollgui.Cores.Core;
-import me.xapu1337.recodes.trollgui.Utilities.EnumCollection;
-import me.xapu1337.recodes.trollgui.Utilities.InventoryUpdate;
-import me.xapu1337.recodes.trollgui.Utilities.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Color;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -43,7 +39,7 @@ public class PlayerSelector implements Listener, InventoryHolder{
         Bukkit.getPluginManager().registerEvents(this, Core.instance);
         GUI = Bukkit.createInventory(this, 54,
                 centerTitle(
-                        EnumCollection.MenuTitles.PLAYER_SELECTOR.get()
+                        Core.instance.utils.getConfigPath("MenuTitles.selectPlayer")
                 )
         );
         initializeItems();
@@ -52,16 +48,10 @@ public class PlayerSelector implements Listener, InventoryHolder{
     public void initializeItems(){
         ArrayList<Player> players = new ArrayList<>(Core.instance.getServer().getOnlinePlayers());
         for(int i = 45; i < 54; i++)
-            GUI.setItem(i, Util.createItem(XMaterial.GRAY_STAINED_GLASS_PANE, false, " "));
-        GUI.setItem(48, Util.createItem(XMaterial.OAK_BUTTON, false, EnumCollection.PlayerSelectorItems.LEFT.name, EnumCollection.PlayerSelectorItems.LEFT.lore));
-        GUI.setItem(49, Util.createItem(XMaterial.BARRIER, false, EnumCollection.PlayerSelectorItems.CLOSE.name, EnumCollection.PlayerSelectorItems.CLOSE.lore));
-        GUI.setItem(50, Util.createItem(XMaterial.OAK_BUTTON, false, EnumCollection.PlayerSelectorItems.RIGHT.name, EnumCollection.PlayerSelectorItems.RIGHT.lore));
-        InventoryUpdate.updateInventory(player, centerTitle(
-                EnumCollection.MenuTitles.PLAYER_SELECTOR.get()
-                        .replace("%CURRENT_PAGE%", "FUCK")
-                        .replace("%MAX_PAGES%", "YU")
-                        )
-        );
+            GUI.setItem(i, Core.instance.utils.createItem(XMaterial.GRAY_STAINED_GLASS_PANE, false, " "));
+        GUI.setItem(48, Core.instance.utils.createItem(XMaterial.OAK_BUTTON, false, Core.instance.utils.getConfigPath("MenuItems.playerSelector.left.name"), Core.instance.utils.getConfigPath("MenuItems.playerSelector.left.lore")));
+        GUI.setItem(49, Core.instance.utils.createItem(XMaterial.BARRIER, false, Core.instance.utils.getConfigPath("MenuItems.playerSelector.close.name"), Core.instance.utils.getConfigPath("MenuItems.playerSelector.close.lore")));
+        GUI.setItem(50, Core.instance.utils.createItem(XMaterial.OAK_BUTTON, false, Core.instance.utils.getConfigPath("MenuItems.playerSelector.right.name"), Core.instance.utils.getConfigPath("MenuItems.playerSelector.right.lore")));
 //        InventoryTitleHelper.sendInventoryTitle(player, GUI, centerTitle(EnumCollection.MenuTitles.PLAYER_SELECTOR.get().replace("%CURRENT_PAGE", String.valueOf(index + 1)).replace("%MAX_PAGES%", String.valueOf(Math.round(Bukkit.getOnlinePlayers().size() / maxItemsPerPage)))));
 
         if(players != null && !players.isEmpty()) {
@@ -100,24 +90,23 @@ public class PlayerSelector implements Listener, InventoryHolder{
 
         if (clickedItem.getType() == XMaterial.PLAYER_HEAD.parseMaterial()) {
             Player selectedPlayer = Bukkit.getPlayer(UUID.fromString(clickedItem.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(Core.instance, "uuid"), PersistentDataType.STRING)));
-            player.sendMessage("Targetting: " + selectedPlayer.getDisplayName());
-            selectedPlayer.sendMessage("You are beeing targetted.");
+            player.openInventory(new TrollGUI(selectedPlayer).getInventory());
         } else if (clickedItem.getType() == XMaterial.BARRIER.parseMaterial()) {
             player.closeInventory();
         } else if (clickedItem.getType().equals(XMaterial.OAK_BUTTON.parseMaterial())) {
-            if (ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase(ChatColor.stripColor(EnumCollection.PlayerSelectorItems.LEFT.name))) {
-                if (page == 0) player.sendMessage(EnumCollection.Messages.ALREADY_ON_FIRST_PAGE.get());
+            if (ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase(ChatColor.stripColor(Core.instance.utils.getConfigPath("MenuItems.playerSelector.left.name")))) {
+                if (page == 0) player.sendMessage(Core.instance.utils.getConfigPath("Messages.alreadyOnFirstPage"));
                 else {
                     page--;
                     GUI.clear();
                     initializeItems();
                 }
-            } else if (ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase(ChatColor.stripColor(EnumCollection.PlayerSelectorItems.RIGHT.name))) {
+            } else if (ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase(ChatColor.stripColor(Core.instance.utils.getConfigPath("MenuItems.playerSelector.right.name")))) {
                 if (!((index + 1) >= players.size())) {
                     page++;
                     GUI.clear();
                     initializeItems();
-                } else player.sendMessage(EnumCollection.Messages.ALREADY_ON_LAST_PAGE.get());
+                } else player.sendMessage(Core.instance.utils.getConfigPath("Messages.alreadyOnLastPage"));
             }
         }
     }

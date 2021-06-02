@@ -4,8 +4,6 @@ import me.xapu1337.recodes.trollgui.Cores.Core;
 import me.xapu1337.recodes.trollgui.Handlers.CommandHandler;
 import me.xapu1337.recodes.trollgui.Inventorys.PlayerSelector;
 import me.xapu1337.recodes.trollgui.Inventorys.Settings;
-import me.xapu1337.recodes.trollgui.Utilities.EnumCollection;
-import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
@@ -14,6 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Set;
 
 public class TrollCommand extends CommandHandler {
@@ -43,7 +42,7 @@ public class TrollCommand extends CommandHandler {
         addDescription("");
         addUsage("");
         addPermission("ms3.use");
-        addPermissionMessage(EnumCollection.Messages.MISSING_PERMISSIONS.get());
+        addPermissionMessage(Objects.requireNonNull(Core.instance.utils.getConfigPath("Messages.missingPermissions", true)));
         registerCommand(commandMap);
         addListTabbComplete(0, "settings", "giveskull", "credits", "update", "contact", "config");
         addListTabbComplete(1, convert(keys));
@@ -59,7 +58,6 @@ public class TrollCommand extends CommandHandler {
                         p.openInventory(new Settings().getInventory());
                     break;
                 case "giveskull":
-
                     break;
                 case "credits":
 

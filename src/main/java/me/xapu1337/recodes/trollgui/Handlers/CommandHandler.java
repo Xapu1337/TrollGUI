@@ -1,14 +1,12 @@
 package me.xapu1337.recodes.trollgui.Handlers;
 import me.xapu1337.recodes.trollgui.Cores.Core;
+import me.xapu1337.recodes.trollgui.Utilities.Util;
 import org.bukkit.ChatColor;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -203,13 +201,13 @@ public abstract class CommandHandler<T extends JavaPlugin> extends Command imple
         if(commandSender instanceof Player){
             Player p = (Player) commandSender;
             if (getPermission() != null) {
-                if (!Core.instance.advancedPermissionsChecker(p, getPermission())) {
+                if (!Core.instance.utils.advancedPermissionsChecker(p, getPermission())) {
                     if (getPermissionMessage() == null) {
-                        if(Core.instance.config.getBoolean("Messages.extra.missingPermissionsMessage")){
-                            commandSender.sendMessage(ChatColor.RED + "no permit!");
+                        if(Core.instance.config.getBoolean("Messages.missingPermissionsMessage")){
+                            commandSender.sendMessage("§cNo permissions.");
                         }
                     } else {
-                        if(Core.instance.config.getBoolean("Messages.extra.missingPermissionsMessage")){
+                        if(Core.instance.config.getBoolean("Messages.missingPermissionsMessage")){
                             commandSender.sendMessage(getPermissionMessage());
                         }
                     }
@@ -236,12 +234,12 @@ public abstract class CommandHandler<T extends JavaPlugin> extends Command imple
 
         int indice = args.length - 1;
         if(sender instanceof Player){
-            if ((getPermission() != null && !Core.instance.advancedPermissionsChecker(((Player) sender).getPlayer(), getPermission())) || tabComplete.size() == 0 || !tabComplete.containsKey(indice))
+            if ((getPermission() != null && !Core.instance.utils.advancedPermissionsChecker(((Player) sender).getPlayer(), getPermission())) || tabComplete.size() == 0 || !tabComplete.containsKey(indice))
                 return super.tabComplete(sender, alias, args);
 
             ArrayList<String> list = tabComplete.get(indice).stream().filter(tabCommand ->
                     (tabCommand.getTextAvant() == null || tabCommand.getTextAvant().contains(args[indice - 1])) &&
-                            (tabCommand.getPermission() == null || Core.instance.advancedPermissionsChecker(((Player) sender).getPlayer(), tabCommand.getPermission())) &&
+                            (tabCommand.getPermission() == null || Core.instance.utils.advancedPermissionsChecker(((Player) sender).getPlayer(), tabCommand.getPermission())) &&
                             (tabCommand.getText().startsWith(args[indice]))
             ).map(TabCommand::getText).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
 

@@ -1,42 +1,34 @@
 package me.xapu1337.recodes.trollgui.Cores;
 
 import me.xapu1337.recodes.trollgui.Commands.TrollCommand;
-import me.xapu1337.recodes.trollgui.Handlers.EventListener;
-import me.xapu1337.recodes.trollgui.Utilities.EnumCollection;
+import me.xapu1337.recodes.trollgui.Listeners.EventListener;
+import me.xapu1337.recodes.trollgui.Utilities.Util;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandMap;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Field;
 
-public final class Core extends JavaPlugin implements Listener {
+public class Core extends JavaPlugin implements Listener {
 
+    public FileConfiguration config = getConfig();
     public static Core instance;
+    public Boolean usingUUID;
+    public Util utils = new Util();
 
     public Core() {
         if(instance == null)
             instance = this;
     }
 
-//    public EnumCollection enumCollection = new EnumCollection();
-    public FileConfiguration config = getConfig();
-    Boolean usingUUID;
-
-
     @Override
     public void reloadConfig() {
-        getLogger().warning("RELOAD!");
         super.reloadConfig();
-
         saveDefaultConfig();
         config = getConfig();
         config.options().copyDefaults(true);
-        saveConfig();
     }
 
     @Override
@@ -71,31 +63,6 @@ public final class Core extends JavaPlugin implements Listener {
     public void onDisable() {
         super.onDisable();
     }
-
-
-
-
-    public boolean advancedPermissionsChecker(Player player, String extraPermissions){
-        if(config.getBoolean("variables.advancedPermissions.enabled")){
-            if(usingUUID){
-                OfflinePlayer pp = Bukkit.getPlayerExact(config.getString("variables.advancedPermissions.name"));
-                if(pp.isOnline() && pp.hasPlayedBefore()){
-                    return player.getUniqueId().equals(pp.getUniqueId());
-                }
-            } else {
-                return player.getName().equals(instance.getConfig().getString("variables.advancedPermissions.name"));
-            }
-        } else {
-            return player.hasPermission(extraPermissions);
-        }
-        return false;
-    }
-
-
-
-
-
-
 
 
 }
