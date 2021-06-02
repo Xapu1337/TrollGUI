@@ -19,12 +19,11 @@ Variables:
     enabled: false
 
 MenuTitles:
-  trollGUI: "&8⨯ &9&lMS3 &8⨯"
-  selectPlayer: '&8⨯ &9Select a player &8| &7[&6%CURRENT_PAGE% &8/ &6%MAX_PAGES%&7] &8⨯' #%CURRENT_PAGE% = The current page, %MAX_PAGES% the maximal number of pages.
-  settings: '&8⨯ &9Select settings &8⨯'
+  trollGUI: "&8x &9&lMS3 &8- &7%PLAYER% &8x" # %PLAYER% is the selected player that is being trolled.
+  selectPlayer: '&8x &9Select a player &8x' #%CURRENT_PAGE% = The current page, %MAX_PAGES% the maximal number of pages.
+  settings: '&8x &9Select settings &8x'
 
 Messages:
-  noPermissions: '&cYou don''t have the permissions for that.'
   missingPermissionsMessage: true
   missingPermissions: '&cYou''re missing the permissions "ms3.troll"'
   reloaded: '&cReloaded the configuration successfully.'
