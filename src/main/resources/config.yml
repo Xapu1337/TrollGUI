@@ -43,7 +43,7 @@ MenuItems:
         lore: '&7Closes the inventory (or any GUI) the player has open'
       dropAll:
         name: '&8Drop all items from Player'
-        lore: '&7"Who did cut a hole in my pants?!"'
+        lore: '&7"Who tf did cut a hole in my pants?!"'
       dropItem:
         name: '&8Drop the item from players hand'
         lore: '&7Makes the hand from the player slippy'
@@ -102,7 +102,7 @@ MenuItems:
   settingsMenu:
     reload:
       name: '&cReload the current configuration.'
-      lore: '&7Reload the current config, Without needing to restart the server.'
+      lore: '&7Reload the current config, Without needing to reload the server.'
   playerSelector:
     close:
       name: "&cCLOSE"
@@ -111,7 +111,7 @@ MenuItems:
       name: "&8← &7BACK"
       lore: "&7Go one back"
     right:
-      name: "&7RIGHT &8→"
-      lore: "&7Go one to the right"
+      name: "&7NEXT &8→"
+      lore: "&7Go to the next page"
     extras:
       hasOP: '&cThis player has operator.'

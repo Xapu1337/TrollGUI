@@ -37,11 +37,37 @@ public class TrollGUI implements Listener, InventoryHolder {
     public void initializeItems(){
         for(int i = 0; i < GUI.getSize(); i++)
             GUI.setItem(i, Core.instance.utils.createItem(XMaterial.GRAY_STAINED_GLASS_PANE, false, " "));
-        GUI.setItem(10, Core.instance.utils.createItem(XMaterial.BLAZE_POWDER, false, Core.instance.utils.getConfigPath("MenuItems.trollMenu.burnPlayer.name"), Core.instance.utils.getConfigPath("MenuItems.trollMenu.burnPlayer.lore")));
-        GUI.setItem(11, Core.instance.utils.createItem(XMaterial.BARRIER, false, Core.instance.utils.getConfigPath("MenuItems.trollMenu.closeGUI.name"), Core.instance.utils.getConfigPath("MenuItems.trollMenu.closeGUI.lore")));
-        GUI.setItem(12, Core.instance.utils.createItem(XMaterial.CAULDRON, false, Core.instance.utils.getConfigPath("MenuItems.trollMenu.dropAll.name"), Core.instance.utils.getConfigPath("MenuItems.trollMenu.dropAll.lore")));
-        GUI.setItem(13, Core.instance.utils.createItem(XMaterial.WATER_BUCKET, false, Core.instance.utils.getConfigPath("MenuItems.trollMenu.dropItem.name"), Core.instance.utils.getConfigPath("MenuItems.trollMenu.dropItem.lore")));
-        GUI.setItem(14, Core.instance.utils.createItem(XMaterial.TNT, false, Core.instance.utils.getConfigPath("MenuItems.trollMenu.explodePlayer.name"), Core.instance.utils.getConfigPath("MenuItems.trollMenu.explodePlayer.lore")));
+
+        GUI.setItem(10, Core.instance.utils.createItem(XMaterial.BLAZE_POWDER, false,
+                Core.instance.utils.getConfigPath("MenuItems.trollMenu.burnPlayer.name"),
+                Core.instance.utils.getConfigPath("MenuItems.trollMenu.burnPlayer.lore")));
+
+        GUI.setItem(11, Core.instance.utils.createItem(XMaterial.BARRIER, false,
+                Core.instance.utils.getConfigPath("MenuItems.trollMenu.closeGUI.name"),
+                Core.instance.utils.getConfigPath("MenuItems.trollMenu.closeGUI.lore")));
+
+        GUI.setItem(12, Core.instance.utils.createItem(XMaterial.CAULDRON, false,
+                Core.instance.utils.getConfigPath("MenuItems.trollMenu.dropAll.name"),
+                Core.instance.utils.getConfigPath("MenuItems.trollMenu.dropAll.lore")));
+
+        GUI.setItem(13, Core.instance.utils.createItem(XMaterial.WATER_BUCKET, false,
+                Core.instance.utils.getConfigPath("MenuItems.trollMenu.dropItem.name"),
+                Core.instance.utils.getConfigPath("MenuItems.trollMenu.dropItem.lore")));
+
+        GUI.setItem(14, Core.instance.utils.createItem(XMaterial.TNT, false,
+                Core.instance.utils.getConfigPath("MenuItems.trollMenu.explodePlayer.name"),
+                Core.instance.utils.getConfigPath("MenuItems.trollMenu.explodePlayer.lore")));
+
+        XMaterial customMatForFakeBlock;
+
+        if(XMaterial.matchXMaterial(Core.instance.config.getString("MenuItems.trollMenu.fakeBlock.options.block")).isPresent())
+            customMatForFakeBlock = XMaterial.matchXMaterial(Core.instance.config.getString("MenuItems.trollMenu.fakeBlock.options.block")).get();
+        else
+            customMatForFakeBlock = XMaterial.TNT;
+
+        GUI.setItem(15, Core.instance.utils.createItem(customMatForFakeBlock, false,
+                Core.instance.utils.getConfigPath("MenuItems.trollMenu.fakeBlock.name"),
+                Core.instance.utils.getConfigPath("MenuItems.trollMenu.fakeBlock.lore")));
     }
 
     @Override
@@ -74,6 +100,9 @@ public class TrollGUI implements Listener, InventoryHolder {
                 break;
             case 14:
                 new ExplodePlayerTroll(caller, player).execute();
+                break;
+            case 15:
+                new FakeBlockTroll(caller, player).execute();
                 break;
         }
 

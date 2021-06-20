@@ -5,6 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -197,15 +198,13 @@ public abstract class CommandHandler<T extends JavaPlugin> extends Command imple
      * @return true if ok, false otherwise
      */
     @Override
-    public boolean execute(CommandSender commandSender, String command, String[] arg) {
+    public boolean execute(@NotNull CommandSender commandSender, @NotNull String command, String[] arg) {
         if(commandSender instanceof Player){
             Player p = (Player) commandSender;
             if (getPermission() != null) {
                 if (!Core.instance.utils.advancedPermissionsChecker(p, getPermission())) {
                     if (getPermissionMessage() == null) {
-                        if(Core.instance.config.getBoolean("Messages.missingPermissionsMessage")){
-                            commandSender.sendMessage("§cNo permissions.");
-                        }
+                        commandSender.sendMessage("§cNo permissions.");
                     } else {
                         if(Core.instance.config.getBoolean("Messages.missingPermissionsMessage")){
                             commandSender.sendMessage(getPermissionMessage());
@@ -214,10 +213,8 @@ public abstract class CommandHandler<T extends JavaPlugin> extends Command imple
                     return false;
                 }
             }
-            if (onCommand(commandSender, this, command, arg))
-                return true;
-            commandSender.sendMessage(ChatColor.DARK_RED + getUsage());
-            return false;
+            return onCommand(commandSender, this, command, arg);
+//            commandSender.sendMessage(ChatColor.DARK_RED + getUsage());
         }
         return false;
     }
@@ -230,7 +227,7 @@ public abstract class CommandHandler<T extends JavaPlugin> extends Command imple
      * @return a list of possible values
      */
     @Override
-    public List<String> tabComplete(CommandSender sender, String alias, String[] args) {
+    public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, String[] args) {
 
         int indice = args.length - 1;
         if(sender instanceof Player){
