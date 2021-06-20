@@ -11,12 +11,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class TrollCommand extends CommandHandler {
-    Set<String> keys = Core.instance.config.getDefaultSection().getKeys(true);
+    Set<String> keys = Objects.requireNonNull(Core.instance.config.getDefaultSection()).getKeys(true);
+
 
     @org.jetbrains.annotations.NotNull
     @org.jetbrains.annotations.Contract(pure = true)
@@ -38,14 +37,15 @@ public class TrollCommand extends CommandHandler {
 
     public TrollCommand(CommandMap commandMap, JavaPlugin plugin) {
         super(plugin, "troll");
+        Arrays.asList("Messages", "Variables", "MenuTitles", "MenuItems").forEach(keys::remove);
 
         addDescription("");
-        addUsage("");
+//        addUsage("");
         addPermission("ms3.use");
         addPermissionMessage(Objects.requireNonNull(Core.instance.utils.getConfigPath("Messages.missingPermissions", true)));
         registerCommand(commandMap);
         addListTabbComplete(0, "settings", "giveskull", "credits", "update", "contact", "config");
-        addListTabbComplete(1, convert(keys));
+        addListTabbComplete(1, convert((keys)));
         addListTabbComplete(2, "%SPACE_SEPARATOR%", "%EMPTY_CHAR%");
     }
 
@@ -58,6 +58,7 @@ public class TrollCommand extends CommandHandler {
                         p.openInventory(new Settings().getInventory());
                     break;
                 case "giveskull":
+
                     break;
                 case "credits":
 
@@ -76,6 +77,6 @@ public class TrollCommand extends CommandHandler {
                     break;
             }
         }
-        return false;
+        return true;
     }
 }

@@ -27,6 +27,7 @@ public class DropItemTroll extends TrollHandler {
             loc.setY(loc.getY() + 1.45);
 
             Item dropped = victim.getWorld().dropItem(loc, victim.getInventory().getItemInMainHand());
+            victim.swingMainHand();
 
             dropped.setVelocity(loc.getDirection().multiply(0.39));
             dropped.setPickupDelay(40);
