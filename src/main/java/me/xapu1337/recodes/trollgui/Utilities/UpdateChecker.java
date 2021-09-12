@@ -1,4 +1,5 @@
-package me.xapu.trollgui.other;
+package me.xapu1337.recodes.trollgui.Utilities;
+
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -27,18 +28,6 @@ public class UpdateChecker {
                 }
             } catch (IOException exception) {
                 this.plugin.getLogger().info("Cannot look for updates: " + exception.getMessage());
-            }
-        });
-    }
-
-    public void getCredits(final Consumer<String> consumer) {
-        Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> {
-            try (InputStream inputStream = new URL("https://raw.githubusercontent.com/Xapu1337/TrollGUI/master/credits.troll").openStream(); Scanner scanner = new Scanner(inputStream)) {
-                if (scanner.hasNext()) {
-                    consumer.accept(scanner.nextLine());
-                }
-            } catch (IOException exception) {
-                this.plugin.getLogger().info("Cannot get credits: " + exception.getMessage());
             }
         });
     }

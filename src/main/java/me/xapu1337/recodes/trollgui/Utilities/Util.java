@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Objects;
 
 public class Util {
@@ -41,6 +42,16 @@ public class Util {
         return ChatColor.translateAlternateColorCodes('&', (withPrefix ? ( getConfigPath("Variables.prefix") + getConfigPath(path)) : (getConfigPath(path))));
     }
 
+    public String uuidOrName(Player who, boolean useUUID) {
+        return useUUID ? who.getUniqueId().toString() : who.getName();
+    }
+
+    public void addOrRemove(HashMap<String, String> collection, Player player){
+        if(collection.containsKey(uuidOrName(player, Core.instance.usingUUID)))
+            collection.remove(uuidOrName(player, Core.instance.usingUUID));
+        else
+            collection.put(uuidOrName(player, Core.instance.usingUUID), uuidOrName(player, Core.instance.usingUUID));
+    }
 
     public boolean advancedPermissionsChecker(Player player, String extraPermissions){
         if(Core.instance.getConfig().getBoolean("variables.advancedPermissions.enabled")){
@@ -58,5 +69,14 @@ public class Util {
         return false;
     }
 
+
+    public String reverseMessage(String i){
+        StringBuilder res = new StringBuilder();
+        int length = i.length();
+
+        for (int i1 = length - 1 ; i1 >= 0 ; i1--)
+            res.append(i.charAt(i1));
+        return res.toString();
+    }
 
 }
