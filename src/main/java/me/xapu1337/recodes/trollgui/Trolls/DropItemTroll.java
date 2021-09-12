@@ -21,7 +21,7 @@ public class DropItemTroll extends TrollHandler {
     @Override
     public void execute() {
         if (victim.getInventory().getItemInMainHand() == null || victim.getInventory().getItemInMainHand().getType() == XMaterial.AIR.parseMaterial())
-            caller.sendMessage(Core.instance.utils.getConfigPath("Messages.noItemInHand", true).replace("%player%", victim.getName()));
+            caller.sendMessage(Core.instance.utils.getConfigPath("Messages.noItemInHand", true).replace("%PLAYER%", victim.getName()));
         else {
             Location loc = victim.getLocation();
             loc.setY(loc.getY() + 1.45);

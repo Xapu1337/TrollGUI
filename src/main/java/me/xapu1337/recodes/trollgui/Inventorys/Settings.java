@@ -15,6 +15,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 public class Settings implements Listener, InventoryHolder {
     public Inventory GUI;
@@ -41,7 +42,7 @@ public class Settings implements Listener, InventoryHolder {
     }
 
     @Override
-    public Inventory getInventory() { return GUI; }
+    public @NotNull Inventory getInventory() { return GUI; }
 
     @EventHandler
     public void onInventoryClicked(InventoryClickEvent event) {

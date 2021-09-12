@@ -18,14 +18,14 @@ public class RandomLookTroll extends TrollHandler {
     @Override
     public void execute() {
         Location loc = victim.getLocation();
-        float retoreYaw = loc.getYaw();
+        float restoreYaw = loc.getYaw();
         float restorePitch = loc.getPitch();
         new BukkitRunnable(){
             private int i = 0;
             public void run() {
                 if(i >= Core.instance.getConfig().getInt("MenuItems.trollMenu.randomLook.options.randomLookTime") * 20) {
                     loc.setPitch(restorePitch);
-                    loc.setYaw(retoreYaw);
+                    loc.setYaw(restoreYaw);
                     victim.teleport(loc);
                     cancel();
                 }

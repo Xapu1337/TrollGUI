@@ -12,7 +12,7 @@ public abstract class TrollHandler {
     }
 
     /**
-     * Executed from the TrollGUI Class everything inside this function gets executed.
+     * The method that gets executed on item click
      */
     public abstract void execute();
 

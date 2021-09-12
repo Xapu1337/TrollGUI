@@ -11,31 +11,32 @@
 
 Variables:
   prefix: '&9&lMS3 &8| &7'
-  enableSneakRightClickSelection: false # if true you can shift + Right click a player to open the troll menu.
+  enableSneakRightClickSelection: false # Allows shift right-clicking a player to open the troll menu.
   advancedPermission:
-    # Basically, this is an check that doesn't have to check if the player has the permission XYZ
-    # It checks if the player name has the name then it allows it. Useful if you have it as an troll for only you and no other person.
-    name: 'Steve' # Offline name of the player, he must join the server before though.
+    # Basically, this is a check that doesn't have to check if the player has the permission "ms3.use"
+    # It checks if the player name has the name then it allows it. Useful if you want to limit the TrollGUI just for you.
+    name: 'Steve' # If your server is in offline mode then the player must join before
     enabled: false
 
 MenuTitles:
-  trollGUI: "&8x &9&lMS3 &8- &7%PLAYER% &8x" # %PLAYER% is the selected player that is being trolled.
-  selectPlayer: '&8x &9Select a player &8x' #%CURRENT_PAGE% = The current page, %MAX_PAGES% the maximal number of pages.
+  trollGUI: "&8x &9&lMS3&8 - &7%VICTIM% &8x" # Possible placeholders: %PLAYER% - Player that opened the menu, %VICTIM% - The player that is being trolled.
+  selectPlayer: '&8x &9Select a player &8x'
   settings: '&8x &9Select settings &8x'
 
 Messages:
   missingPermissionsMessage: true
-  missingPermissions: '&cYou''re missing the permissions "ms3.troll"'
+  missingPermissions: '&cYou''re missing the permissions "ms3.use"'
   reloaded: '&cReloaded the configuration successfully.'
   noItemInHand: '&7Player &b%PLAYER%&7 isn''t holding an item in their hand.'
   alreadyOnFirstPage: "&cYou are already on the first page."
   alreadyOnLastPage: "&cYou are already on the last page."
+  playerNotAvaliable: "&cPlayer either disconnected or is not available"
 
 MenuItems:
   trollMenu:
       burnPlayer:
         name: '&6Burn the player'
-        lore: '&7Summon Ragnarök the god of fire to punish him!'
+        lore: '&7Summon Ragnarok the god of fire to punish him!'
         options:
           burnTime: 7 # x seconds until the player stops burning.
       closeGUI:
@@ -51,13 +52,13 @@ MenuItems:
         name: '&4Explode the player'
         lore: '&7Do you also smell gunpowder?'
         options:
-          explodeRadius: 1 # the radius of the explosion (Please keep this value LOW! High values can easily crash the server usually anything > 200 crashes)
-          explodeRandomness: true # uses the value above as the highest value and 1 as the lowest value, Exploding radius is somewhere between 1 and explodeRadius
+          explodeRadius: 1 # The radius of the explosion. (Please keep this value LOW! High values can easily crash the server usually anything > 200 crashes)
+          explodeRandomness: true # Uses the value above as the highest value and 1 as the lowest value, Exploding radius is somewhere between 1 and explodeRadius.
       fakeBlock:
         name: '&eFake Blocks (Clientside)'
         lore: '&7"HEY SOMEONES IS GRIEFING!" you hear them shout'
         options:
-          block: 'MATERIAL.TNT' # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html as a reference (If the custom block is invalid TNT will be the default)
+          block: 'TNT' # Use https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html as a reference. (If the custom block is invalid TNT will be the default)
           radius: 5 # Same as explodeRadius, Keep this LOW! High values tend to either crash the server OR that the player gets disconnected due to a timeout.
       fakeClear:
         name: '&eFake clear players inventory'
@@ -65,40 +66,46 @@ MenuItems:
         options:
           fakeClearDelay: 10 # x seconds until all items return to the inventory.
       fakeOperator:
-        name: '&bFake OP The player'
-        lore: '&7Old but gold'
+        name: '&bFake OP / DEOP The player'
+        lore: '&7If player has OP then it will send the deop message and if not the operator message'
       freezePlayer:
         name: '&bFreeze Player'
-        lore: '&7When you going AFK involuntary'
+        lore: '&7Make the player AFK involuntary'
       invSee:
-        name: '&6See the inventory from the player'
+        name: '&9See the inventory from the player'
         lore: '&7HAVE YOU STOLE MY DIAMONDS?!!'
+      invShare:
+        name: '&9Open inventory to everyone'
+        lore: '&7"Ohh... What''s that?"'
       launchPlayer:
         name: '&6Launch Player'
         lore: '&7Let the player touch the sky'
+      noBreak:
+        name: '&7No Break'
+        lore: '&7Disables the breaking ability of the player'
       noBuild:
         name: '&7No Build'
         lore: '&7Disables the building ability of the player'
-      noPlace:
-        name: '&7No Place'
-        lore: '&7Disables the placing ability of the player'
       randomLook:
         name: '&cRandom look'
-        lore: '&7Makes the Player look in random locations'
+        lore: '&7Makes the player look in random locations'
         options:
           randomLookTime: 10 # x seconds until the player stops the random looking
       reverseMessage:
         name: '&9Reverse send message'
         lore: '&7Do you are have a stroke'
+      returnToPlayerSelector:
+        name: '&cGo Back'
+        lore: '&7Return to the Player Selector'
       scarePlayer:
         name: '&5Scare Player'
-        lore: '&7Spooky scary skeletons'
+        lore: '&7Spooky Scary Skeletons'
       thunder:
-        name: '&3Spawn a Lightning on the player'
+        name: '&3Thor / Strike Player'
         lore: '&7Truly godlike powers!'
       extras:
-        isEnabled: '&a✓'
-        isDisabled: '&c✕'
+        isEnabled: '&8> &a✓ &8- Enabled.'
+        isDisabled: '&8> &c✕ &8- Disabled.'
   settingsMenu:
     reload:
       name: '&cReload the current configuration.'
@@ -106,7 +113,7 @@ MenuItems:
   playerSelector:
     close:
       name: "&cCLOSE"
-      lore: "&7Close this menu" # &7 is just invisible, But just empty text will give a error.
+      lore: "&7Close this menu"
     left:
       name: "&8← &7BACK"
       lore: "&7Go one back"
@@ -114,4 +121,4 @@ MenuItems:
       name: "&7NEXT &8→"
       lore: "&7Go to the next page"
     extras:
-      hasOP: '&cThis player has operator.'
+      hasOP: '&7This player is &coperator&7.'

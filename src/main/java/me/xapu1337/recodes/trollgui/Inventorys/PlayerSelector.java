@@ -2,6 +2,7 @@ package me.xapu1337.recodes.trollgui.Inventorys;
 
 import com.cryptomorin.xseries.XMaterial;
 import me.xapu1337.recodes.trollgui.Cores.Core;
+import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
@@ -14,14 +15,17 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataType;
+import sun.jvm.hotspot.oops.Array;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.UUID;
 
 public class PlayerSelector implements Listener, InventoryHolder{
     public Inventory GUI;
     public Player player;
-    int maxItemsPerPage = 1;
+    int maxItemsPerPage = 43;
     int page = 0;
     int index = 0;
     public String centerTitle(String title) {
@@ -52,7 +56,6 @@ public class PlayerSelector implements Listener, InventoryHolder{
         GUI.setItem(48, Core.instance.utils.createItem(XMaterial.OAK_BUTTON, false, Core.instance.utils.getConfigPath("MenuItems.playerSelector.left.name"), Core.instance.utils.getConfigPath("MenuItems.playerSelector.left.lore")));
         GUI.setItem(49, Core.instance.utils.createItem(XMaterial.BARRIER, false, Core.instance.utils.getConfigPath("MenuItems.playerSelector.close.name"), Core.instance.utils.getConfigPath("MenuItems.playerSelector.close.lore")));
         GUI.setItem(50, Core.instance.utils.createItem(XMaterial.OAK_BUTTON, false, Core.instance.utils.getConfigPath("MenuItems.playerSelector.right.name"), Core.instance.utils.getConfigPath("MenuItems.playerSelector.right.lore")));
-//        InventoryTitleHelper.sendInventoryTitle(player, GUI, centerTitle(EnumCollection.MenuTitles.PLAYER_SELECTOR.get().replace("%CURRENT_PAGE", String.valueOf(index + 1)).replace("%MAX_PAGES%", String.valueOf(Math.round(Bukkit.getOnlinePlayers().size() / maxItemsPerPage)))));
 
         if(players != null && !players.isEmpty()) {
             for(int i = 0; i < maxItemsPerPage; i++) {
@@ -64,8 +67,10 @@ public class PlayerSelector implements Listener, InventoryHolder{
                     playerMeta.setDisplayName(ChatColor.RED + players.get(index).getDisplayName());
                     playerMeta.setOwningPlayer(Bukkit.getPlayer(players.get(index).getUniqueId()));
                     playerMeta.getPersistentDataContainer().set(new NamespacedKey(Core.instance, "uuid"), PersistentDataType.STRING, players.get(index).getUniqueId().toString());
-                    playerItem.setItemMeta(playerMeta);
+                    if(players.get(index).isOp())
+                        playerMeta.setLore(Collections.singletonList(Core.instance.utils.getConfigPath("MenuItems.playerSelector.extras.hasOP")));
 
+                    playerItem.setItemMeta(playerMeta);
                     GUI.addItem(playerItem);
 
                 }
@@ -90,7 +95,8 @@ public class PlayerSelector implements Listener, InventoryHolder{
 
         if (clickedItem.getType() == XMaterial.PLAYER_HEAD.parseMaterial()) {
             Player selectedPlayer = Bukkit.getPlayer(UUID.fromString(clickedItem.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(Core.instance, "uuid"), PersistentDataType.STRING)));
-            player.openInventory(new TrollGUI(selectedPlayer).getInventory());
+            if(selectedPlayer == null) { event.getWhoClicked().sendMessage(Core.instance.utils.getConfigPath("Messages.playerNotAvaliable", true)); return; }
+            player.openInventory(new TrollGUI((Player) event.getWhoClicked(), selectedPlayer).getInventory());
         } else if (clickedItem.getType() == XMaterial.BARRIER.parseMaterial()) {
             player.closeInventory();
         } else if (clickedItem.getType().equals(XMaterial.OAK_BUTTON.parseMaterial())) {

@@ -17,7 +17,6 @@ public class DropAllTroll extends TrollHandler {
 
     /**
      * Executed from the TrollGUI Class everything inside this function gets executed.
-     * BUG: Off-Hand item will not drop. // Resolved.
      */
     @Override
     public void execute() {
