@@ -23,7 +23,7 @@ public class Util {
 
         meta.setDisplayName(name);
         if(isEnchanted){
-            meta.addEnchant(XEnchantment.DURABILITY.parseEnchantment(), 1, true);
+            meta.addEnchant(XEnchantment.DURABILITY.getEnchant(), 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         }
         // Set the lore of the ite
@@ -36,6 +36,13 @@ public class Util {
 
     public String getConfigPath(String path){
         return ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(Core.instance.getConfig().getString(path)));
+    }
+
+
+    public String getString(String path, String defaultString){
+        String configString = Core.instance.getConfig().getString(path);
+        if(configString == null || configString.length() == 0 ) return defaultString;
+        else return configString;
     }
 
     public String getConfigPath(String path, boolean withPrefix){

@@ -232,11 +232,6 @@ public class TrollGUI implements Listener, InventoryHolder {
             case 32:
                 new ThunderPlayerTroll(caller, victim).execute();
                 break;
-
-
-
-
-
             case 53:
                 caller.openInventory(new PlayerSelector(caller).getInventory());
                 break;

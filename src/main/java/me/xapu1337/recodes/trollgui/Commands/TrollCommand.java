@@ -38,11 +38,13 @@ public class TrollCommand extends CommandHandler {
     }
 
     public TrollCommand(CommandMap commandMap, JavaPlugin plugin) {
-        super(plugin, "troll");
+        super(plugin, Core.instance.utils.getString("Variables.commands.troll.name", "ms3").replaceAll("\\s", ""));
         Arrays.asList("Messages", "Variables", "MenuTitles", "MenuItems").forEach(keys::remove);
 
         addDescription("");
 //        addUsage("");
+        if(Core.instance.getConfig().getBoolean("Variables.commands.troll.alias.enabled"))
+            addAliases(Arrays.stream(Core.instance.getConfig().getStringList("Variables.commands.troll.alias.aliases").toArray(new String[0])).map(a -> a.replaceAll("\\s", "")).toArray(String[]::new));
         addPermission("ms3.use");
         addPermissionMessage(Objects.requireNonNull(Core.instance.utils.getConfigPath("Messages.missingPermissions", true)));
         registerCommand(commandMap);
