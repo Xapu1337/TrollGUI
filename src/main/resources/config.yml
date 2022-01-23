@@ -1,6 +1,6 @@
 
 #  /$$$$$$$$/$$$$$$$   /$$$$$$  /$$       /$$              /$$$$$$  /$$   /$$ /$$$$$$
-#    |__  $$__/ $$__   $$ /$$__  $$| $$  | $$            /$$__  $$| $$  | $$|_  $$_/
+#    | $$__/ $$__  $$ /$$__  $$| $$      | $$             /$$__  $$| $$  | $$|_  $$_/
 #    | $$  | $$  \ $$| $$  \ $$| $$      | $$            | $$  \__/| $$  | $$  | $$
 #    | $$  | $$$$$$$/| $$  | $$| $$      | $$            | $$ /$$$$| $$  | $$  | $$
 #    | $$  | $$__  $$| $$  | $$| $$      | $$            | $$|_  $$| $$  | $$  | $$
@@ -13,13 +13,25 @@ Variables:
   prefix: '&9&lMS3 &8| &7'
   enableSneakRightClickSelection: false # Allows shift right-clicking a player to open the troll menu.
   advancedPermission:
-    # Basically, this is a check that doesn't have to check if the player has the permission "ms3.use"
+    # Basically, this is a check that doesn't have to check if the player has the permission 'ms3.use'
     # It checks if the player name has the name then it allows it. Useful if you want to limit the TrollGUI just for you.
     name: 'Steve' # If your server is in offline mode then the player must join before
     enabled: false
+  # Used for the commands names (e.g. /troll)
+  # Note: Try not to use commands that are already used this will cause either errors or just use the plugin that loads firstly
+  # Note: If the name is invalid it will fallback to "ms3"
+  commands:
+    troll:
+      name: 'ms3'
+      # Used for additional command names that do the same thing
+      alias:
+        enabled: false
+        aliases:
+          - 'mysystem3'
+
 
 MenuTitles:
-  trollGUI: "&8x &9&lMS3&8 - &7%VICTIM% &8x" # Possible placeholders: %PLAYER% - Player that opened the menu, %VICTIM% - The player that is being trolled.
+  trollGUI: '&8x &9&lMS3&8 - &7%VICTIM% &8x' # Possible placeholders: %PLAYER% - Player that opened the menu, %VICTIM% - The player that is being trolled.
   selectPlayer: '&8x &9Select a player &8x'
   settings: '&8x &9Select settings &8x'
 
@@ -28,9 +40,9 @@ Messages:
   missingPermissions: '&cYou''re missing the permissions "ms3.use"'
   reloaded: '&cReloaded the configuration successfully.'
   noItemInHand: '&7Player &b%PLAYER%&7 isn''t holding an item in their hand.'
-  alreadyOnFirstPage: "&cYou are already on the first page."
-  alreadyOnLastPage: "&cYou are already on the last page."
-  playerNotAvaliable: "&cPlayer either disconnected or is not available"
+  alreadyOnFirstPage: '&cYou are already on the first page.'
+  alreadyOnLastPage: '&cYou are already on the last page.'
+  playerNotAvaliable: '&cPlayer either disconnected or is not available'
 
 MenuItems:
   trollMenu:
@@ -109,16 +121,16 @@ MenuItems:
   settingsMenu:
     reload:
       name: '&cReload the current configuration.'
-      lore: '&7Reload the current config, Without needing to reload the server.'
+      lore: '&7Reload the current config, Without needing to reload the server. (Note: If you change command names you MUST reload the server to make them work)'
   playerSelector:
     close:
-      name: "&cCLOSE"
-      lore: "&7Close this menu"
+      name: '&cCLOSE'
+      lore: '&7Close this menu'
     left:
-      name: "&8← &7BACK"
-      lore: "&7Go one back"
+      name: '&8← &7BACK'
+      lore: '&7Go one back'
     right:
-      name: "&7NEXT &8→"
-      lore: "&7Go to the next page"
+      name: '&7NEXT &8→'
+      lore: '&7Go to the next page'
     extras:
       hasOP: '&7This player is &coperator&7.'
