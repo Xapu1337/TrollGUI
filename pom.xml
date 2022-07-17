@@ -6,7 +6,7 @@
 
     <groupId>me.xapu1337.recodes</groupId>
     <artifactId>trollgui</artifactId>
-    <version>2.01</version>
+    <version>2.1</version>
     <packaging>jar</packaging>
 
     <name>TrollGUI</name>
@@ -19,7 +19,7 @@
 
     <build>
         <directory>
-            C:\Users\XapuR\OneDrive\spigot-server-test\plugins
+            ${project.basedir}/build_out
         </directory>
         <plugins>
             <plugin>
@@ -37,7 +37,7 @@
                 <version>2.0</version>
                 <configuration>
                     <warName>ms3</warName>
-                    <outputDirectory>C:\Users\XapuR\OneDrive\spigot-server-test\plugins</outputDirectory>
+                    <outputDirectory>${project.basedir}/build_out</outputDirectory>
                 </configuration>
             </plugin>
             <plugin>
@@ -54,12 +54,12 @@
                             <relocations>
                                 <relocation>
                                     <pattern>com.cryptomorin.xseries</pattern>
-                                    <shadedPattern>me.xapu.trollgui.utils</shadedPattern>
+                                    <shadedPattern>me.xapu1337.trollgui.compatability</shadedPattern>
                                 </relocation>
 
                                 <relocation>
                                     <pattern>org.bstats</pattern>
-                                    <shadedPattern>me.xapu.trollgui.utils</shadedPattern>
+                                    <shadedPattern>me.xapu1337.trollgui.metrics</shadedPattern>
                                 </relocation>
                             </relocations>
                             <filters>
@@ -103,25 +103,30 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.18.1-R0.1-SNAPSHOT</version>
+            <version>1.19-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.github.cryptomorin</groupId>
             <artifactId>XSeries</artifactId>
-            <version>8.6.0.0.1</version>
+            <version>9.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
-            <version>2.2.1</version>
+            <version>3.0.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>22.0.0</version>
+            <version>23.0.0</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.classgraph</groupId>
+            <artifactId>classgraph</artifactId>
+            <version>4.8.149</version>
         </dependency>
     </dependencies>
 </project>

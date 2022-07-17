@@ -1,15 +1,20 @@
 package me.xapu1337.recodes.trollgui.Listeners;
 
 import me.xapu1337.recodes.trollgui.Cores.Core;
+import me.xapu1337.recodes.trollgui.Inventorys.TrollGUI;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.stream.Collectors;
 
 public class EventListener implements Listener {
 
@@ -39,5 +44,31 @@ public class EventListener implements Listener {
             e.setMessage(Core.instance.utils.reverseMessage(e.getMessage()));
         }
     }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent e) {
+
+        if (Core.instance.singletons.currentPlayersTrolling.size() > 0) {
+            // Find the current TrollGUI with the player that left as a victim.
+            TrollGUI currentTrollGUI = Core.instance.singletons.currentPlayersTrolling.values().stream()
+                    .filter(trollGUI -> trollGUI.getVictim().getUniqueId().equals(e.getPlayer().getUniqueId()))
+                    .findFirst()
+                    .orElse(null);
+
+            if (currentTrollGUI == null) return;
+
+            currentTrollGUI.getCaller().closeInventory();
+            currentTrollGUI.getCaller().sendMessage(Core.instance.utils.getConfigPath("Messages.playerNotAvailable", true).replaceAll("%PLAYER%", e.getPlayer().getName()));
+        }
+
+    }
+
+    @EventHandler
+    public void onInventoryClose(InventoryCloseEvent e) {
+        if (Core.instance.singletons.currentPlayersTrolling.values().stream().map(TrollGUI::getInventory).collect(Collectors.toList()).contains(e.getInventory())) {
+            Core.instance.singletons.currentPlayersTrolling.remove(Core.instance.singletons.currentPlayersTrolling.values().stream().filter(trollGUI -> trollGUI.getInventory() == e.getInventory()).collect(Collectors.toList()).stream().findFirst().get());
+        }
+    }
+
 
 }

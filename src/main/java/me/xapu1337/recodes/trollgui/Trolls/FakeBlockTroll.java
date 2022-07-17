@@ -4,6 +4,7 @@ import com.cryptomorin.xseries.XItemStack;
 import com.cryptomorin.xseries.XMaterial;
 import me.xapu1337.recodes.trollgui.Cores.Core;
 import me.xapu1337.recodes.trollgui.Handlers.TrollHandler;
+import me.xapu1337.recodes.trollgui.Handlers.TrollItemMetaData;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -13,9 +14,26 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Objects;
 
 public class FakeBlockTroll extends TrollHandler {
-    public FakeBlockTroll(Player caller, Player victim) {
-        super(caller, victim);
+
+
+
+    @Override
+    public TrollItemMetaData setMetaData() {
+        XMaterial customMatForFakeBlock;
+
+        if(XMaterial.matchXMaterial(Core.instance.config.getString("MenuItems.trollMenu.fakeBlock.options.block")).isPresent())
+            customMatForFakeBlock = XMaterial.matchXMaterial(Core.instance.config.getString("MenuItems.trollMenu.fakeBlock.options.block")).get();
+        else
+            customMatForFakeBlock = XMaterial.TNT;
+        
+        return (
+                new TrollItemMetaData()
+                        .setItem(customMatForFakeBlock)
+                        .setConfigData("fakeBlock")
+
+        );
     }
+
 
     /**
      * Executed from the TrollGUI Class everything inside this function gets executed.

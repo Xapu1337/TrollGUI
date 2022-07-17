@@ -3,7 +3,6 @@ package me.xapu1337.recodes.trollgui.Inventorys;
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import me.xapu1337.recodes.trollgui.Cores.Core;
-import me.xapu1337.recodes.trollgui.Utilities.Util;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -33,12 +32,12 @@ public class Settings implements Listener, InventoryHolder {
         Bukkit.getPluginManager().registerEvents(this, Core.instance);
         GUI = Bukkit.createInventory(this, 9, centerTitle(Core.instance.utils.getConfigPath("MenuTitles.settings")));
         for(int i = 0; i < GUI.getSize(); i++)
-            GUI.setItem(i, Core.instance.utils.createItem(XMaterial.GRAY_STAINED_GLASS_PANE, false, " "));
+            GUI.setItem(i, Core.instance.utils.createItem(XMaterial.GRAY_STAINED_GLASS_PANE, "§r"));
         initializeItems();
     }
 
     public void initializeItems(){
-        GUI.setItem(4, Core.instance.utils.createItem(XMaterial.REDSTONE_BLOCK, false, Core.instance.utils.getConfigPath("MenuItems.settingsMenu.reload.name"), Core.instance.utils.getConfigPath("MenuItems.settingsMenu.reload.lore")));
+        GUI.setItem(4, Core.instance.utils.createItem(XMaterial.REDSTONE_BLOCK, Core.instance.utils.getConfigPath("MenuItems.settingsMenu.reload.name"), Core.instance.utils.getConfigPath("MenuItems.settingsMenu.reload.lore")));
     }
 
     @Override
