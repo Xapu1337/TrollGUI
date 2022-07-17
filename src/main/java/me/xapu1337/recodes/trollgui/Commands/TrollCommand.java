@@ -5,7 +5,6 @@ import me.xapu1337.recodes.trollgui.Handlers.CommandHandler;
 import me.xapu1337.recodes.trollgui.Inventorys.PlayerSelector;
 import me.xapu1337.recodes.trollgui.Inventorys.Settings;
 import me.xapu1337.recodes.trollgui.Utilities.UpdateChecker;
-import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;

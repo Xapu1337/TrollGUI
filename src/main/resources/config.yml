@@ -42,10 +42,16 @@ Messages:
   noItemInHand: '&7Player &b%PLAYER%&7 isn''t holding an item in their hand.'
   alreadyOnFirstPage: '&cYou are already on the first page.'
   alreadyOnLastPage: '&cYou are already on the last page.'
-  playerNotAvaliable: '&cPlayer either disconnected or is not available'
+  playerNotAvailable: '&cPlayer &7&l%PLAYER%&c either disconnected or is not available anymore.'
+  targetSelfWarning: '&cYou currently have the target set to yourself.'
 
 MenuItems:
   trollMenu:
+      allEffects:
+        name: '&5&lAll Effects'
+        lore: '&7How did you get here?'
+        options:
+          effectDuration: 10 # x seconds until the effect is removed
       burnPlayer:
         name: '&6Burn the player'
         lore: '&7Summon Ragnarok the god of fire to punish him!'

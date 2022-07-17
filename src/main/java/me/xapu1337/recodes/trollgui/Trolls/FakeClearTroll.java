@@ -1,7 +1,9 @@
 package me.xapu1337.recodes.trollgui.Trolls;
 
+import com.cryptomorin.xseries.XMaterial;
 import me.xapu1337.recodes.trollgui.Cores.Core;
 import me.xapu1337.recodes.trollgui.Handlers.TrollHandler;
+import me.xapu1337.recodes.trollgui.Handlers.TrollItemMetaData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -10,9 +12,18 @@ import java.util.HashMap;
 
 public class FakeClearTroll extends TrollHandler {
 
-    public FakeClearTroll(Player caller, Player victim) {
-        super(caller, victim);
+
+    @Override
+    public TrollItemMetaData setMetaData() {
+        return (
+                new TrollItemMetaData()
+                        .setItem(XMaterial.PUFFERFISH)
+                        .setConfigData("fakeClear")
+                        .formatPlaceholders("%TIME%", String.valueOf(Core.instance.getConfig().getInt("MenuItems.trollMenu.fakeClear.options.fakeClearDelay")))
+
+        );
     }
+
 
     /**
      * the:
@@ -21,7 +32,7 @@ public class FakeClearTroll extends TrollHandler {
      * if(Core.instance.utils.uuidOrName(victim.getPlayer(), Core.instance.getServer().getOnlineMode()))...
      * </code>
      * <br />
-     * may seem weird but basically I'm making it offline & online mode friendly and avoiding issues.
+     * may seem weird, but basically I'm making it offline & online mode friendly and avoiding issues.
      */
     @Override
     public void execute() {

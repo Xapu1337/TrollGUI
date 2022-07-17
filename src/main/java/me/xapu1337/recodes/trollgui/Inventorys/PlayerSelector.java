@@ -2,7 +2,6 @@ package me.xapu1337.recodes.trollgui.Inventorys;
 
 import com.cryptomorin.xseries.XMaterial;
 import me.xapu1337.recodes.trollgui.Cores.Core;
-import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
@@ -15,7 +14,6 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataType;
-import sun.jvm.hotspot.oops.Array;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,10 +50,10 @@ public class PlayerSelector implements Listener, InventoryHolder{
     public void initializeItems(){
         ArrayList<Player> players = new ArrayList<>(Core.instance.getServer().getOnlinePlayers());
         for(int i = 45; i < 54; i++)
-            GUI.setItem(i, Core.instance.utils.createItem(XMaterial.GRAY_STAINED_GLASS_PANE, false, " "));
-        GUI.setItem(48, Core.instance.utils.createItem(XMaterial.OAK_BUTTON, false, Core.instance.utils.getConfigPath("MenuItems.playerSelector.left.name"), Core.instance.utils.getConfigPath("MenuItems.playerSelector.left.lore")));
-        GUI.setItem(49, Core.instance.utils.createItem(XMaterial.BARRIER, false, Core.instance.utils.getConfigPath("MenuItems.playerSelector.close.name"), Core.instance.utils.getConfigPath("MenuItems.playerSelector.close.lore")));
-        GUI.setItem(50, Core.instance.utils.createItem(XMaterial.OAK_BUTTON, false, Core.instance.utils.getConfigPath("MenuItems.playerSelector.right.name"), Core.instance.utils.getConfigPath("MenuItems.playerSelector.right.lore")));
+            GUI.setItem(i, Core.instance.utils.createItem(XMaterial.GRAY_STAINED_GLASS_PANE,  " "));
+        GUI.setItem(48, Core.instance.utils.createItem(XMaterial.OAK_BUTTON,  Core.instance.utils.getConfigPath("MenuItems.playerSelector.left.name"), Core.instance.utils.getConfigPath("MenuItems.playerSelector.left.lore")));
+        GUI.setItem(49, Core.instance.utils.createItem(XMaterial.BARRIER,  Core.instance.utils.getConfigPath("MenuItems.playerSelector.close.name"), Core.instance.utils.getConfigPath("MenuItems.playerSelector.close.lore")));
+        GUI.setItem(50, Core.instance.utils.createItem(XMaterial.OAK_BUTTON,  Core.instance.utils.getConfigPath("MenuItems.playerSelector.right.name"), Core.instance.utils.getConfigPath("MenuItems.playerSelector.right.lore")));
 
         if(players != null && !players.isEmpty()) {
             for(int i = 0; i < maxItemsPerPage; i++) {
@@ -95,7 +93,7 @@ public class PlayerSelector implements Listener, InventoryHolder{
 
         if (clickedItem.getType() == XMaterial.PLAYER_HEAD.parseMaterial()) {
             Player selectedPlayer = Bukkit.getPlayer(UUID.fromString(clickedItem.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(Core.instance, "uuid"), PersistentDataType.STRING)));
-            if(selectedPlayer == null) { event.getWhoClicked().sendMessage(Core.instance.utils.getConfigPath("Messages.playerNotAvaliable", true)); return; }
+            if(selectedPlayer == null) { event.getWhoClicked().sendMessage(Core.instance.utils.getConfigPath("Messages.  playerNotAvailable", true).replaceAll("%PLAYER%", clickedItem.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(Core.instance, "uuid"), PersistentDataType.STRING) )); return; }
             player.openInventory(new TrollGUI((Player) event.getWhoClicked(), selectedPlayer).getInventory());
         } else if (clickedItem.getType() == XMaterial.BARRIER.parseMaterial()) {
             player.closeInventory();

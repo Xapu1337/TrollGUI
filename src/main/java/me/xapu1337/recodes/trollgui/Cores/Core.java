@@ -22,7 +22,6 @@ public class Core extends JavaPlugin implements Listener {
     public boolean usingUUID;
     public Util utils = new Util();
     public Singleton singletons = new Singleton();
-
     public Core() {
         if(instance == null)
             instance = this;

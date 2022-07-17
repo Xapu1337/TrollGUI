@@ -17,16 +17,24 @@ import java.util.Objects;
 
 public class Util {
 
-    public ItemStack createItem(final XMaterial xMat, final Boolean isEnchanted , final String name, final String... lore) {
+    public ItemStack createItem(final XMaterial xMat, final String name) {
         final ItemStack item = new ItemStack(xMat.parseMaterial(), 1);
         final ItemMeta meta = item.getItemMeta();
 
         meta.setDisplayName(name);
-        if(isEnchanted){
-            meta.addEnchant(XEnchantment.DURABILITY.getEnchant(), 1, true);
-            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        }
-        // Set the lore of the ite
+
+
+        item.setItemMeta(meta);
+
+        return item;
+    }
+
+    public ItemStack createItem(final XMaterial xMat, final String name, final String ...lore) {
+        final ItemStack item = new ItemStack(xMat.parseMaterial(), 1);
+        final ItemMeta meta = item.getItemMeta();
+
+        meta.setDisplayName(name);
+
         meta.setLore(Arrays.asList(lore));
 
         item.setItemMeta(meta);

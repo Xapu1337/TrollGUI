@@ -1,8 +1,12 @@
 package me.xapu1337.recodes.trollgui.Inventorys;
 
 import com.cryptomorin.xseries.XMaterial;
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ClassInfo;
+import io.github.classgraph.ClassInfoList;
+import io.github.classgraph.ScanResult;
 import me.xapu1337.recodes.trollgui.Cores.Core;
-import me.xapu1337.recodes.trollgui.Trolls.*;
+import me.xapu1337.recodes.trollgui.Handlers.TrollHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -14,9 +18,35 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.InvocationTargetException;
+
 public class TrollGUI implements Listener, InventoryHolder {
-    private final Player caller;
-    private final Player victim;
+    private final Player _caller;
+    private final Player _victim;
+
+    private final ItemStack _trollItemFiller = Core.instance.utils.createItem(XMaterial.STONE, "TROLL_ITEM_PLACEHOLDER_PLACE_ITEMS_HERE");
+    private final int INVENTORY_SIZE_X = 9;
+    private final int INVENTORY_SIZE_Y = 6;
+
+    private final int INVENTORY_SIZE = (INVENTORY_SIZE_X * INVENTORY_SIZE_Y);
+
+    private final int MAX_ITEMS_PER_PAGE = 7 * 4;
+    private int CURRENT_PAGE = 0;
+    private int CURRENT_INDEX = 0;
+
+
+    /***
+     * [][][][][][][][][] <-- Padding
+     * []              <-- Trolls
+     * []              []
+     * []              []
+     * []              []
+     * []              []
+     * []              []
+     * []              []
+     * [][][][][][][][][PS] <-- Player Selector (PS)
+     */
+
     public Inventory GUI;
     public String centerTitle(String title) {
         StringBuilder result = new StringBuilder();
@@ -28,214 +58,156 @@ public class TrollGUI implements Listener, InventoryHolder {
 
         return result.append(title).toString();
     }
-    public TrollGUI(Player caller, Player victim) {
-        this.victim = victim;
-        this.caller = caller;
+
+    private final void setItemXY(int x, int y, ItemStack item) {
+        int index = (y * INVENTORY_SIZE_X) + x;
+        if (index < INVENTORY_SIZE && index >= 0)
+            this.getInventory().setItem(index, item);
+    }
+
+    private final void setBackground() {
+        int PADDING_SIZE = 1;
+
+        for (int x = 0; x < INVENTORY_SIZE_X - PADDING_SIZE * 2; x++)
+            for (int y = 0; y < INVENTORY_SIZE_Y - PADDING_SIZE * 2; y++)
+                setItemXY(x + PADDING_SIZE, y + PADDING_SIZE, _trollItemFiller);
+
+        for (int i = 0; i < INVENTORY_SIZE; i++) {
+            if (this.getInventory().getItem(i) == null || this.getInventory().getItem(i).getType() == XMaterial.AIR.parseMaterial()) {
+                this.getInventory().setItem(i, Core.instance.utils.createItem(XMaterial.BLACK_STAINED_GLASS_PANE, "§r"));
+                // Check if we hit the last row, if we do so change nothing except if the caller is the victim, then we need to add a warning message
+                if (i >= INVENTORY_SIZE_X * (INVENTORY_SIZE_Y - 1)) {
+                    if (_caller.equals(_victim)) {
+                        this.getInventory().setItem(i, Core.instance.utils.createItem(XMaterial.RED_STAINED_GLASS_PANE, Core.instance.utils.getConfigPath("Messages.targetSelfWarning")));
+                    }
+                }
+            } else {
+                if (this.getInventory().getItem(i).equals(_trollItemFiller))
+                    this.getInventory().setItem(i, XMaterial.AIR.parseItem());
+            }
+        }
+    }
+
+    public TrollGUI(Player _caller, Player _victim) {
+        this._victim = _victim;
+        this._caller = _caller;
+
+        Core.instance.singletons.currentPlayersTrolling.put(_caller, this);
+
         Bukkit.getPluginManager().registerEvents(this, Core.instance);
-        GUI = Bukkit.createInventory(this, 54, centerTitle(
+        GUI = Bukkit.createInventory(this, INVENTORY_SIZE, centerTitle(
                 Core.instance.utils.getConfigPath("MenuTitles.trollGUI")
-                        .replace("%VICTIM%", victim.getName())
-                        .replace("%PLAYER%", caller.getName())
+                        .replace("%VICTIM%", _victim.getName())
+                        .replace("%PLAYER%", _caller.getName())
                 )
         );
+
         initializeItems();
     }
 
     public void initializeItems(){
-        for(int i = 0; i < GUI.getSize(); i++)
-            GUI.setItem(i, Core.instance.utils.createItem(XMaterial.GRAY_STAINED_GLASS_PANE, false, " "));
 
-        GUI.setItem(10, Core.instance.utils.createItem(XMaterial.BLAZE_POWDER, false,
-                Core.instance.utils.getConfigPath("MenuItems.trollMenu.burnPlayer.name"),
-                Core.instance.utils.getConfigPath("MenuItems.trollMenu.burnPlayer.lore")));
+        try (ScanResult scanResult = new ClassGraph().enableAllInfo().acceptPackages("me.xapu1337.recodes.trollgui").scan()) {
+            ClassInfoList controlClasses = scanResult.getSubclasses("me.xapu1337.recodes.trollgui.Handlers.TrollHandler");
+            for (ClassInfo classInfo : controlClasses) {
+                try {
+                    Class<?> clazz = classInfo.loadClass();
+                    ( (TrollHandler) clazz.getConstructor().newInstance()).setPlayers(_caller, _victim).Init();
+                } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                    e.printStackTrace();
+                }
+            }
 
-        GUI.setItem(11, Core.instance.utils.createItem(XMaterial.BARRIER, false,
-                Core.instance.utils.getConfigPath("MenuItems.trollMenu.closeGUI.name"),
-                Core.instance.utils.getConfigPath("MenuItems.trollMenu.closeGUI.lore")));
+        }
 
-        GUI.setItem(12, Core.instance.utils.createItem(XMaterial.CAULDRON, false,
-                Core.instance.utils.getConfigPath("MenuItems.trollMenu.dropAll.name"),
-                Core.instance.utils.getConfigPath("MenuItems.trollMenu.dropAll.lore")));
+        GUI.clear();
 
-        GUI.setItem(13, Core.instance.utils.createItem(XMaterial.WATER_BUCKET, false,
-                Core.instance.utils.getConfigPath("MenuItems.trollMenu.dropItem.name"),
-                Core.instance.utils.getConfigPath("MenuItems.trollMenu.dropItem.lore")));
+        setBackground();
 
-        GUI.setItem(14, Core.instance.utils.createItem(XMaterial.TNT, false,
-                Core.instance.utils.getConfigPath("MenuItems.trollMenu.explodePlayer.name"),
-                Core.instance.utils.getConfigPath("MenuItems.trollMenu.explodePlayer.lore")));
+        for(int i = 0; i < MAX_ITEMS_PER_PAGE; i++) {
+            CURRENT_INDEX = MAX_ITEMS_PER_PAGE * CURRENT_PAGE + i;
+            if(CURRENT_INDEX >= Core.instance.singletons.holdingTrolls.size()) break;
+            if (Core.instance.singletons.holdingTrolls.getValueAt(CURRENT_INDEX) != null) {
 
-        XMaterial customMatForFakeBlock;
+                GUI.addItem(Core.instance.singletons.holdingTrolls.getValueAt(CURRENT_INDEX).metaData.getItemStack());
 
-        if(XMaterial.matchXMaterial(Core.instance.config.getString("MenuItems.trollMenu.fakeBlock.options.block")).isPresent())
-            customMatForFakeBlock = XMaterial.matchXMaterial(Core.instance.config.getString("MenuItems.trollMenu.fakeBlock.options.block")).get();
-        else
-            customMatForFakeBlock = XMaterial.TNT;
+            }
+        }
 
-        GUI.setItem(15, Core.instance.utils.createItem(customMatForFakeBlock, false,
-                Core.instance.utils.getConfigPath("MenuItems.trollMenu.fakeBlock.name"),
-                Core.instance.utils.getConfigPath("MenuItems.trollMenu.fakeBlock.lore")));
-
-        GUI.setItem(16, Core.instance.utils.createItem(XMaterial.PUFFERFISH, false,
-                Core.instance.utils.getConfigPath("MenuItems.trollMenu.fakeClear.name"),
-                Core.instance.utils.getConfigPath("MenuItems.trollMenu.fakeClear.lore").replace("%TIME%", String.valueOf(Core.instance.config.getInt("MenuItems.trollMenu.fakeClear.options.fakeClearDelay")))));
-
-        GUI.setItem(19, Core.instance.utils.createItem(XMaterial.LIGHT_GRAY_DYE, false,
-                Core.instance.utils.getConfigPath("MenuItems.trollMenu.fakeOperator.name"),
-                Core.instance.utils.getConfigPath("MenuItems.trollMenu.fakeOperator.lore")));
-
-        GUI.setItem(20, Core.instance.utils.createItem(XMaterial.SNOWBALL, Core.instance.singletons.frozenPlayers.containsKey(Core.instance.utils.uuidOrName(victim, Core.instance.usingUUID)),
-                Core.instance.utils.getConfigPath("MenuItems.trollMenu.freezePlayer.name"),
-                Core.instance.utils.getConfigPath("MenuItems.trollMenu.freezePlayer.lore"),
-                Core.instance.singletons.frozenPlayers.containsKey(Core.instance.utils.uuidOrName(victim, Core.instance.usingUUID))
-                        ?
-                            Core.instance.utils.getConfigPath("MenuItems.trollMenu.extras.isEnabled")
-                        :
-                            Core.instance.utils.getConfigPath("MenuItems.trollMenu.extras.isDisabled")
-        ));
-
-        GUI.setItem(21, Core.instance.utils.createItem(XMaterial.TRAPPED_CHEST, false,
-                Core.instance.utils.getConfigPath("MenuItems.trollMenu.invSee.name"),
-                Core.instance.utils.getConfigPath("MenuItems.trollMenu.invSee.lore")));
-
-        GUI.setItem(22, Core.instance.utils.createItem(XMaterial.ENDER_CHEST, false,
-                Core.instance.utils.getConfigPath("MenuItems.trollMenu.invShare.name"),
-                Core.instance.utils.getConfigPath("MenuItems.trollMenu.invShare.lore")));
-
-        GUI.setItem(23, Core.instance.utils.createItem(XMaterial.FIREWORK_ROCKET, false,
-                Core.instance.utils.getConfigPath("MenuItems.trollMenu.launchPlayer.name"),
-                Core.instance.utils.getConfigPath("MenuItems.trollMenu.launchPlayer.lore")));
-
-        GUI.setItem(24, Core.instance.utils.createItem(XMaterial.GRASS_BLOCK, Core.instance.singletons.noBuildPlayers.containsKey(Core.instance.utils.uuidOrName(victim, Core.instance.usingUUID)),
-                Core.instance.utils.getConfigPath("MenuItems.trollMenu.noBuild.name"),
-                Core.instance.utils.getConfigPath("MenuItems.trollMenu.noBuild.lore"),
-                Core.instance.singletons.noBuildPlayers.containsKey(Core.instance.utils.uuidOrName(victim, Core.instance.usingUUID))
-                        ?
-                        Core.instance.utils.getConfigPath("MenuItems.trollMenu.extras.isEnabled")
-                        :
-                        Core.instance.utils.getConfigPath("MenuItems.trollMenu.extras.isDisabled")
-        ));
-
-        GUI.setItem(25, Core.instance.utils.createItem(XMaterial.STONE, Core.instance.singletons.noBreakPlayers.containsKey(Core.instance.utils.uuidOrName(victim, Core.instance.usingUUID)),
-                Core.instance.utils.getConfigPath("MenuItems.trollMenu.noBreak.name"),
-                Core.instance.utils.getConfigPath("MenuItems.trollMenu.noBreak.lore"),
-                Core.instance.singletons.noBreakPlayers.containsKey(Core.instance.utils.uuidOrName(victim, Core.instance.usingUUID))
-                        ?
-                        Core.instance.utils.getConfigPath("MenuItems.trollMenu.extras.isEnabled")
-                        :
-                        Core.instance.utils.getConfigPath("MenuItems.trollMenu.extras.isDisabled")
-        ));
-
-        GUI.setItem(29, Core.instance.utils.createItem(XMaterial.BARRIER, false,
-                Core.instance.utils.getConfigPath("MenuItems.trollMenu.randomLook.name"),
-                Core.instance.utils.getConfigPath("MenuItems.trollMenu.randomLook.lore")));
-
-        GUI.setItem(30, Core.instance.utils.createItem(XMaterial.PAPER, Core.instance.singletons.reverseMessagePlayers.containsKey(Core.instance.utils.uuidOrName(victim, Core.instance.usingUUID)),
-                Core.instance.utils.getConfigPath("MenuItems.trollMenu.reverseMessage.name"),
-                Core.instance.utils.getConfigPath("MenuItems.trollMenu.reverseMessage.lore"),
-                Core.instance.singletons.reverseMessagePlayers.containsKey(Core.instance.utils.uuidOrName(victim, Core.instance.usingUUID))
-                        ?
-                        Core.instance.utils.getConfigPath("MenuItems.trollMenu.extras.isEnabled")
-                        :
-                        Core.instance.utils.getConfigPath("MenuItems.trollMenu.extras.isDisabled")
-        ));
-
-        GUI.setItem(31, Core.instance.utils.createItem(XMaterial.CARVED_PUMPKIN, false,
-                Core.instance.utils.getConfigPath("MenuItems.trollMenu.scarePlayer.name"),
-                Core.instance.utils.getConfigPath("MenuItems.trollMenu.scarePlayer.lore")));
-
-        GUI.setItem(32, Core.instance.utils.createItem(XMaterial.PRISMARINE_SHARD, true,
-                Core.instance.utils.getConfigPath("MenuItems.trollMenu.thunder.name"),
-                Core.instance.utils.getConfigPath("MenuItems.trollMenu.thunder.lore")));
-
-
-        GUI.setItem(53, Core.instance.utils.createItem(XMaterial.BARRIER, true,
+        GUI.setItem(49, Core.instance.utils.createItem(XMaterial.BARRIER,
                 Core.instance.utils.getConfigPath("MenuItems.trollMenu.returnToPlayerSelector.name"),
                 Core.instance.utils.getConfigPath("MenuItems.trollMenu.returnToPlayerSelector.lore")));
 
+
+        GUI.setItem(50, Core.instance.utils.createItem(XMaterial.OAK_BUTTON,  Core.instance.utils.getConfigPath("MenuItems.playerSelector.right.name"), Core.instance.utils.getConfigPath("MenuItems.playerSelector.right.lore")));
+        GUI.setItem(48, Core.instance.utils.createItem(XMaterial.OAK_BUTTON,  Core.instance.utils.getConfigPath("MenuItems.playerSelector.left.name"), Core.instance.utils.getConfigPath("MenuItems.playerSelector.left.lore")));
     }
 
     @Override
     @NotNull
     public Inventory getInventory() { return GUI; }
 
+    // Getters
+    @NotNull
+    public Player getVictim() { return _victim; }
+
+    @NotNull
+    public Player getCaller() { return _caller; }
+
 
     @EventHandler
     public void onInventoryClicked(InventoryClickEvent event) {
-        if (event.getInventory().getHolder() != this) return; // IF the inventory belongs not to this class dismiss.
-        event.setCancelled(true); // Disable the item to be draggable.
+        if (event.getInventory().getHolder() != this) return;
+        event.setCancelled(true);
 
         final ItemStack clickedItem = event.getCurrentItem();
 
-        if (clickedItem == null || clickedItem.getType() == XMaterial.AIR.parseMaterial()) return;
+        if (clickedItem == null || clickedItem.getType() == XMaterial.AIR.parseMaterial() || clickedItem.isSimilar(Core.instance.utils.createItem(XMaterial.BLACK_STAINED_GLASS_PANE, "§r"))) return;
 
-        switch (event.getRawSlot()){
-            case 10:
-                new BurnPlayerTroll(caller, victim).execute();
-                break;
-            case 11:
-                new CloseGUITroll(caller, victim).execute();
-                break;
-            case 12:
-                new DropAllTroll(caller, victim).execute();
-                break;
-            case 13:
-                new DropItemTroll(caller, victim).execute();
-                break;
-            case 14:
-                new ExplodePlayerTroll(caller, victim).execute();
-                break;
-            case 15:
-                new FakeBlockTroll(caller, victim).execute();
-                break;
-            case 16:
-                new FakeClearTroll(caller, victim).execute();
-                break;
-            case 19:
-                new FakeOperatorTroll(caller, victim).execute();
-                break;
-            case 20:
-                new FreezeTroll(caller, victim).execute();
-                GUI.clear();
-                initializeItems();
-                break;
-            case 21:
-                new InvSeeTroll(caller, victim).execute();
-                break;
-            case 22:
-                new InvShareTroll(caller, victim).execute();
-                break;
-            case 23:
-                new LaunchPlayerTroll(caller, victim).execute();
-                break;
-            case 24:
-                new NoBuildTroll(caller, victim).execute();
-                GUI.clear();
-                initializeItems();
-                break;
-            case 25:
-                new NoBreakTroll(caller, victim).execute();
-                GUI.clear();
-                initializeItems();
-                break;
-            case 29:
-                new RandomLookTroll(caller, victim).execute();
-                break;
-            case 30:
-                new ReverseMessageTroll(caller, victim).execute();
-                GUI.clear();
-                initializeItems();
-                break;
-            case 31:
-                new ScareTroll(caller, victim).execute();
-                break;
-            case 32:
-                new ThunderPlayerTroll(caller, victim).execute();
-                break;
-            case 53:
-                caller.openInventory(new PlayerSelector(caller).getInventory());
-                break;
-        }
+
+
+        if(
+                !Core.instance.singletons.holdingTrolls.values().stream().anyMatch(
+                        trollHandler -> trollHandler.metaData.getItemStack().isSimilar(clickedItem)
+                )
+        ) {
+            if (clickedItem.isSimilar(Core.instance.utils.createItem(XMaterial.BARRIER,
+                    Core.instance.utils.getConfigPath("MenuItems.trollMenu.returnToPlayerSelector.name"),
+                    Core.instance.utils.getConfigPath("MenuItems.trollMenu.returnToPlayerSelector.lore")))) {
+                _caller.openInventory(new PlayerSelector(_caller).getInventory());
+            }
+
+            if (clickedItem.getType().equals(XMaterial.OAK_BUTTON.parseMaterial())) {
+                if (ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase(ChatColor.stripColor(Core.instance.utils.getConfigPath("MenuItems.playerSelector.left.name")))) {
+                    if (CURRENT_PAGE == 0) _caller.sendMessage(Core.instance.utils.getConfigPath("Messages.alreadyOnFirstPage"));
+                    else {
+                        CURRENT_PAGE--;
+                        GUI.clear();
+                        initializeItems();
+                    }
+                } else if (ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase(ChatColor.stripColor(Core.instance.utils.getConfigPath("MenuItems.playerSelector.right.name")))) {
+                    if (!((CURRENT_INDEX + 1) >= Core.instance.singletons.holdingTrolls.size())) {
+                        CURRENT_PAGE++;
+                        GUI.clear();
+                        initializeItems();
+                    } else _caller.sendMessage(Core.instance.utils.getConfigPath("Messages.alreadyOnLastPage"));
+                }
+            }
+        };
+
+
+        Core.instance.singletons.holdingTrolls.forEach((className, trollHandler) -> {
+            if (trollHandler.metaData.getItemStack().equals(clickedItem)) {
+                trollHandler.execute();
+                if (trollHandler.metaData.isToggable) {
+                    initializeItems();
+
+                }
+            }
+        });
+
+
+
 
 
     }
