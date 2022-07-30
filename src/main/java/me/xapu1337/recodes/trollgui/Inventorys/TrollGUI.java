@@ -1,14 +1,13 @@
 package me.xapu1337.recodes.trollgui.Inventorys;
 
 import com.cryptomorin.xseries.XMaterial;
-import io.github.classgraph.ClassGraph;
-import io.github.classgraph.ClassInfo;
-import io.github.classgraph.ClassInfoList;
-import io.github.classgraph.ScanResult;
-import me.xapu1337.recodes.trollgui.Cores.Core;
+import me.xapu1337.recodes.trollgui.Cores.TrollCore;
 import me.xapu1337.recodes.trollgui.Handlers.TrollHandler;
+import me.xapu1337.recodes.trollgui.Utilities.Singleton;
+import me.xapu1337.recodes.trollgui.Utilities.Utilities;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,21 +15,23 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.InvocationTargetException;
+import java.util.Objects;
+import java.util.Random;
 
 public class TrollGUI implements Listener, InventoryHolder {
     private final Player _caller;
     private final Player _victim;
-
-    private final ItemStack _trollItemFiller = Core.instance.utils.createItem(XMaterial.STONE, "TROLL_ITEM_PLACEHOLDER_PLACE_ITEMS_HERE");
+    private PlayerSelector _callingSelector;
+    private final ItemStack _blackPanePlaceholder = Utilities.getSingleInstance().createItem(XMaterial.BLACK_STAINED_GLASS_PANE, "§r");
+    private final ItemStack _redPanePlaceholder = Utilities.getSingleInstance().createItem(XMaterial.RED_STAINED_GLASS_PANE, Utilities.getSingleInstance().getConfigPath("Messages.targetSelfWarning"));
     private final int INVENTORY_SIZE_X = 9;
     private final int INVENTORY_SIZE_Y = 6;
 
     private final int INVENTORY_SIZE = (INVENTORY_SIZE_X * INVENTORY_SIZE_Y);
 
-    private final int MAX_ITEMS_PER_PAGE = 7 * 4;
     private int CURRENT_PAGE = 0;
     private int CURRENT_INDEX = 0;
 
@@ -48,16 +49,7 @@ public class TrollGUI implements Listener, InventoryHolder {
      */
 
     public Inventory GUI;
-    public String centerTitle(String title) {
-        StringBuilder result = new StringBuilder();
-        int spaces = (27 - ChatColor.stripColor(title).length());
 
-        for (int i = 0; i < spaces; i++) {
-            result.append(" ");
-        }
-
-        return result.append(title).toString();
-    }
 
     private final void setItemXY(int x, int y, ItemStack item) {
         int index = (y * INVENTORY_SIZE_X) + x;
@@ -66,81 +58,62 @@ public class TrollGUI implements Listener, InventoryHolder {
     }
 
     private final void setBackground() {
-        int PADDING_SIZE = 1;
-
-        for (int x = 0; x < INVENTORY_SIZE_X - PADDING_SIZE * 2; x++)
-            for (int y = 0; y < INVENTORY_SIZE_Y - PADDING_SIZE * 2; y++)
-                setItemXY(x + PADDING_SIZE, y + PADDING_SIZE, _trollItemFiller);
-
-        for (int i = 0; i < INVENTORY_SIZE; i++) {
-            if (this.getInventory().getItem(i) == null || this.getInventory().getItem(i).getType() == XMaterial.AIR.parseMaterial()) {
-                this.getInventory().setItem(i, Core.instance.utils.createItem(XMaterial.BLACK_STAINED_GLASS_PANE, "§r"));
-                // Check if we hit the last row, if we do so change nothing except if the caller is the victim, then we need to add a warning message
-                if (i >= INVENTORY_SIZE_X * (INVENTORY_SIZE_Y - 1)) {
-                    if (_caller.equals(_victim)) {
-                        this.getInventory().setItem(i, Core.instance.utils.createItem(XMaterial.RED_STAINED_GLASS_PANE, Core.instance.utils.getConfigPath("Messages.targetSelfWarning")));
-                    }
+        for (int x = 0; x < INVENTORY_SIZE_X; x++)
+            for (int y = 0; y < INVENTORY_SIZE_Y; y++) {
+                if (Singleton.getSingleInstance().doubleChestCenterSlots.contains( (y * INVENTORY_SIZE_X ) + x)) continue;
+                setItemXY(x, y, _blackPanePlaceholder);
+                if ( y == INVENTORY_SIZE_Y - 1 && _caller.equals(_victim)) {
+                    setItemXY(x, y, _redPanePlaceholder);
                 }
-            } else {
-                if (this.getInventory().getItem(i).equals(_trollItemFiller))
-                    this.getInventory().setItem(i, XMaterial.AIR.parseItem());
             }
-        }
     }
 
     public TrollGUI(Player _caller, Player _victim) {
         this._victim = _victim;
         this._caller = _caller;
 
-        Core.instance.singletons.currentPlayersTrolling.put(_caller, this);
-
-        Bukkit.getPluginManager().registerEvents(this, Core.instance);
-        GUI = Bukkit.createInventory(this, INVENTORY_SIZE, centerTitle(
-                Core.instance.utils.getConfigPath("MenuTitles.trollGUI")
+        Singleton.getSingleInstance().currentPlayersTrolling.put(_caller, this);
+        Bukkit.getPluginManager().registerEvents(this, TrollCore.instance);
+        GUI = Bukkit.createInventory(this, INVENTORY_SIZE,
+                Utilities.getSingleInstance().getConfigPath("MenuItems.trollMenu.title")
                         .replace("%VICTIM%", _victim.getName())
                         .replace("%PLAYER%", _caller.getName())
-                )
+
         );
 
         initializeItems();
     }
 
+    public TrollGUI setCallingSelector(PlayerSelector _callingSelector) {
+        this._callingSelector = _callingSelector;
+        return this;
+    }
+
     public void initializeItems(){
 
-        try (ScanResult scanResult = new ClassGraph().enableAllInfo().acceptPackages("me.xapu1337.recodes.trollgui").scan()) {
-            ClassInfoList controlClasses = scanResult.getSubclasses("me.xapu1337.recodes.trollgui.Handlers.TrollHandler");
-            for (ClassInfo classInfo : controlClasses) {
-                try {
-                    Class<?> clazz = classInfo.loadClass();
-                    ( (TrollHandler) clazz.getConstructor().newInstance()).setPlayers(_caller, _victim).Init();
-                } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }
+        Singleton.getSingleInstance( ).loadedTrollHandlers.forEach( ( className, trollHandler ) -> trollHandler.setPlayers( _caller, _victim ).setGUI( this ).Init( ) );
 
         GUI.clear();
 
         setBackground();
 
+        int MAX_ITEMS_PER_PAGE = 7 * 4;
         for(int i = 0; i < MAX_ITEMS_PER_PAGE; i++) {
             CURRENT_INDEX = MAX_ITEMS_PER_PAGE * CURRENT_PAGE + i;
-            if(CURRENT_INDEX >= Core.instance.singletons.holdingTrolls.size()) break;
-            if (Core.instance.singletons.holdingTrolls.getValueAt(CURRENT_INDEX) != null) {
-
-                GUI.addItem(Core.instance.singletons.holdingTrolls.getValueAt(CURRENT_INDEX).metaData.getItemStack());
-
+            if (!(CURRENT_INDEX >= Singleton.getSingleInstance().loadedTrollHandlers.size()) && (Singleton.getSingleInstance().loadedTrollHandlers.getValueAt(CURRENT_INDEX) != null)) {
+                GUI.addItem(Singleton.getSingleInstance().loadedTrollHandlers.getValueAt(CURRENT_INDEX).data.getItemStack());
             }
         }
 
-        GUI.setItem(49, Core.instance.utils.createItem(XMaterial.BARRIER,
-                Core.instance.utils.getConfigPath("MenuItems.trollMenu.returnToPlayerSelector.name"),
-                Core.instance.utils.getConfigPath("MenuItems.trollMenu.returnToPlayerSelector.lore")));
+        GUI.setItem(49, Utilities.getSingleInstance().createItem(XMaterial.BARRIER,
+                Utilities.getSingleInstance().getConfigPath("MenuItems.trollMenu.items.returnToPlayerSelector.name"),
+                Utilities.getSingleInstance().getConfigPath("MenuItems.trollMenu.items.returnToPlayerSelector.lore")));
 
 
-        GUI.setItem(50, Core.instance.utils.createItem(XMaterial.OAK_BUTTON,  Core.instance.utils.getConfigPath("MenuItems.playerSelector.right.name"), Core.instance.utils.getConfigPath("MenuItems.playerSelector.right.lore")));
-        GUI.setItem(48, Core.instance.utils.createItem(XMaterial.OAK_BUTTON,  Core.instance.utils.getConfigPath("MenuItems.playerSelector.left.name"), Core.instance.utils.getConfigPath("MenuItems.playerSelector.left.lore")));
+        GUI.setItem(50, Utilities.getSingleInstance().createItem(XMaterial.OAK_BUTTON,  Utilities.getSingleInstance().getConfigPath("MenuItems.playerSelector.right.name"), Utilities.getSingleInstance().getConfigPath("MenuItems.playerSelector.right.lore")));
+        GUI.setItem(48, Utilities.getSingleInstance().createItem(XMaterial.OAK_BUTTON,  Utilities.getSingleInstance().getConfigPath("MenuItems.playerSelector.left.name"), Utilities.getSingleInstance().getConfigPath("MenuItems.playerSelector.left.lore")));
+        GUI.setItem(53, Utilities.getSingleInstance().createItem(XMaterial.DROPPER,  Utilities.getSingleInstance().getConfigPath("MenuItems.trollMenu.items.randomTroll.name"), Utilities.getSingleInstance().getConfigPath("MenuItems.trollMenu.items.randomTroll.lore")));
+        _caller.openInventory(GUI);
     }
 
     @Override
@@ -162,46 +135,54 @@ public class TrollGUI implements Listener, InventoryHolder {
 
         final ItemStack clickedItem = event.getCurrentItem();
 
-        if (clickedItem == null || clickedItem.getType() == XMaterial.AIR.parseMaterial() || clickedItem.isSimilar(Core.instance.utils.createItem(XMaterial.BLACK_STAINED_GLASS_PANE, "§r"))) return;
-
-
-
+        if (clickedItem == null || clickedItem.getType() == XMaterial.AIR.parseMaterial() || clickedItem.isSimilar(Utilities.getSingleInstance().createItem(XMaterial.BLACK_STAINED_GLASS_PANE, "§r"))) return;
         if(
-                !Core.instance.singletons.holdingTrolls.values().stream().anyMatch(
-                        trollHandler -> trollHandler.metaData.getItemStack().isSimilar(clickedItem)
+                Singleton.getSingleInstance().loadedTrollHandlers.values().stream().noneMatch(
+                        trollHandler -> Objects.equals(trollHandler.getClass().getName(), Objects.requireNonNull(clickedItem.getItemMeta()).getPersistentDataContainer().get(new NamespacedKey(TrollCore.instance, "assigned-troll-class"), PersistentDataType.STRING))
                 )
         ) {
-            if (clickedItem.isSimilar(Core.instance.utils.createItem(XMaterial.BARRIER,
-                    Core.instance.utils.getConfigPath("MenuItems.trollMenu.returnToPlayerSelector.name"),
-                    Core.instance.utils.getConfigPath("MenuItems.trollMenu.returnToPlayerSelector.lore")))) {
-                _caller.openInventory(new PlayerSelector(_caller).getInventory());
+            if (event.getRawSlot() == 49) {
+                _caller.closeInventory();
+                _callingSelector.openForPlayer(_caller);
+            }
+            if (event.getRawSlot() == 53) {
+                // Get a random troll
+                int randomTroll = new Random().nextInt(Singleton.getSingleInstance().loadedTrollHandlers.size());
+                while (Singleton.getSingleInstance().loadedTrollHandlers.getValueAt(randomTroll) == null) {
+                    randomTroll = new Random().nextInt(Singleton.getSingleInstance().loadedTrollHandlers.size());
+                }
+                TrollHandler trollHandler = Singleton.getSingleInstance().loadedTrollHandlers.getValueAt(randomTroll);
+                _caller.sendMessage(Utilities.getSingleInstance().getConfigPath("Messages.selectedRandomTroll", true).replaceAll("%TROLL%", ChatColor.translateAlternateColorCodes('&', trollHandler.data.displayName)));
+                trollHandler.execute( );
+                if (trollHandler.data.isToggable) {
+                    initializeItems();
+                }
             }
 
             if (clickedItem.getType().equals(XMaterial.OAK_BUTTON.parseMaterial())) {
-                if (ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase(ChatColor.stripColor(Core.instance.utils.getConfigPath("MenuItems.playerSelector.left.name")))) {
-                    if (CURRENT_PAGE == 0) _caller.sendMessage(Core.instance.utils.getConfigPath("Messages.alreadyOnFirstPage"));
+                if (ChatColor.stripColor(Objects.requireNonNull(clickedItem.getItemMeta()).getDisplayName()).equalsIgnoreCase(ChatColor.stripColor(Utilities.getSingleInstance().getConfigPath("MenuItems.playerSelector.left.name")))) {
+                    if (CURRENT_PAGE == 0) _caller.sendMessage(Utilities.getSingleInstance().getConfigPath("Messages.alreadyOnFirstPage"));
                     else {
                         CURRENT_PAGE--;
                         GUI.clear();
                         initializeItems();
                     }
-                } else if (ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase(ChatColor.stripColor(Core.instance.utils.getConfigPath("MenuItems.playerSelector.right.name")))) {
-                    if (!((CURRENT_INDEX + 1) >= Core.instance.singletons.holdingTrolls.size())) {
+                } else if (ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase(ChatColor.stripColor(Utilities.getSingleInstance().getConfigPath("MenuItems.playerSelector.right.name")))) {
+                    if (!((CURRENT_INDEX + 1) >= Singleton.getSingleInstance().loadedTrollHandlers.size())) {
                         CURRENT_PAGE++;
                         GUI.clear();
                         initializeItems();
-                    } else _caller.sendMessage(Core.instance.utils.getConfigPath("Messages.alreadyOnLastPage"));
+                    } else _caller.sendMessage(Utilities.getSingleInstance().getConfigPath("Messages.alreadyOnLastPage"));
                 }
             }
         };
 
 
-        Core.instance.singletons.holdingTrolls.forEach((className, trollHandler) -> {
-            if (trollHandler.metaData.getItemStack().equals(clickedItem)) {
-                trollHandler.execute();
-                if (trollHandler.metaData.isToggable) {
+        Singleton.getSingleInstance().loadedTrollHandlers.forEach((className, trollHandler) -> {
+            if (Objects.equals(className, Objects.requireNonNull(clickedItem.getItemMeta()).getPersistentDataContainer().get(new NamespacedKey(TrollCore.instance, "assigned-troll-class"), PersistentDataType.STRING))) {
+                trollHandler.execute( );
+                if (trollHandler.data.isToggable) {
                     initializeItems();
-
                 }
             }
         });
@@ -211,4 +192,6 @@ public class TrollGUI implements Listener, InventoryHolder {
 
 
     }
+
+
 }

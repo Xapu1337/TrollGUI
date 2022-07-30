@@ -1,10 +1,12 @@
 package me.xapu1337.recodes.trollgui.Trolls;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.xapu1337.recodes.trollgui.Cores.Core;
+import me.xapu1337.recodes.trollgui.Cores.TrollCore;
+import me.xapu1337.recodes.trollgui.Enums.TrollAttributes;
 import me.xapu1337.recodes.trollgui.Handlers.TrollHandler;
-import me.xapu1337.recodes.trollgui.Handlers.TrollItemMetaData;
-import org.bukkit.entity.Player;
+import me.xapu1337.recodes.trollgui.Types.TrollItemMetaData;
+import me.xapu1337.recodes.trollgui.Utilities.Singleton;
+import me.xapu1337.recodes.trollgui.Utilities.Utilities;
 
 public class FreezeTroll extends TrollHandler {
 
@@ -14,9 +16,10 @@ public class FreezeTroll extends TrollHandler {
                 new TrollItemMetaData()
                         .setItem(XMaterial.SNOWBALL)
                         .setConfigData("freezePlayer")
+                        .setAttributes( TrollAttributes.POSSIBLE_DESTRUCTION )
                         .setToggable(true)
                         .setToggled(
-                                () -> Core.instance.singletons.frozenPlayers.containsKey(Core.instance.utils.uuidOrName(victim, Core.instance.usingUUID))
+                                () -> Singleton.getSingleInstance().frozenPlayers.containsKey(Utilities.getSingleInstance().uuidOrName(victim, TrollCore.instance.usingUUID))
                         )
 
         );
@@ -25,6 +28,6 @@ public class FreezeTroll extends TrollHandler {
 
     @Override
     public void execute() {
-        Core.instance.utils.addOrRemove(Core.instance.singletons.frozenPlayers, victim);
+        Utilities.getSingleInstance().addOrRemove(Singleton.getSingleInstance().frozenPlayers, victim);
     }
 }

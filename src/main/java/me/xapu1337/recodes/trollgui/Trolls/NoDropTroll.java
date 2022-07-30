@@ -7,18 +7,18 @@ import me.xapu1337.recodes.trollgui.Types.TrollItemMetaData;
 import me.xapu1337.recodes.trollgui.Utilities.Singleton;
 import me.xapu1337.recodes.trollgui.Utilities.Utilities;
 
-public class NoBuildTroll extends TrollHandler {
+public class NoDropTroll extends TrollHandler {
 
 
     @Override
     public TrollItemMetaData setMetaData() {
         return (
                 new TrollItemMetaData()
-                        .setItem(XMaterial.GRASS_BLOCK)
-                        .setConfigData("noBuild")
+                        .setItem(XMaterial.DROPPER)
+                        .setConfigData("noDrop")
                         .setToggable(true)
                         .setToggled(
-                                () -> Singleton.getSingleInstance().noBuildPlayers.containsKey(Utilities.getSingleInstance().uuidOrName(victim, TrollCore.instance.usingUUID))
+                                () -> Singleton.getSingleInstance().noDropPlayers.containsKey(Utilities.getSingleInstance().uuidOrName(victim, TrollCore.instance.usingUUID))
                         )
 
         );
@@ -27,6 +27,6 @@ public class NoBuildTroll extends TrollHandler {
 
     @Override
     public void execute() {
-        Utilities.getSingleInstance().addOrRemove(Singleton.getSingleInstance().noBuildPlayers, victim);
+        Utilities.getSingleInstance().addOrRemove(Singleton.getSingleInstance().noDropPlayers, victim);
     }
 }

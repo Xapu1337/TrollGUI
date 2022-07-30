@@ -1,11 +1,10 @@
 package me.xapu1337.recodes.trollgui.Trolls;
 
 import com.cryptomorin.xseries.XMaterial;
+import me.xapu1337.recodes.trollgui.Enums.TrollAttributes;
 import me.xapu1337.recodes.trollgui.Handlers.TrollHandler;
-import me.xapu1337.recodes.trollgui.Handlers.TrollItemMetaData;
-import org.bukkit.Bukkit;
+import me.xapu1337.recodes.trollgui.Types.TrollItemMetaData;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 
 public class ThunderPlayerTroll extends TrollHandler {
 
@@ -16,6 +15,7 @@ public class ThunderPlayerTroll extends TrollHandler {
                 new TrollItemMetaData()
                         .setItem(XMaterial.PRISMARINE_SHARD)
                         .setConfigData("thunder")
+                        .setAttributes( TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS, TrollAttributes.POSSIBLE_DESTRUCTION )
 
         );
     }

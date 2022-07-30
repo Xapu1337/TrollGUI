@@ -1,10 +1,11 @@
 package me.xapu1337.recodes.trollgui.Trolls;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.xapu1337.recodes.trollgui.Cores.Core;
+import me.xapu1337.recodes.trollgui.Cores.TrollCore;
+import me.xapu1337.recodes.trollgui.Enums.TrollAttributes;
 import me.xapu1337.recodes.trollgui.Handlers.TrollHandler;
-import me.xapu1337.recodes.trollgui.Handlers.TrollItemMetaData;
-import org.bukkit.entity.Player;
+import me.xapu1337.recodes.trollgui.Types.TrollItemMetaData;
+import me.xapu1337.recodes.trollgui.Utilities.Singleton;
 
 public class InvShareTroll extends TrollHandler {
 
@@ -14,6 +15,7 @@ public class InvShareTroll extends TrollHandler {
                 new TrollItemMetaData()
                         .setItem(XMaterial.ENDER_CHEST)
                         .setConfigData("invShare")
+                        .setAttributes( TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS )
 
         );
     }
@@ -21,11 +23,11 @@ public class InvShareTroll extends TrollHandler {
 
     @Override
     public void execute() {
-        Core.instance.getServer().getOnlinePlayers().forEach((player -> {
+        TrollCore.instance.getServer().getOnlinePlayers().forEach((player -> {
             // Check if any of the players are currently trolling the victim.
-            if (Core.instance.singletons.currentPlayersTrolling.containsKey(player)) {
+            if (Singleton.getSingleInstance().currentPlayersTrolling.containsKey(player)) {
                 // If so, check if the player is trolling the victim.
-                if (Core.instance.singletons.currentPlayersTrolling.get(player).getVictim().getUniqueId().equals(victim.getUniqueId())) {
+                if (Singleton.getSingleInstance().currentPlayersTrolling.get(player).getVictim().getUniqueId().equals(victim.getUniqueId())) {
                     // If so, abort the troll.
                     return;
                 }
