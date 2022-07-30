@@ -1,15 +1,12 @@
 package me.xapu1337.recodes.trollgui.Trolls;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.xapu1337.recodes.trollgui.Cores.Core;
+import me.xapu1337.recodes.trollgui.Enums.TrollAttributes;
 import me.xapu1337.recodes.trollgui.Handlers.TrollHandler;
-import me.xapu1337.recodes.trollgui.Handlers.TrollItemMetaData;
+import me.xapu1337.recodes.trollgui.Types.TrollItemMetaData;
+import me.xapu1337.recodes.trollgui.Utilities.Utilities;
 import org.bukkit.Location;
 import org.bukkit.entity.Item;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.Objects;
 
 public class DropItemTroll extends TrollHandler {
 
@@ -19,6 +16,7 @@ public class DropItemTroll extends TrollHandler {
                 new TrollItemMetaData()
                         .setItem(XMaterial.WATER_BUCKET)
                         .setConfigData("dropItem")
+                        .setAttributes( TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS )
 
         );
     }
@@ -29,7 +27,7 @@ public class DropItemTroll extends TrollHandler {
     @Override
     public void execute() {
         if (victim.getInventory().getItemInMainHand() == null || victim.getInventory().getItemInMainHand().getType() == XMaterial.AIR.parseMaterial())
-            caller.sendMessage(Core.instance.utils.getConfigPath("Messages.noItemInHand", true).replace("%PLAYER%", victim.getName()));
+            caller.sendMessage(Utilities.getSingleInstance().getConfigPath("Messages.noItemInHand", true).replace("%PLAYER%", victim.getName()));
         else {
             Location loc = victim.getLocation();
             loc.setY(loc.getY() + 1.45);

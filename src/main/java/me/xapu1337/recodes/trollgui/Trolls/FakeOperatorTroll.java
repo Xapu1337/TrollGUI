@@ -1,11 +1,9 @@
 package me.xapu1337.recodes.trollgui.Trolls;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.xapu1337.recodes.trollgui.Cores.Core;
 import me.xapu1337.recodes.trollgui.Handlers.TrollHandler;
-import me.xapu1337.recodes.trollgui.Handlers.TrollItemMetaData;
+import me.xapu1337.recodes.trollgui.Types.TrollItemMetaData;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 
 public class FakeOperatorTroll extends TrollHandler {
 

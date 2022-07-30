@@ -1,15 +1,12 @@
 package me.xapu1337.recodes.trollgui.Trolls;
 
-import com.cryptomorin.xseries.XItemStack;
 import com.cryptomorin.xseries.XMaterial;
-import me.xapu1337.recodes.trollgui.Cores.Core;
+import me.xapu1337.recodes.trollgui.Cores.TrollCore;
+import me.xapu1337.recodes.trollgui.Enums.TrollAttributes;
 import me.xapu1337.recodes.trollgui.Handlers.TrollHandler;
-import me.xapu1337.recodes.trollgui.Handlers.TrollItemMetaData;
+import me.xapu1337.recodes.trollgui.Types.TrollItemMetaData;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.Objects;
 
@@ -21,8 +18,8 @@ public class FakeBlockTroll extends TrollHandler {
     public TrollItemMetaData setMetaData() {
         XMaterial customMatForFakeBlock;
 
-        if(XMaterial.matchXMaterial(Core.instance.config.getString("MenuItems.trollMenu.fakeBlock.options.block")).isPresent())
-            customMatForFakeBlock = XMaterial.matchXMaterial(Core.instance.config.getString("MenuItems.trollMenu.fakeBlock.options.block")).get();
+        if(XMaterial.matchXMaterial(TrollCore.instance.config.getString("MenuItems.trollMenu.trolls.fakeBlock.options.block")).isPresent())
+            customMatForFakeBlock = XMaterial.matchXMaterial(TrollCore.instance.config.getString("MenuItems.trollMenu.trolls.fakeBlock.options.block")).get();
         else
             customMatForFakeBlock = XMaterial.TNT;
         
@@ -30,6 +27,7 @@ public class FakeBlockTroll extends TrollHandler {
                 new TrollItemMetaData()
                         .setItem(customMatForFakeBlock)
                         .setConfigData("fakeBlock")
+                        .setAttributes( TrollAttributes.POSSIBLE_CRASH_OR_FREEZE)
 
         );
     }
@@ -40,14 +38,14 @@ public class FakeBlockTroll extends TrollHandler {
      */
     @Override
     public void execute() {
-        int rad = Core.instance.config.getInt("MenuItems.trollMenu.fakeBlock.options.radius");
+        int rad = TrollCore.instance.config.getInt("MenuItems.trollMenu.fakeBlock.options.radius");
         String v = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
         int subVersion = Integer.parseInt(v.replace("1_", "").replaceAll("_R\\d", "").replace("v", ""));
 
         XMaterial customMatForFakeBlock;
 
-        if(XMaterial.matchXMaterial(Objects.requireNonNull(Core.instance.config.getString("MenuItems.trollMenu.fakeBlock.options.block"))).isPresent())
-            customMatForFakeBlock = XMaterial.matchXMaterial(Objects.requireNonNull(Core.instance.config.getString("MenuItems.trollMenu.fakeBlock.options.block"))).get();
+        if(XMaterial.matchXMaterial(Objects.requireNonNull(TrollCore.instance.config.getString("MenuItems.trollMenu.trolls.fakeBlock.options.block"))).isPresent())
+            customMatForFakeBlock = XMaterial.matchXMaterial(Objects.requireNonNull(TrollCore.instance.config.getString("MenuItems.trollMenu.trolls.fakeBlock.options.block"))).get();
         else
             customMatForFakeBlock = XMaterial.TNT;
         try{

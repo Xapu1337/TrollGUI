@@ -1,11 +1,11 @@
 package me.xapu1337.recodes.trollgui.Trolls;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.xapu1337.recodes.trollgui.Cores.Core;
+import me.xapu1337.recodes.trollgui.Cores.TrollCore;
+import me.xapu1337.recodes.trollgui.Enums.TrollAttributes;
 import me.xapu1337.recodes.trollgui.Handlers.TrollHandler;
-import me.xapu1337.recodes.trollgui.Handlers.TrollItemMetaData;
+import me.xapu1337.recodes.trollgui.Types.TrollItemMetaData;
 import org.bukkit.World;
-import org.bukkit.entity.Player;
 
 import java.util.Random;
 
@@ -19,6 +19,7 @@ public class ExplodePlayerTroll extends TrollHandler {
                 new TrollItemMetaData()
                         .setItem(XMaterial.TNT)
                         .setConfigData("explodePlayer")
+                        .setAttributes( TrollAttributes.POSSIBLE_DESTRUCTION, TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS, TrollAttributes.POSSIBLE_CRASH_OR_FREEZE )
 
         );
     }
@@ -30,12 +31,13 @@ public class ExplodePlayerTroll extends TrollHandler {
     @Override
     public void execute() {
         World victimWorld = victim.getWorld();
+
             victimWorld.createExplosion(victim.getLocation(),
-                    Core.instance.getConfig().getBoolean("MenuItems.trollMenu.explodePlayer.options.explodeRandomness")
+                    TrollCore.instance.getConfig().getBoolean("MenuItems.trollMenu.explodePlayer.options.explodeRandomness")
                     ?
-                    random.nextInt(Core.instance.getConfig().getInt("MenuItems.trollMenu.explodePlayer.options.explodeRadius") + 1)
+                    random.nextInt(TrollCore.instance.getConfig().getInt("MenuItems.trollMenu.explodePlayer.options.explodeRadius") + 1)
                     :
-                    Core.instance.getConfig().getInt("MenuItems.trollMenu.explodePlayer.options.explodeRadius") + 1
+                    TrollCore.instance.getConfig().getInt("MenuItems.trollMenu.explodePlayer.options.explodeRadius") + 1
                     ,
                     false);
 

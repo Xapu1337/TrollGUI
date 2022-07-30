@@ -1,10 +1,11 @@
 package me.xapu1337.recodes.trollgui.Trolls;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.xapu1337.recodes.trollgui.Cores.Core;
+import me.xapu1337.recodes.trollgui.Cores.TrollCore;
 import me.xapu1337.recodes.trollgui.Handlers.TrollHandler;
-import me.xapu1337.recodes.trollgui.Handlers.TrollItemMetaData;
-import org.bukkit.entity.Player;
+import me.xapu1337.recodes.trollgui.Types.TrollItemMetaData;
+import me.xapu1337.recodes.trollgui.Utilities.Singleton;
+import me.xapu1337.recodes.trollgui.Utilities.Utilities;
 
 public class NoBreakTroll extends TrollHandler {
 
@@ -16,7 +17,7 @@ public class NoBreakTroll extends TrollHandler {
                         .setConfigData("noBreak")
                         .setToggable(true)
                         .setToggled(
-                                () -> Core.instance.singletons.noBreakPlayers.containsKey(Core.instance.utils.uuidOrName(victim, Core.instance.usingUUID))
+                                () -> Singleton.getSingleInstance().noBreakPlayers.containsKey(Utilities.getSingleInstance().uuidOrName(victim, TrollCore.instance.usingUUID))
                         )
 
         );
@@ -25,6 +26,6 @@ public class NoBreakTroll extends TrollHandler {
 
     @Override
     public void execute() {
-        Core.instance.utils.addOrRemove(Core.instance.singletons.noBreakPlayers, victim);
+        Utilities.getSingleInstance().addOrRemove(Singleton.getSingleInstance().noBreakPlayers, victim);
     }
 }

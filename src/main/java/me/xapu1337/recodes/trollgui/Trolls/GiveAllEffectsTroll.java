@@ -2,22 +2,24 @@ package me.xapu1337.recodes.trollgui.Trolls;
 
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XPotion;
-import me.xapu1337.recodes.trollgui.Cores.Core;
+import me.xapu1337.recodes.trollgui.Cores.TrollCore;
+import me.xapu1337.recodes.trollgui.Enums.TrollAttributes;
 import me.xapu1337.recodes.trollgui.Handlers.TrollHandler;
-import me.xapu1337.recodes.trollgui.Handlers.TrollItemMetaData;
+import me.xapu1337.recodes.trollgui.Types.TrollItemMetaData;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class AllEffectsTroll extends TrollHandler {
+public class GiveAllEffectsTroll extends TrollHandler {
 
 
     @Override
     public TrollItemMetaData setMetaData() {
         return (
                 new TrollItemMetaData()
-                        .setItem(XMaterial.LINGERING_POTION)
-                        .setConfigData("allEffects")
+                        .setItem(XMaterial.POTION)
+                        .setConfigData("giveAllEffects")
+                        .setAttributes( TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS )
 
 
         );
@@ -30,7 +32,7 @@ public class AllEffectsTroll extends TrollHandler {
 
             if (effect == null || !effect.isSupported()) return;
 
-            victim.addPotionEffect(effect.buildPotionEffect(Core.instance.config.getInt("MenuItems.trollMenu.allEffects.options.effectDuration") * 20, 0));
+            victim.addPotionEffect(effect.buildPotionEffect(TrollCore.instance.config.getInt("MenuItems.trollMenu.giveAllBadEffects.options.effectDuration") * 20, 0));
         });
     }
 }

@@ -1,11 +1,15 @@
 package me.xapu1337.recodes.trollgui.Trolls;
 
 import com.cryptomorin.xseries.XMaterial;
-import com.cryptomorin.xseries.XSound;
-import com.cryptomorin.xseries.particles.XParticle;
+import me.xapu1337.recodes.trollgui.Enums.TrollAttributes;
 import me.xapu1337.recodes.trollgui.Handlers.TrollHandler;
-import me.xapu1337.recodes.trollgui.Handlers.TrollItemMetaData;
-import org.bukkit.entity.Player;
+import me.xapu1337.recodes.trollgui.Types.TrollItemMetaData;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
+import org.bukkit.Location;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Firework;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.util.Vector;
 
 public class LaunchPlayerTroll extends TrollHandler {
@@ -16,6 +20,7 @@ public class LaunchPlayerTroll extends TrollHandler {
                 new TrollItemMetaData()
                         .setItem(XMaterial.FIREWORK_ROCKET)
                         .setConfigData("launchPlayer")
+                        .setAttributes( TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS )
 
         );
     }
@@ -23,8 +28,30 @@ public class LaunchPlayerTroll extends TrollHandler {
 
     @Override
     public void execute() {
-        victim.setVelocity(new Vector(0f, 5f, 0f));
-        victim.playSound(victim.getLocation(), XSound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST.parseSound(), 3f, 1f);
-        victim.spawnParticle(XParticle.getParticle("EXPLOSION_HUGE"), victim.getLocation(), 1, 0.11, 1, 1, 1);
+        Vector upVec = new Vector(0, 25, 0);
+
+        Location fireworkSpawn = victim.getLocation().add(upVec);
+
+        victim.setVelocity(upVec);
+
+        Firework firework = (Firework) fireworkSpawn.getWorld().spawnEntity(fireworkSpawn, EntityType.FIREWORK);
+
+        FireworkMeta fireworkMeta = firework.getFireworkMeta();
+
+        fireworkMeta.addEffect(
+                FireworkEffect
+                        .builder()
+                        .trail(true)
+                        .withColor( Color.fromRGB(0xFF5F0F)   )
+                        .withColor( Color.fromRGB(0xD7FF0F)   )
+                        .withColor( Color.fromRGB(0xFFB259)   )
+                        .withFade ( Color.fromRGB(0xFFD7B0)   )
+                        .with     ( FireworkEffect.Type.STAR  )
+                        .build()
+        );
+
+        firework.setFireworkMeta(fireworkMeta);
+
+        firework.setVelocity(new Vector(0, Math.E - 1, 0));
     }
 }

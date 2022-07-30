@@ -5,9 +5,8 @@ import com.cryptomorin.xseries.XPotion;
 import com.cryptomorin.xseries.XSound;
 import com.cryptomorin.xseries.particles.XParticle;
 import me.xapu1337.recodes.trollgui.Handlers.TrollHandler;
-import me.xapu1337.recodes.trollgui.Handlers.TrollItemMetaData;
+import me.xapu1337.recodes.trollgui.Types.TrollItemMetaData;
 import org.bukkit.SoundCategory;
-import org.bukkit.entity.Player;
 
 public class ScareTroll extends TrollHandler {
 
