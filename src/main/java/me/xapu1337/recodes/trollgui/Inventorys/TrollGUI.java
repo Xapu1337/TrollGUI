@@ -3,11 +3,9 @@ package me.xapu1337.recodes.trollgui.Inventorys;
 import com.cryptomorin.xseries.XMaterial;
 import me.xapu1337.recodes.trollgui.Cores.TrollCore;
 import me.xapu1337.recodes.trollgui.Handlers.TrollHandler;
-import me.xapu1337.recodes.trollgui.Utilities.Singleton;
 import me.xapu1337.recodes.trollgui.Utilities.Utilities;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,7 +19,14 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.Random;
 
+import static me.xapu1337.recodes.trollgui.Utilities.Singleton.getSingleInstance;
+
 public class TrollGUI implements Listener, InventoryHolder {
+
+    static {
+        Bukkit.getLogger().info("TrollGUI is loading...");
+    }
+
     private final Player _caller;
     private final Player _victim;
     private PlayerSelector _callingSelector;
@@ -60,7 +65,7 @@ public class TrollGUI implements Listener, InventoryHolder {
     private final void setBackground() {
         for (int x = 0; x < INVENTORY_SIZE_X; x++)
             for (int y = 0; y < INVENTORY_SIZE_Y; y++) {
-                if (Singleton.getSingleInstance().doubleChestCenterSlots.contains( (y * INVENTORY_SIZE_X ) + x)) continue;
+                if (getSingleInstance().doubleChestCenterSlots.contains( (y * INVENTORY_SIZE_X ) + x)) continue;
                 setItemXY(x, y, _blackPanePlaceholder);
                 if ( y == INVENTORY_SIZE_Y - 1 && _caller.equals(_victim)) {
                     setItemXY(x, y, _redPanePlaceholder);
@@ -72,7 +77,6 @@ public class TrollGUI implements Listener, InventoryHolder {
         this._victim = _victim;
         this._caller = _caller;
 
-        Singleton.getSingleInstance().currentPlayersTrolling.put(_caller, this);
         Bukkit.getPluginManager().registerEvents(this, TrollCore.instance);
         GUI = Bukkit.createInventory(this, INVENTORY_SIZE,
                 Utilities.getSingleInstance().getConfigPath("MenuItems.trollMenu.title")
@@ -82,6 +86,7 @@ public class TrollGUI implements Listener, InventoryHolder {
         );
 
         initializeItems();
+        getSingleInstance().currentPlayersTrolling.put(_caller, this);
     }
 
     public TrollGUI setCallingSelector(PlayerSelector _callingSelector) {
@@ -91,8 +96,8 @@ public class TrollGUI implements Listener, InventoryHolder {
 
     public void initializeItems(){
 
-        Singleton.getSingleInstance( ).loadedTrollHandlers.forEach( ( className, trollHandler ) -> trollHandler.setPlayers( _caller, _victim ).setGUI( this ).Init( ) );
-
+        getSingleInstance( ).loadedTrollHandlers.forEach( ( className, trollHandler ) -> trollHandler.setPlayers(_caller, _victim).setGUI( this ).Init( ) );
+        Bukkit.getLogger().info("TrollGUI initialized for C " + _caller.getName() + " and V " + _victim.getName());
         GUI.clear();
 
         setBackground();
@@ -100,8 +105,8 @@ public class TrollGUI implements Listener, InventoryHolder {
         int MAX_ITEMS_PER_PAGE = 7 * 4;
         for(int i = 0; i < MAX_ITEMS_PER_PAGE; i++) {
             CURRENT_INDEX = MAX_ITEMS_PER_PAGE * CURRENT_PAGE + i;
-            if (!(CURRENT_INDEX >= Singleton.getSingleInstance().loadedTrollHandlers.size()) && (Singleton.getSingleInstance().loadedTrollHandlers.getValueAt(CURRENT_INDEX) != null)) {
-                GUI.addItem(Singleton.getSingleInstance().loadedTrollHandlers.getValueAt(CURRENT_INDEX).data.getItemStack());
+            if (!(CURRENT_INDEX >= getSingleInstance().loadedTrollHandlers.size()) && (getSingleInstance().loadedTrollHandlers.getValueAt(CURRENT_INDEX) != null)) {
+                GUI.addItem(getSingleInstance().loadedTrollHandlers.getValueAt(CURRENT_INDEX).data.getItemStack());
             }
         }
 
@@ -137,21 +142,22 @@ public class TrollGUI implements Listener, InventoryHolder {
 
         if (clickedItem == null || clickedItem.getType() == XMaterial.AIR.parseMaterial() || clickedItem.isSimilar(Utilities.getSingleInstance().createItem(XMaterial.BLACK_STAINED_GLASS_PANE, "§r"))) return;
         if(
-                Singleton.getSingleInstance().loadedTrollHandlers.values().stream().noneMatch(
-                        trollHandler -> Objects.equals(trollHandler.getClass().getName(), Objects.requireNonNull(clickedItem.getItemMeta()).getPersistentDataContainer().get(new NamespacedKey(TrollCore.instance, "assigned-troll-class"), PersistentDataType.STRING))
-                )
+                !getSingleInstance().loadedTrollHandlers.containsKey(clickedItem.getItemMeta().getPersistentDataContainer().get(getSingleInstance().trollItemNamespaceKey, PersistentDataType.STRING))
         ) {
+            Bukkit.getLogger().warning("TrollGUI: Unknown item clicked: " + clickedItem.getItemMeta().getPersistentDataContainer().get(getSingleInstance().trollItemNamespaceKey, PersistentDataType.STRING));
             if (event.getRawSlot() == 49) {
                 _caller.closeInventory();
+                getSingleInstance().currentPlayersTrolling.remove(_caller);
                 _callingSelector.openForPlayer(_caller);
+
             }
             if (event.getRawSlot() == 53) {
                 // Get a random troll
-                int randomTroll = new Random().nextInt(Singleton.getSingleInstance().loadedTrollHandlers.size());
-                while (Singleton.getSingleInstance().loadedTrollHandlers.getValueAt(randomTroll) == null) {
-                    randomTroll = new Random().nextInt(Singleton.getSingleInstance().loadedTrollHandlers.size());
+                int randomTroll = new Random().nextInt(getSingleInstance().loadedTrollHandlers.size());
+                while (getSingleInstance().loadedTrollHandlers.getValueAt(randomTroll) == null) {
+                    randomTroll = new Random().nextInt(getSingleInstance().loadedTrollHandlers.size());
                 }
-                TrollHandler trollHandler = Singleton.getSingleInstance().loadedTrollHandlers.getValueAt(randomTroll);
+                TrollHandler trollHandler = getSingleInstance().loadedTrollHandlers.getValueAt(randomTroll);
                 _caller.sendMessage(Utilities.getSingleInstance().getConfigPath("Messages.selectedRandomTroll", true).replaceAll("%TROLL%", ChatColor.translateAlternateColorCodes('&', trollHandler.data.displayName)));
                 trollHandler.execute( );
                 if (trollHandler.data.isToggable) {
@@ -168,30 +174,37 @@ public class TrollGUI implements Listener, InventoryHolder {
                         initializeItems();
                     }
                 } else if (ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase(ChatColor.stripColor(Utilities.getSingleInstance().getConfigPath("MenuItems.playerSelector.right.name")))) {
-                    if (!((CURRENT_INDEX + 1) >= Singleton.getSingleInstance().loadedTrollHandlers.size())) {
+                    if (!((CURRENT_INDEX + 1) >= getSingleInstance().loadedTrollHandlers.size())) {
                         CURRENT_PAGE++;
                         GUI.clear();
                         initializeItems();
                     } else _caller.sendMessage(Utilities.getSingleInstance().getConfigPath("Messages.alreadyOnLastPage"));
                 }
             }
-        };
+        }
 
 
-        Singleton.getSingleInstance().loadedTrollHandlers.forEach((className, trollHandler) -> {
-            if (Objects.equals(className, Objects.requireNonNull(clickedItem.getItemMeta()).getPersistentDataContainer().get(new NamespacedKey(TrollCore.instance, "assigned-troll-class"), PersistentDataType.STRING))) {
-                trollHandler.execute( );
-                if (trollHandler.data.isToggable) {
-                    initializeItems();
-                }
-            }
-        });
-
-
+//        getSingleInstance().loadedTrollHandlers.forEach((className, trollHandler) -> {
+//            if (Objects.equals(className, Objects.requireNonNull(clickedItem.getItemMeta()).getPersistentDataContainer().get(new NamespacedKey(TrollCore.instance, "assigned-troll-class"), PersistentDataType.STRING))) {
+//
+//            }
+//        });
+        // Get the troll handler for the clicked item (persistent data: "assigned-troll-class")
+        String className = Objects.requireNonNull(clickedItem.getItemMeta()).getPersistentDataContainer().get(getSingleInstance().trollItemNamespaceKey, PersistentDataType.STRING);
+        if (className == null) return;
+        TrollHandler trollHandler = getSingleInstance().loadedTrollHandlers.get(className);
+        if (trollHandler == null) return;
+        trollHandler.setPlayers(_caller, _victim);
+        trollHandler.execute();
+        if (trollHandler.data.isToggable) {
+            // If multiple people are trolling, we need to update the items for each player
+            getSingleInstance().currentPlayersTrolling.forEach((player, trollGUI) -> {
+                trollGUI.initializeItems();
+            });
+        }
 
 
 
     }
-
 
 }

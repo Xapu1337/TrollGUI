@@ -16,7 +16,7 @@ public class SwapPlayersTroll extends TrollHandler {
     public TrollItemMetaData setMetaData() {
         return (
                 new TrollItemMetaData()
-                        .setItem( XMaterial.TNT )
+                        .setItem( XMaterial.EMERALD )
                         .setConfigData( "swapPlayers" )
                         .setAttributes( TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS, TrollAttributes.POSSIBLE_CRASH_OR_FREEZE )
         );

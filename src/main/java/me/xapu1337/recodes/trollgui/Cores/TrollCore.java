@@ -7,12 +7,10 @@ import me.xapu1337.recodes.trollgui.Listeners.EventListener;
 import me.xapu1337.recodes.trollgui.Utilities.Singleton;
 import me.xapu1337.recodes.trollgui.Utilities.UpdateChecker;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandMap;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Comparator;
 
@@ -62,9 +60,11 @@ public class TrollCore extends JavaPlugin implements Listener {
         new TrollCommand(this);
 
         // Run reflection to get all the loaded troll handlers
-        for (Class<?> clazz : Singleton.getSingleInstance().controlClasses.loadClasses().stream().sorted(Comparator.comparing(Class::getSimpleName)).toList()) {
+        for (Class<?> clazz : Singleton.getSingleInstance().trollHandlerClasses.loadClasses().stream().sorted(Comparator.comparing(Class::getSimpleName)).toList()) {
             try {
-                Singleton.getSingleInstance().loadedTrollHandlers.put(clazz.getName(), (TrollHandler) clazz.getConstructor( ).newInstance( ));
+                if(!Singleton.getSingleInstance().loadedTrollHandlers.containsKey(clazz.getName())) {
+                    Singleton.getSingleInstance().loadedTrollHandlers.put(clazz.getName(), (TrollHandler) clazz.getConstructor().newInstance());
+                }
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
                      NoSuchMethodException e) {
                 throw new RuntimeException(e);
@@ -76,6 +76,9 @@ public class TrollCore extends JavaPlugin implements Listener {
     @Override
     public void onDisable() {
         super.onDisable();
+        Singleton.getSingleInstance().loadedTrollHandlers.values().forEach(TrollHandler::onServerDisable);
+        Singleton.getSingleInstance().currentPlayersTrolling.clear();
+
     }
 
 

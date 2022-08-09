@@ -199,6 +199,7 @@ Messages:
   reloaded: '&cReloaded the configuration successfully.'
   selectDimensionToTeleport: '&7Please click the dimension you want the player to be teleported to.'
   selectedRandomTroll: '&7Selected random troll %TROLL%' # PLACEHOLDERS: %TROLL%
+  serverReloaded: '&cThe server has been reloaded or the plugin got disabled, the current GUI has been closed.'
   sequences:
     postedCringe:
       - Ohh no... I think...
@@ -209,6 +210,7 @@ Messages:
     inventory.
   swapPlayersSuccess: '&7Swapped players &b%PLAYER1%&7 and &b%PLAYER2%&7.' # PLACEHOLDERS: %PLAYER1%, %PLAYER2%
   targetSelfWarning: '&cYou currently have the target set to yourself.'
+  teleportFailed: '&cThe location is not save, please try it again once the players position changed.'
   teleportedToDimension: '&7Teleported &b%PLAYER%&7 to &b%DIMENSION%&7.' # PLACEHOLDERS: %PLAYER%, %DIMENSION%
 Variables:
   advancedPermission:

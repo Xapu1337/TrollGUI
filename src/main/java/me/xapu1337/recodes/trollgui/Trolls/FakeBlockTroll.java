@@ -8,21 +8,14 @@ import me.xapu1337.recodes.trollgui.Types.TrollItemMetaData;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
-import java.util.Objects;
-
 public class FakeBlockTroll extends TrollHandler {
 
+    // Variables
 
+    XMaterial customMatForFakeBlock = XMaterial.matchXMaterial(TrollCore.instance.getConfig().getString("MenuItems.trollMenu.trolls.fakeBlock.options.block")).orElse(XMaterial.TNT);
 
     @Override
     public TrollItemMetaData setMetaData() {
-        XMaterial customMatForFakeBlock;
-
-        if(XMaterial.matchXMaterial(TrollCore.instance.config.getString("MenuItems.trollMenu.trolls.fakeBlock.options.block")).isPresent())
-            customMatForFakeBlock = XMaterial.matchXMaterial(TrollCore.instance.config.getString("MenuItems.trollMenu.trolls.fakeBlock.options.block")).get();
-        else
-            customMatForFakeBlock = XMaterial.TNT;
-        
         return (
                 new TrollItemMetaData()
                         .setItem(customMatForFakeBlock)
@@ -32,6 +25,11 @@ public class FakeBlockTroll extends TrollHandler {
         );
     }
 
+    @Override
+    public void onServerDisable() {
+        super.onServerDisable();
+        customMatForFakeBlock = null;
+    }
 
     /**
      * Executed from the TrollGUI Class everything inside this function gets executed.
@@ -42,12 +40,7 @@ public class FakeBlockTroll extends TrollHandler {
         String v = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
         int subVersion = Integer.parseInt(v.replace("1_", "").replaceAll("_R\\d", "").replace("v", ""));
 
-        XMaterial customMatForFakeBlock;
 
-        if(XMaterial.matchXMaterial(Objects.requireNonNull(TrollCore.instance.config.getString("MenuItems.trollMenu.trolls.fakeBlock.options.block"))).isPresent())
-            customMatForFakeBlock = XMaterial.matchXMaterial(Objects.requireNonNull(TrollCore.instance.config.getString("MenuItems.trollMenu.trolls.fakeBlock.options.block"))).get();
-        else
-            customMatForFakeBlock = XMaterial.TNT;
         try{
             for(double x = victim.getLocation().getX() - rad; x <= victim.getLocation().getX() + rad; x++){
                 for(double y = victim.getLocation().getY() - rad; y <= victim.getLocation().getY() + rad; y++){

@@ -1,4 +1,5 @@
 package me.xapu1337.recodes.trollgui.Trolls;
+
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import me.xapu1337.recodes.trollgui.Enums.TrollAttributes;
@@ -6,12 +7,8 @@ import me.xapu1337.recodes.trollgui.Handlers.TrollHandler;
 import me.xapu1337.recodes.trollgui.Inventorys.PlayerSelector;
 import me.xapu1337.recodes.trollgui.Types.TrollItemMetaData;
 import me.xapu1337.recodes.trollgui.Utilities.Utilities;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.Arrays;
 
 public class SwapPlayerInventoryTroll extends TrollHandler {
 
@@ -21,7 +18,7 @@ public class SwapPlayerInventoryTroll extends TrollHandler {
     public TrollItemMetaData setMetaData() {
         return (
                 new TrollItemMetaData()
-                        .setItem( XMaterial.TNT )
+                        .setItem( XMaterial.CHEST )
                         .setConfigData( "swapPlayerInventory" )
                         .setAttributes( TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS )
         );

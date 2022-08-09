@@ -1,8 +1,6 @@
 package me.xapu1337.recodes.trollgui.Utilities;
 
-import com.cryptomorin.xseries.XBiome;
 import com.cryptomorin.xseries.XMaterial;
-import com.google.common.base.Strings;
 import me.xapu1337.recodes.trollgui.Cores.TrollCore;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -10,11 +8,8 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.util.StringUtil;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class Utilities {
@@ -89,18 +84,21 @@ public class Utilities {
     }
 
     public void addOrRemove(HashMap<String, String> collection, Player player){
-        if(collection.containsKey(uuidOrName(player, TrollCore.instance.usingUUID)))
-            collection.remove(uuidOrName(player, TrollCore.instance.usingUUID));
+        String uOrN = uuidOrName(player, TrollCore.instance.usingUUID);
+        if(collection.containsKey(uOrN))
+            collection.remove(uOrN);
         else
-            collection.put(uuidOrName(player, TrollCore.instance.usingUUID), uuidOrName(player, TrollCore.instance.usingUUID));
+            collection.put(uOrN, uOrN);
     }
 
     public boolean advancedPermissionsChecker(Player player, String extraPermissions){
         if(TrollCore.instance.getConfig().getBoolean("variables.advancedPermissions.enabled")){
             if(TrollCore.instance.usingUUID){
-                OfflinePlayer pp = Bukkit.getPlayerExact(TrollCore.instance.getConfig().getString("variables.advancedPermissions.name"));
-                if(pp.isOnline() && pp.hasPlayedBefore()){
+                OfflinePlayer pp = Bukkit.getPlayerExact(Objects.requireNonNull(TrollCore.instance.getConfig().getString("variables.advancedPermissions.name")));
+                if(pp != null && pp.isOnline() && pp.hasPlayedBefore()){
                     return player.getUniqueId().equals(pp.getUniqueId());
+                } else {
+                    return false;
                 }
             } else {
                 return player.getName().equals(TrollCore.instance.getConfig().getString("variables.advancedPermissions.name"));
@@ -108,7 +106,6 @@ public class Utilities {
         } else {
             return player.hasPermission(extraPermissions);
         }
-        return false;
     }
 
 
@@ -150,37 +147,37 @@ public class Utilities {
         int y2 = (int)y;
         Location location = null;
         Block centerBlock = null;
-        loop: while(y2 <= 120){
-            centerBlock = world.getBlockAt((int)x, y2, (int)z);
-            if(chkRelativeBlock(centerBlock, BlockFace.SELF, 0)){
-                location = new Location(world, x, (double)y2+2d, z);
-                break loop;
+        if (y2 <= 120) do {
+            centerBlock = world.getBlockAt((int) x, y2, (int) z);
+            if (chkRelativeBlock(centerBlock, BlockFace.SELF, 0)) {
+                location = new Location(world, x, (double) y2 + 2d, z);
+                break;
             }
             y2++;
-        }
+        } while (y2 <= 120);
 
         return location;
     }
 
     public boolean teleportTo(World world, Player player, double x, double z){
         String worldName = world.getName();
-        Location location = null;
+        Location location;
 
-        if(worldName.equals("world") || worldName.equals("world_the_end")){
-            location = getProperLocationOverWorldEnd(world, player, x, z);
-            return player.teleport(location);
-        }
-        else if(worldName.equals("world_nether")){
+        switch (worldName) {
+            case "world":
+            case "world_the_end":
+                location = getProperLocationOverWorldEnd(world, player, x, z);
+                return player.teleport(location);
+            case "world_nether":
 
-            location = getProperLocationNether(world, x, 3, z);
+                location = getProperLocationNether(world, x, 3, z);
 
-            if(location == null)
-                player.sendMessage("Not a safe location");
-
-            return player.teleport(location);
-        }
-        else {
-            return false;
+                if (location == null) {
+                    return false;
+                }
+                return player.teleport(location);
+            default:
+                return false;
         }
     }
 
@@ -231,4 +228,28 @@ public class Utilities {
         return index > 0 && index < haystack.length() - 1;
     }
 
+    public void cleanCollectionIfPossible(HashMap<?, ?> collection){
+        if(collection != null && collection.size() > 0){
+            collection.clear();
+        }
+    }
+
+    public void cleanCollectionIfPossible(Map<?, ?> collection){
+        if(collection != null && collection.size() > 0){
+            collection.clear();
+        }
+    }
+
+    public void cleanCollectionIfPossible(IndexableMap<?, ?> collection){
+        if(collection != null && collection.size() > 0){
+            collection.clear();
+        }
+    }
+
+
+    public void cleanCollectionIfPossible(List<?> collection){
+        if(collection != null && collection.size() > 0){
+            collection.clear();
+        }
+    }
 }

@@ -21,12 +21,13 @@ import java.util.Objects;
 public class Settings implements Listener, InventoryHolder {
     public Inventory GUI;
 
-    public Settings() {
+    public Settings(Player player) {
         Bukkit.getPluginManager().registerEvents(this, TrollCore.instance);
         GUI = Bukkit.createInventory(this, 9, Utilities.getSingleInstance().getConfigPath("MenuItems.settingsMenu.title"));
         for(int i = 0; i < GUI.getSize(); i++)
             GUI.setItem(i, Utilities.getSingleInstance().createItem(XMaterial.GRAY_STAINED_GLASS_PANE, "§r"));
         initializeItems();
+
     }
 
     public void initializeItems(){
@@ -53,4 +54,6 @@ public class Settings implements Listener, InventoryHolder {
         }
 
     }
+
+
 }

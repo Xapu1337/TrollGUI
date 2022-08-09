@@ -7,6 +7,8 @@ import me.xapu1337.recodes.trollgui.Handlers.TrollHandler;
 import me.xapu1337.recodes.trollgui.Types.TrollItemMetaData;
 import org.bukkit.Location;
 
+import java.util.Objects;
+
 public class LavaBedTroll extends TrollHandler {
 
     @Override
@@ -28,11 +30,11 @@ public class LavaBedTroll extends TrollHandler {
         for (int x = -1; x <= 1; x++) {
             for (int z = -1; z <= 1; z++) {
                 Location loc = bottom.clone().add(x, -1, z);
-                loc.getBlock().setType(XMaterial.LAVA.parseMaterial());
+                loc.getBlock().setType(Objects.requireNonNull(XMaterial.LAVA.parseMaterial()));
             }
         }
 
-        victim.playSound(victim.getLocation(), XSound.BLOCK_FIRE_EXTINGUISH.parseSound(), 3f, 1f);
+        victim.playSound(victim.getLocation(), Objects.requireNonNull(XSound.BLOCK_FIRE_EXTINGUISH.parseSound()), 3f, 1f);
     }
 
 }

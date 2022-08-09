@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 import java.util.UUID;
-import java.util.function.BiConsumer;
 
 public class PlayerSelector implements Listener, InventoryHolder{
     public Inventory GUI;
@@ -164,13 +163,15 @@ public class PlayerSelector implements Listener, InventoryHolder{
 
         ItemStack clickedItem = event.getCurrentItem();
         if (clickedItem == null || clickedItem.getType() == XMaterial.AIR.parseMaterial()) return;
-
+        Bukkit.getLogger().info(clickedItem.getType().name());
         String itemStore = clickedItem
                 .getItemMeta()
                 .getPersistentDataContainer()
                 .get(new NamespacedKey(TrollCore.instance, "uuid"), PersistentDataType.STRING);
+        Bukkit.getLogger().info(itemStore);
         if (clickedItem.getType() == XMaterial.PLAYER_HEAD.parseMaterial()) {
             // The id might be an uuid or a name depending on the online mode.
+            Bukkit.getLogger().info("Player head clicked");
             Player target = null;
             if (itemStore != null && !itemStore.isEmpty() && Utilities.getSingleInstance().isValidUUID(itemStore)) {
                 target = Bukkit.getPlayer(UUID.fromString(itemStore));
@@ -178,16 +179,21 @@ public class PlayerSelector implements Listener, InventoryHolder{
                 target = Bukkit.getPlayer(itemStore);
             }
 
+            Bukkit.getLogger().info(target.getName());
+
 //            Player selectedPlayer = Bukkit
 //                    .getPlayer(UUID
 //                            .fromString(itemStore));
 
             if(target == null) {
+                Bukkit.getLogger().info("Target is null");
                 event.getWhoClicked().sendMessage(Utilities.getSingleInstance().getConfigPath("Messages.playerNotAvailable", true).replaceAll("%PLAYER%", itemStore));
                 return;
             }
 
-            onPlayerSelect.accept(this, (Player) event.getWhoClicked(), target);
+
+            Bukkit.getLogger().info("Trolling: " +target.getName() + " with " + player.getName());
+            onPlayerSelect.accept(this, player, target);
 
 
         } else if (clickedItem.getType() == XMaterial.BARRIER.parseMaterial()) {
@@ -217,8 +223,10 @@ public class PlayerSelector implements Listener, InventoryHolder{
             if(players != null && !players.isEmpty()) {
                 int random = new Random().nextInt(players.size());
                 Player selectedPlayer = players.get(random);
-                onPlayerSelect.accept(this, (Player) event.getWhoClicked(), selectedPlayer);
+                onPlayerSelect.accept(this, player, selectedPlayer);
             }
         }
     }
+
+
 }
