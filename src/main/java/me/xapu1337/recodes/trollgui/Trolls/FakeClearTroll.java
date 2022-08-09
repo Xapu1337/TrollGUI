@@ -11,6 +11,8 @@ import org.bukkit.inventory.ItemStack;
 
 public class FakeClearTroll extends TrollHandler {
 
+    // Variables
+    ItemStack[] savedInventory;
 
     @Override
     public TrollItemMetaData setMetaData() {
@@ -23,6 +25,11 @@ public class FakeClearTroll extends TrollHandler {
         );
     }
 
+    @Override
+    public void onServerDisable() {
+        super.onServerDisable();
+        savedInventory = null;
+    }
 
     /**
      * the:
@@ -36,7 +43,7 @@ public class FakeClearTroll extends TrollHandler {
     @Override
     public void execute() {
         if(!Singleton.getSingleInstance().clearedPlayerInventories.containsKey(Utilities.getSingleInstance().uuidOrName(victim.getPlayer(), TrollCore.instance.getServer().getOnlineMode()))) {
-            ItemStack[] savedInventory = victim.getInventory().getContents();
+            savedInventory = victim.getInventory().getContents();
             victim.getInventory().clear();
             Singleton.getSingleInstance().clearedPlayerInventories.put(Utilities.getSingleInstance().uuidOrName(victim.getPlayer(), TrollCore.instance.getServer().getOnlineMode()), "1");
             int seconds = 10;

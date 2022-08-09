@@ -5,12 +5,15 @@ import me.xapu1337.recodes.trollgui.Cores.TrollCore;
 import me.xapu1337.recodes.trollgui.Enums.TrollAttributes;
 import me.xapu1337.recodes.trollgui.Handlers.TrollHandler;
 import me.xapu1337.recodes.trollgui.Types.TrollItemMetaData;
+import me.xapu1337.recodes.trollgui.Utilities.Utilities;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 
 public class PostedCringeTroll extends TrollHandler {
 
+    // Variables
+    List<String> postedCringeMessages;
     @Override
     public TrollItemMetaData setMetaData() {
         return (
@@ -21,13 +24,20 @@ public class PostedCringeTroll extends TrollHandler {
         );
     }
 
+
+    @Override
+    public void onServerDisable() {
+        super.onServerDisable();
+        Utilities.getSingleInstance().cleanCollectionIfPossible(postedCringeMessages);
+    }
+
     /**
      * The method that gets executed on item click
      */
     @Override
     public void execute() {
 
-        List<String> postedCringeMessages = TrollCore.instance.config.getStringList("Messages.sequences.postedCringe");
+        postedCringeMessages = TrollCore.instance.config.getStringList("Messages.sequences.postedCringe");
 
         // If the list is empty, insert the default messages
         if(postedCringeMessages.size() == 0) {

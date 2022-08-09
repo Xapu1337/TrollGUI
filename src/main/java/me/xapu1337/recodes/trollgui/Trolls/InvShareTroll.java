@@ -24,11 +24,8 @@ public class InvShareTroll extends TrollHandler {
     @Override
     public void execute() {
         TrollCore.instance.getServer().getOnlinePlayers().forEach((player -> {
-            // Check if any of the players are currently trolling the victim.
             if (Singleton.getSingleInstance().currentPlayersTrolling.containsKey(player)) {
-                // If so, check if the player is trolling the victim.
                 if (Singleton.getSingleInstance().currentPlayersTrolling.get(player).getVictim().getUniqueId().equals(victim.getUniqueId())) {
-                    // If so, abort the troll.
                     return;
                 }
             }

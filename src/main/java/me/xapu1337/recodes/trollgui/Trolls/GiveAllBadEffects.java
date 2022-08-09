@@ -7,8 +7,7 @@ import me.xapu1337.recodes.trollgui.Enums.TrollAttributes;
 import me.xapu1337.recodes.trollgui.Handlers.TrollHandler;
 import me.xapu1337.recodes.trollgui.Types.TrollItemMetaData;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 public class GiveAllBadEffects extends TrollHandler {
 
@@ -32,7 +31,7 @@ public class GiveAllBadEffects extends TrollHandler {
 
             if (effect == null || !effect.isSupported()) return;
 
-            victim.addPotionEffect(effect.buildPotionEffect(TrollCore.instance.config.getInt("MenuItems.trollMenu.giveAllBadEffects.options.effectDuration") * 20, 0));
+            victim.addPotionEffect(Objects.requireNonNull(effect.buildPotionEffect(TrollCore.instance.config.getInt("MenuItems.trollMenu.giveAllBadEffects.options.effectDuration") * 20, 0)));
         });
     }
 }

@@ -35,9 +35,9 @@ public class MenuSelectionHandler implements Listener, InventoryHolder {
     private ItemMeta _tmpMeta;
     private Inventory _inventory;
     private String _title;
-
+    private InventoryHolder _callbackClass;
     public final List<ItemStack> selectableItems = new ArrayList<>();
-    public BiConsumer<ItemStack, String> callback;
+    public BiConsumer<ItemStack, String>callback;
 
 
 
@@ -101,6 +101,10 @@ public class MenuSelectionHandler implements Listener, InventoryHolder {
         return this;
     }
 
+    public void setInventoryHolderClass(InventoryHolder _callbackClass) {
+        this._callbackClass = _callbackClass;
+    }
+
     public Inventory build() {
 
         Bukkit.getPluginManager().registerEvents(this, TrollCore.instance);
@@ -130,6 +134,7 @@ public class MenuSelectionHandler implements Listener, InventoryHolder {
 
     public MenuSelectionHandler openForPlayer(@NotNull Player player) {
         player.openInventory(build());
+
         return this;
     }
 
@@ -140,7 +145,6 @@ public class MenuSelectionHandler implements Listener, InventoryHolder {
     public void onClick(InventoryClickEvent event) {
         if (event.getInventory().getHolder() != this) return;
         event.setCancelled(true);
-
         if (event.getCurrentItem() == null) return;
         if (!event.getCurrentItem().hasItemMeta()) return;
 
@@ -152,6 +156,9 @@ public class MenuSelectionHandler implements Listener, InventoryHolder {
         }
 
     }
+
+
+
 
 
     /**

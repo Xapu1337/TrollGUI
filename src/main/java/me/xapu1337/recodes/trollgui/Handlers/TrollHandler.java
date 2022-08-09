@@ -42,6 +42,7 @@ public abstract class TrollHandler {
         return this._callingGUI;
     }
 
+    public void onServerDisable() { };
 
 
     /**

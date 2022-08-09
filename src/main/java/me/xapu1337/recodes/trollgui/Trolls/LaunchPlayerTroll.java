@@ -14,6 +14,10 @@ import org.bukkit.util.Vector;
 
 public class LaunchPlayerTroll extends TrollHandler {
 
+
+    // Variables
+    private Firework firework;
+    private FireworkMeta fireworkMeta;
     @Override
     public TrollItemMetaData setMetaData() {
         return (
@@ -25,6 +29,15 @@ public class LaunchPlayerTroll extends TrollHandler {
         );
     }
 
+    @Override
+    public void onServerDisable() {
+        super.onServerDisable();
+        if (firework != null) {
+            firework.remove();
+        }
+        firework = null;
+        fireworkMeta = null;
+    }
 
     @Override
     public void execute() {
@@ -34,9 +47,9 @@ public class LaunchPlayerTroll extends TrollHandler {
 
         victim.setVelocity(upVec);
 
-        Firework firework = (Firework) fireworkSpawn.getWorld().spawnEntity(fireworkSpawn, EntityType.FIREWORK);
+        firework = (Firework) fireworkSpawn.getWorld().spawnEntity(fireworkSpawn, EntityType.FIREWORK);
 
-        FireworkMeta fireworkMeta = firework.getFireworkMeta();
+        fireworkMeta = firework.getFireworkMeta();
 
         fireworkMeta.addEffect(
                 FireworkEffect

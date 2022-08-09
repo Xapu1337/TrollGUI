@@ -8,7 +8,6 @@ import me.xapu1337.recodes.trollgui.Types.TrollItemMetaData;
 import me.xapu1337.recodes.trollgui.Utilities.Utilities;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.util.Vector;
 
 public class DimensionTeleportTroll extends TrollHandler{
 
@@ -75,16 +74,16 @@ public class DimensionTeleportTroll extends TrollHandler{
                 )
                 .setCallback( (itemStack, id) ->
                 {
-                    caller.sendMessage("You selected " + id);
                     World selectedWorld = Bukkit.getWorld(id);
                     if (selectedWorld == null)
                         Bukkit.getLogger().warning("[MS3] The world " + id + " does not exist!");
                     else
-                        Utilities.getSingleInstance().teleportTo(selectedWorld, victim, victim.getLocation().getX(), victim.getLocation().getZ());
-                    caller.sendMessage(Utilities.getSingleInstance().getConfigPath("Messages.teleportedToDimension", true).replaceAll("%PLAYER%", victim.getDisplayName()).replaceAll("%DIMENSION%", selectedWorld.getName().toUpperCase()));
-
+                        if(Utilities.getSingleInstance().teleportTo(selectedWorld, victim, victim.getLocation().getX(), victim.getLocation().getZ()))
+                            caller.sendMessage(Utilities.getSingleInstance().getConfigPath("Messages.teleportedToDimension", true).replaceAll("%PLAYER%", victim.getDisplayName()).replaceAll("%DIMENSION%", selectedWorld.getName().toUpperCase()));
+                        else
+                            caller.sendMessage(Utilities.getSingleInstance().getConfigPath("Messages.teleportFailed", true));
                 }
-                ).openForPlayer(caller);
+                ).openForPlayer(caller).setInventoryHolderClass(this.getGUI());
     }
 }
 

@@ -3,8 +3,10 @@ package me.xapu1337.recodes.trollgui.Utilities;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ScanResult;
+import me.xapu1337.recodes.trollgui.Cores.TrollCore;
 import me.xapu1337.recodes.trollgui.Handlers.TrollHandler;
 import me.xapu1337.recodes.trollgui.Inventorys.TrollGUI;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
@@ -24,6 +26,8 @@ public class Singleton {
         return instance;
     }
 
+    public final NamespacedKey trollItemNamespaceKey = new NamespacedKey(TrollCore.instance, "assigned-troll-class");
+
     public final IndexableMap<String, String> clearedPlayerInventories = new IndexableMap<String, String>();
     public final IndexableMap<String, String> frozenPlayers = new IndexableMap<String, String>();
     public final IndexableMap<String, String> noBuildPlayers = new IndexableMap<String, String>();
@@ -34,9 +38,8 @@ public class Singleton {
 
     // Simple map holding owners of currently open inventories.
     public final IndexableMap<Player, TrollGUI> currentPlayersTrolling = new IndexableMap<Player, TrollGUI>();
-
     public final ScanResult scanResult = new ClassGraph().enableAllInfo().acceptPackages("me.xapu1337.recodes.trollgui").scan();
-    public final ClassInfoList controlClasses = scanResult.getSubclasses("me.xapu1337.recodes.trollgui.Handlers.TrollHandler");
+    public final ClassInfoList trollHandlerClasses = scanResult.getSubclasses("me.xapu1337.recodes.trollgui.Handlers.TrollHandler");
     public final IndexableMap<String, TrollHandler> loadedTrollHandlers = new IndexableMap<>();
 
     // This works for now, until mojang adds bigger chests this should be fine.
