@@ -3,6 +3,7 @@ package me.xapu1337.recodes.trollgui.Inventorys;
 import com.cryptomorin.xseries.XMaterial;
 import me.xapu1337.recodes.trollgui.Cores.TrollCore;
 import me.xapu1337.recodes.trollgui.Handlers.TrollHandler;
+import me.xapu1337.recodes.trollgui.Utilities.Singleton;
 import me.xapu1337.recodes.trollgui.Utilities.Utilities;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -56,22 +57,18 @@ public class TrollGUI implements Listener, InventoryHolder {
     public Inventory GUI;
 
 
-    private final void setItemXY(int x, int y, ItemStack item) {
-        int index = (y * INVENTORY_SIZE_X) + x;
-        if (index < INVENTORY_SIZE && index >= 0)
-            this.getInventory().setItem(index, item);
-    }
 
     private final void setBackground() {
-        for (int x = 0; x < INVENTORY_SIZE_X; x++)
-            for (int y = 0; y < INVENTORY_SIZE_Y; y++) {
-                if (getSingleInstance().doubleChestCenterSlots.contains( (y * INVENTORY_SIZE_X ) + x)) continue;
-                setItemXY(x, y, _blackPanePlaceholder);
-                if ( y == INVENTORY_SIZE_Y - 1 && _caller.equals(_victim)) {
-                    setItemXY(x, y, _redPanePlaceholder);
-                }
+        for (int i = 0; i < INVENTORY_SIZE; i++) {
+            if (getSingleInstance().doubleChestCenterSlots.contains(i)) {
+                continue;
             }
+
+            ItemStack placeholder = i >= INVENTORY_SIZE - INVENTORY_SIZE_X && _caller.equals(_victim) ? _redPanePlaceholder : _blackPanePlaceholder;
+            GUI.setItem(i, placeholder);
+        }
     }
+
 
     public TrollGUI(Player _caller, Player _victim) {
         this._victim = _victim;

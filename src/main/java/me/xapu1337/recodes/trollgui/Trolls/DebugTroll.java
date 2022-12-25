@@ -2,6 +2,7 @@ package me.xapu1337.recodes.trollgui.Trolls;
 
 import com.cryptomorin.xseries.XMaterial;
 import me.xapu1337.recodes.trollgui.Enums.TrollAttributes;
+import me.xapu1337.recodes.trollgui.Handlers.TemplateHandler;
 import me.xapu1337.recodes.trollgui.Handlers.TrollHandler;
 import me.xapu1337.recodes.trollgui.Types.TrollItemMetaData;
 
@@ -21,7 +22,10 @@ public class DebugTroll extends TrollHandler {
 
     @Override
     public void execute() {
-        System.out.println("DebugTroll executed");
+        TemplateHandler.getInstance().dumpObject(caller.getDisplayName());
+        TemplateHandler.getInstance().dumpMethod(caller, "getName");
+        TemplateHandler.getInstance().printValues();
+        System.out.println(TemplateHandler.getInstance().parseString("hello caller ${caller.getName}"));
     }
 
 

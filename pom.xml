@@ -54,18 +54,13 @@
                             <relocations>
 
                                 <relocation>
-                                    <pattern>org.bstats</pattern>
-                                    <shadedPattern>me.xapu1337.recodes.trollgui.libraries.metrics</shadedPattern>
-                                </relocation>
-
-                                <relocation>
                                     <pattern>io.github.classgraph</pattern>
                                     <shadedPattern>me.xapu1337.recodes.trollgui.libraries.shading.classgraph</shadedPattern>
                                 </relocation>
 
                                 <relocation>
                                     <pattern>com.cryptomorin.xseries</pattern>
-                                    <shadedPattern>me.xapu1337.recodes.trollgui.libraries.compatability.xseries</shadedPattern>
+                                    <shadedPattern>me.xapu1337.recodes.trollgui.libraries.shading.xseries</shadedPattern>
                                 </relocation>
                             </relocations>
                             <filters>
@@ -109,31 +104,25 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.19-R0.1-SNAPSHOT</version>
+            <version>1.19.3-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.github.cryptomorin</groupId>
             <artifactId>XSeries</artifactId>
-            <version>9.0.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.bstats</groupId>
-            <artifactId>bstats-bukkit</artifactId>
-            <version>3.0.0</version>
+            <version>9.2.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>23.0.0</version>
+            <version>23.1.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>io.github.classgraph</groupId>
             <artifactId>classgraph</artifactId>
-            <version>4.8.149</version>
+            <version>4.8.152</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
