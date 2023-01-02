@@ -33,11 +33,11 @@ public class ExplodePlayerTroll extends TrollHandler {
         World victimWorld = victim.getWorld();
 
             victimWorld.createExplosion(victim.getLocation(),
-                    TrollCore.instance.getConfig().getBoolean("MenuItems.trollMenu.explodePlayer.options.explodeRandomness")
+                    TrollCore.instance.getConfig().getBoolean("MenuItems.trollMenu.trolls.explodePlayer.options.explodeRandomness")
                     ?
-                    random.nextInt(TrollCore.instance.getConfig().getInt("MenuItems.trollMenu.explodePlayer.options.explodeRadius") + 1)
+                    random.nextInt(TrollCore.instance.getConfig().getInt("MenuItems.trollMenu.trolls.explodePlayer.options.explodeRadius") + 1)
                     :
-                    TrollCore.instance.getConfig().getInt("MenuItems.trollMenu.explodePlayer.options.explodeRadius") + 1
+                    TrollCore.instance.getConfig().getInt("MenuItems.trollMenu.trolls.explodePlayer.options.explodeRadius") + 1
                     ,
                     false);
 

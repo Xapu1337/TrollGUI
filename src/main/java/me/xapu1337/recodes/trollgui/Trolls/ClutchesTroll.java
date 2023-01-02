@@ -44,7 +44,7 @@ public class ClutchesTroll extends TrollHandler {
                         .setItem(XMaterial.WATER_BUCKET)
                         .setConfigData("clutches")
                         .setAttributes( TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS )
-                );
+        );
     }
 
     /**
@@ -60,7 +60,6 @@ public class ClutchesTroll extends TrollHandler {
 
         finalClutchItems = clutchItems;
         // O(n^(n * 3)) AHHHHHH! NOOOOOOOOOOOOOO!
-        // remove duplicates from the list.
 
         for (LinkedHashMap<String, LinkedHashMap<String, String>> clutch : clutchesList) {
             clutch.forEach(

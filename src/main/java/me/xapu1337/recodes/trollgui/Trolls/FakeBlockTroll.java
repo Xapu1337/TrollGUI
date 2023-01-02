@@ -36,10 +36,9 @@ public class FakeBlockTroll extends TrollHandler {
      */
     @Override
     public void execute() {
-        int rad = TrollCore.instance.config.getInt("MenuItems.trollMenu.fakeBlock.options.radius");
+        int rad = TrollCore.instance.config.getInt("MenuItems.trollMenu.trolls.fakeBlock.options.radius");
         String v = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
         int subVersion = Integer.parseInt(v.replace("1_", "").replaceAll("_R\\d", "").replace("v", ""));
-
 
         try{
             for(double x = victim.getLocation().getX() - rad; x <= victim.getLocation().getX() + rad; x++){

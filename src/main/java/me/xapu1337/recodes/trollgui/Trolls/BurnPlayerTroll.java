@@ -21,6 +21,6 @@ public class BurnPlayerTroll extends TrollHandler {
 
     @Override
     public void execute() {
-        victim.setFireTicks(TrollCore.instance.getConfig().getInt("MenuItems.trollMenu.burnPlayer.options.burnTime") * 20);
+        victim.setFireTicks(TrollCore.instance.getConfig().getInt("MenuItems.trollMenu.trolls.burnPlayer.options.burnTime") * 20);
     }
 }

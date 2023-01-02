@@ -34,7 +34,7 @@ public class RandomLookTroll extends TrollHandler {
         new BukkitRunnable(){
             private int i = 0;
             public void run() {
-                if(i >= TrollCore.instance.getConfig().getInt("MenuItems.trollMenu.randomLook.options.randomLookTime") * 20) {
+                if(i >= TrollCore.instance.getConfig().getInt("MenuItems.trollMenu.trolls.randomLook.options.randomLookTime") * 20) {
                     loc.setPitch(restorePitch);
                     loc.setYaw(restoreYaw);
                     victim.teleport(loc);

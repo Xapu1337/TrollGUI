@@ -31,7 +31,7 @@ public class GiveAllBadEffects extends TrollHandler {
 
             if (effect == null || !effect.isSupported()) return;
 
-            victim.addPotionEffect(Objects.requireNonNull(effect.buildPotionEffect(TrollCore.instance.config.getInt("MenuItems.trollMenu.giveAllBadEffects.options.effectDuration") * 20, 0)));
+            victim.addPotionEffect(Objects.requireNonNull(effect.buildPotionEffect(TrollCore.instance.config.getInt("MenuItems.trollMenu.trolls.giveAllBadEffects.options.effectDuration") * 20, 0)));
         });
     }
 }

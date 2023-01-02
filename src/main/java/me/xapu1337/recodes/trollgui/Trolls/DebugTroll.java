@@ -22,10 +22,12 @@ public class DebugTroll extends TrollHandler {
 
     @Override
     public void execute() {
-        TemplateHandler.getInstance().dumpObject(caller.getDisplayName());
-        TemplateHandler.getInstance().dumpMethod(caller, "getName");
-        TemplateHandler.getInstance().printValues();
-        System.out.println(TemplateHandler.getInstance().parseString("hello caller ${caller.getName}"));
+        caller.sendMessage("§cDebug troll is not implemented yet!");
+        getTemplateHandler().addCustomValue("test", "test");
+        getTemplateHandler().addCustomValue("victim", victim);
+        getTemplateHandler().addCustomValue("caller", caller);
+        getTemplateHandler().printValues();
+        System.out.println(TemplateHandler.getInstance().parseString("hello caller ${displayName}"));
     }
 
 

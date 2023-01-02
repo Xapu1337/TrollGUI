@@ -2,11 +2,14 @@ package me.xapu1337.recodes.trollgui.Commands;
 
 import me.xapu1337.recodes.trollgui.Cores.TrollCore;
 import me.xapu1337.recodes.trollgui.Handlers.CommandHandler;
+import me.xapu1337.recodes.trollgui.Handlers.TemplateHandler;
 import me.xapu1337.recodes.trollgui.Inventorys.PlayerSelector;
 import me.xapu1337.recodes.trollgui.Inventorys.Settings;
 import me.xapu1337.recodes.trollgui.Inventorys.TrollGUI;
+import me.xapu1337.recodes.trollgui.Utilities.Singleton;
 import me.xapu1337.recodes.trollgui.Utilities.UpdateChecker;
 import me.xapu1337.recodes.trollgui.Utilities.Utilities;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -18,7 +21,7 @@ import java.util.Objects;
 import java.util.Set;
 
 public class TrollCommand extends CommandHandler<TrollCore> {
-
+    private final TemplateHandler templateHandler;
 
     @org.jetbrains.annotations.NotNull
     @org.jetbrains.annotations.Contract(pure = true)
@@ -32,14 +35,14 @@ public class TrollCommand extends CommandHandler<TrollCore> {
     }
 
     public TrollCommand(TrollCore plugin) {
-        super(plugin, Utilities.getSingleInstance().getString("Variables.commands.troll.name", "ms3").replaceAll("\\s", ""));
-
+        super(plugin, TrollCore.instance.config.getString("Variables.commands.troll.name", "ms3").replaceAll("\\s", ""));
+        this.templateHandler = new TemplateHandler();
         if(TrollCore.instance.getConfig().getBoolean("Variables.commands.troll.alias.enabled"))
             setAliases(Arrays.stream(TrollCore.instance.getConfig().getStringList("Variables.commands.troll.alias.aliases").toArray(new String[0])).map(a -> a.replaceAll("\\s", "")).toArray(String[]::new));
         setPermission("ms3.use");
         setPermissionMessage(Objects.requireNonNull(Utilities.getSingleInstance().getConfigPath("Messages.missingPermissions", true)));
 
-        addTabbComplete(0, "settings", "update", "contact");
+        addTabbComplete(0, "settings", "update", "contact", "vanish");
         registerCommand();
     }
 
@@ -48,6 +51,28 @@ public class TrollCommand extends CommandHandler<TrollCore> {
         if(commandSender instanceof Player sender){
             switch (args.length > 0 ? args[0].toLowerCase(Locale.ROOT) : "") {
                 case "settings" -> sender.openInventory(new Settings(sender).getInventory());
+                case "vanish" -> {
+                    Utilities.getSingleInstance().addOrRemove(Singleton.getSingleInstance().vanishedPlayers, sender);
+
+                    templateHandler.addCustomValue("vanished", "config:Messages.vanished");
+                    templateHandler.addCustomValue("unvanished", "config:Messages.unvanished");
+
+                    boolean vanished = Singleton.getSingleInstance().vanishedPlayers.containsKey(Utilities.getSingleInstance().uuidOrName(sender, TrollCore.instance.usingUUID));
+
+                    templateHandler.printValues();
+                    sender.sendMessage(templateHandler.$(vanished ? "${vanished}" : "${unvanished}"));
+
+                    if(vanished){
+                        for (Player player : Bukkit.getOnlinePlayers()) {
+                            player.hidePlayer(TrollCore.instance, sender);
+                        }
+                    }else{
+                        for (Player player : Bukkit.getOnlinePlayers()) {
+                            player.showPlayer(TrollCore.instance, sender);
+                        }
+                    }
+
+                }
                 case "update" -> {
                     sender.sendMessage(Utilities.getSingleInstance().getConfigPath("Variables.prefix") + "§bChecking updates...");
                     new UpdateChecker(TrollCore.instance, 78194).getVersion(version -> {

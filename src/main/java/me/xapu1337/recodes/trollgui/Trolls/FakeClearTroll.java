@@ -20,7 +20,7 @@ public class FakeClearTroll extends TrollHandler {
                 new TrollItemMetaData()
                         .setItem(XMaterial.PUFFERFISH)
                         .setConfigData("fakeClear")
-                        .formatPlaceholders("%TIME%", String.valueOf(TrollCore.instance.getConfig().getInt("MenuItems.trollMenu.fakeClear.options.fakeClearDelay")))
+                        .formatPlaceholders(getTemplateHandler())
 
         );
     }
@@ -45,13 +45,13 @@ public class FakeClearTroll extends TrollHandler {
         if(!Singleton.getSingleInstance().clearedPlayerInventories.containsKey(Utilities.getSingleInstance().uuidOrName(victim.getPlayer(), TrollCore.instance.getServer().getOnlineMode()))) {
             savedInventory = victim.getInventory().getContents();
             victim.getInventory().clear();
-            Singleton.getSingleInstance().clearedPlayerInventories.put(Utilities.getSingleInstance().uuidOrName(victim.getPlayer(), TrollCore.instance.getServer().getOnlineMode()), "1");
+            Singleton.getSingleInstance().clearedPlayerInventories.put(Utilities.getSingleInstance().uuidOrName(victim.getPlayer(), TrollCore.instance.getServer().getOnlineMode()), victim);
             int seconds = 10;
 
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TrollCore.instance, () -> {
                 victim.getInventory().setContents(savedInventory);
                 Singleton.getSingleInstance().clearedPlayerInventories.remove(Utilities.getSingleInstance().uuidOrName(victim.getPlayer(), TrollCore.instance.getServer().getOnlineMode()));
-            }, ((long) seconds * TrollCore.instance.config.getInt("MenuItems.trollMenu.fakeClear.options.fakeClearDelay")));
+            }, ((long) seconds * TrollCore.instance.config.getInt("MenuItems.trollMenu.trolls.fakeClear.options.fakeClearDelay")));
         }
     }
 }
