@@ -1,10 +1,13 @@
 package me.xapu1337.recodes.trollgui.Inventorys;
 
 import com.cryptomorin.xseries.XMaterial;
+import com.cryptomorin.xseries.XSound;
 import me.xapu1337.recodes.trollgui.Cores.TrollCore;
 import me.xapu1337.recodes.trollgui.Handlers.TrollHandler;
 import me.xapu1337.recodes.trollgui.Utilities.Singleton;
 import me.xapu1337.recodes.trollgui.Utilities.Utilities;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -17,8 +20,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Random;
+import java.util.stream.Stream;
 
 import static me.xapu1337.recodes.trollgui.Utilities.Singleton.getSingleInstance;
 
@@ -132,17 +137,25 @@ public class TrollGUI implements Listener, InventoryHolder {
 
     @EventHandler
     public void onInventoryClicked(InventoryClickEvent event) {
+        // check if the inventory clicked is the GUI created by this class
         if (event.getInventory().getHolder() != this) return;
+        // cancel the click event (disable the ability to move items around)
         event.setCancelled(true);
 
+        // current item clicked
         final ItemStack clickedItem = event.getCurrentItem();
 
-        if (clickedItem == null || clickedItem.getType() == XMaterial.AIR.parseMaterial() || clickedItem.isSimilar(Utilities.getSingleInstance().createItem(XMaterial.BLACK_STAINED_GLASS_PANE, "§r"))) return;
+        // check if item is not null, not of type air or is the placeholder
+        if (clickedItem == null || clickedItem.getType() == XMaterial.AIR.parseMaterial() || Stream.of(_blackPanePlaceholder, _redPanePlaceholder).anyMatch(clickedItem::isSimilar)) return;
+        // each item has a unique name to make sure it's the correct item, so we can check for that
+        // once we are sure the troll exists in a list of loaded troll handlers (loaded because it needs to execute .init on each class on start / reload)
+        // continue once we are sure the troll exists
         if(
                 !getSingleInstance().loadedTrollHandlers.containsKey(clickedItem.getItemMeta().getPersistentDataContainer().get(getSingleInstance().trollItemNamespaceKey, PersistentDataType.STRING))
         ) {
             Bukkit.getLogger().warning("TrollGUI: Unknown item clicked: " + clickedItem.getItemMeta().getPersistentDataContainer().get(getSingleInstance().trollItemNamespaceKey, PersistentDataType.STRING));
             if (event.getRawSlot() == 49) {
+                // close button
                 _caller.closeInventory();
                 getSingleInstance().currentPlayersTrolling.remove(_caller);
                 _callingSelector.openForPlayer(_caller);
@@ -163,7 +176,9 @@ public class TrollGUI implements Listener, InventoryHolder {
             }
 
             if (clickedItem.getType().equals(XMaterial.OAK_BUTTON.parseMaterial())) {
+                // Left or right button
                 if (ChatColor.stripColor(Objects.requireNonNull(clickedItem.getItemMeta()).getDisplayName()).equalsIgnoreCase(ChatColor.stripColor(Utilities.getSingleInstance().getConfigPath("MenuItems.playerSelector.left.name")))) {
+                    // Left button
                     if (CURRENT_PAGE == 0) _caller.sendMessage(Utilities.getSingleInstance().getConfigPath("Messages.alreadyOnFirstPage"));
                     else {
                         CURRENT_PAGE--;
@@ -171,6 +186,7 @@ public class TrollGUI implements Listener, InventoryHolder {
                         initializeItems();
                     }
                 } else if (ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase(ChatColor.stripColor(Utilities.getSingleInstance().getConfigPath("MenuItems.playerSelector.right.name")))) {
+                    // Right button
                     if (!((CURRENT_INDEX + 1) >= getSingleInstance().loadedTrollHandlers.size())) {
                         CURRENT_PAGE++;
                         GUI.clear();
@@ -181,20 +197,25 @@ public class TrollGUI implements Listener, InventoryHolder {
         }
 
 
-//        getSingleInstance().loadedTrollHandlers.forEach((className, trollHandler) -> {
-//            if (Objects.equals(className, Objects.requireNonNull(clickedItem.getItemMeta()).getPersistentDataContainer().get(new NamespacedKey(TrollCore.instance, "assigned-troll-class"), PersistentDataType.STRING))) {
-//
-//            }
-//        });
-        // Get the troll handler for the clicked item (persistent data: "assigned-troll-class")
+        // check if the class name exists (maybe unnecessary?)
         String className = Objects.requireNonNull(clickedItem.getItemMeta()).getPersistentDataContainer().get(getSingleInstance().trollItemNamespaceKey, PersistentDataType.STRING);
         if (className == null) return;
+        // get the troll handler from the loaded troll handlers
         TrollHandler trollHandler = getSingleInstance().loadedTrollHandlers.get(className);
+        // make sure the troll handler even exists
         if (trollHandler == null) return;
+        // set the players
         trollHandler.setPlayers(_caller, _victim);
+        // execute the troll
         trollHandler.execute();
+
+        // confirmation message
+        _caller.playSound(_caller.getLocation(), Objects.requireNonNull(XSound.ENTITY_VILLAGER_YES.parseSound()), 25, 1);
+        _caller.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(trollHandler.getTemplateHandler().$(Utilities.getSingleInstance().getConfigPath("Messages.executedTroll"))));
+        // Logic for toggable trolls
         if (trollHandler.data.isToggable) {
-            // If multiple people are trolling, we need to update the items for each player
+            // emit the update event to all players currently in the GUI
+            // this "syncs" the GUI for all players
             getSingleInstance().currentPlayersTrolling.forEach((player, trollGUI) -> {
                 trollGUI.initializeItems();
             });

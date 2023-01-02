@@ -8,6 +8,13 @@
 #    | $$  | $$  | $$|  $$$$$$/| $$$$$$$$| $$$$$$$$      |  $$$$$$/|  $$$$$$/ /$$$$$$
 #    |__/  |__/  |__/ \______/ |________/|________/       \______/  \______/ |______/
 
+# Placeholders:
+# ${caller.name} - The player's name who is trolling
+# ${victim.name} - The player's name which is currently selected
+# ${troll.name} - The name of the troll
+# Special:
+# ${config:<key>} - a custom variable that will fetch the value from the path specified (e.g. ${config:MenuItems.trollMenu.items.randomTeleport.name}) (this is case-sensitive & will not work with spaces)
+
 MenuItems:
   clutchesMenu:
     clutches: # Use https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html as a reference.
@@ -114,7 +121,7 @@ MenuItems:
           block: 'TNT' # Use https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html as a reference. (If the custom block is invalid TNT will be the default)
           radius: 5 # Same as explodeRadius, Keep this LOW! High values tend to either crash the server OR that the player gets disconnected due to a timeout.
       fakeClear:
-        lore: '&7Wipes the player inventory for %TIME% seconds.' # PLACEHOLDERS: %TIME%
+        lore: '&7Wipes the player inventory for ${config:MenuItems.trollMenu.trolls.fakeClear.options.fakeClearDelay} seconds.' # PLACEHOLDERS: %TIME%
         name: '&eFake clear players inventory'
         options:
           fakeClearDelay: 10 # x seconds until all items return to the inventory.
@@ -193,8 +200,9 @@ Messages:
   enterMessage: >-
     &7Please write the message you want to send as &9&l%VICTIM%&7 in the chat.
     (&c&lthis message will not be send to the chat&7)
+  executedTroll: '&7Successfully executed the troll &9&l${troll.name}&7 on &9&l${victim.name}&7.'
   missingPermissions: '&cYou''re missing the permissions "ms3.use"'
-  noItemInHand: '&7Player &b%PLAYER%&7 isn''t holding an item in their hand.' # PLACEHOLDERS: %PLAYER%
+  noItemInHand: '&7Player &b%PLAYER%&7 isn''t holding an item in their hand.' # PLACEHOLDERS: ${victim.name}, ${caller.name}, ${troll.name}
   playerNotAvailable: '&cPlayer &7&l%PLAYER%&c either disconnected or is not available anymore.' # PLACEHOLDERS: %PLAYER%
   reloaded: '&cReloaded the configuration successfully.'
   selectDimensionToTeleport: '&7Please click the dimension you want the player to be teleported to.'
@@ -212,6 +220,8 @@ Messages:
   targetSelfWarning: '&cYou currently have the target set to yourself.'
   teleportFailed: '&cThe location is not save, please try it again once the players position changed.'
   teleportedToDimension: '&7Teleported &b%PLAYER%&7 to &b%DIMENSION%&7.' # PLACEHOLDERS: %PLAYER%, %DIMENSION%
+  unvanished: '&7You have been un-vanished.'
+  vanished: '&7You are now vanished.'
 Variables:
   advancedPermission:
     # Basically, this is a check that doesn't have to check if the player has the permission 'ms3.use'

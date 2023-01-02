@@ -5,12 +5,14 @@ import me.xapu1337.recodes.trollgui.Cores.TrollCore;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
 import java.util.*;
 import java.util.regex.Pattern;
+
+
 
 public class Utilities {
 
@@ -59,11 +61,6 @@ public class Utilities {
     }
 
 
-    public String getString(String path, String defaultString){
-        String configString = TrollCore.instance.getConfig().getString(path);
-        if(configString == null || configString.length() == 0 ) return defaultString;
-        else return configString;
-    }
 
     public String getConfigPath(String path, boolean withPrefix){
         return ChatColor.translateAlternateColorCodes('&', (withPrefix ? ( getConfigPath("Variables.prefix") + getConfigPath(path)) : (getConfigPath(path))));
@@ -83,12 +80,12 @@ public class Utilities {
         return UUID_REGEX_PATTERN.matcher(str).matches();
     }
 
-    public void addOrRemove(HashMap<String, String> collection, Player player){
+    public void addOrRemove(HashMap<String, Player> collection, Player player){
         String uOrN = uuidOrName(player, TrollCore.instance.usingUUID);
         if(collection.containsKey(uOrN))
             collection.remove(uOrN);
         else
-            collection.put(uOrN, uOrN);
+            collection.put(uOrN, player);
     }
 
     public boolean advancedPermissionsChecker(Player player, String extraPermissions){
@@ -158,95 +155,134 @@ public class Utilities {
 
         return location;
     }
-
     public boolean teleportTo(World world, Player player, double x, double z){
         String worldName = world.getName();
         Location location;
 
         switch (worldName) {
-            case "world":
-            case "world_the_end":
+            case "world", "world_the_end" -> {
                 location = getProperLocationOverWorldEnd(world, player, x, z);
                 return player.teleport(location);
-            case "world_nether":
-
+            }
+            case "world_nether" -> {
                 location = getProperLocationNether(world, x, 3, z);
-
                 if (location == null) {
                     return false;
                 }
                 return player.teleport(location);
-            default:
+            }
+            default -> {
                 return false;
+            }
         }
     }
 
 
     /**
-     * Return whether the given string contains any of the provided elements.
+     * Determines if the specified string array contains any of the strings in the specified list.
      *
-     * @param str    The string to analyze
-     * @param pieces The items to check the string for
-     *
-     * @return True if the string contains at least one of the items
+     * @param stringArray the string array to check
+     * @param list the list of strings to check for
+     * @return whether the specified string array contains any of the strings in the specified list
      */
-    public boolean containsAny(String str, Iterable<String> pieces) {
-        if (str == null) {
+    public boolean containsAny(String stringArray, Iterable<String> list) {
+        if (stringArray == null) {
             return false;
         }
-        for (String piece : pieces) {
-            if (piece != null && str.contains(piece)) {
+        for (String piece : list) {
+            if (piece != null && stringArray.contains(piece)) {
                 return true;
             }
         }
         return false;
     }
 
-    /**
-     * Null-safe method for checking whether a string is empty. Note that the string
-     * is trimmed, so this method also considers a string with whitespace as empty.
-     *
-     * @param str The string to verify
-     *
-     * @return True if the string is empty, false otherwise
-     */
-    public boolean isEmpty(String str) {
-        return str == null || str.trim().isEmpty();
-    }
 
     /**
-     * Check that the given needle is in the middle of the haystack, i.e. that the haystack
-     * contains the needle and that it is not at the very start or end.
+     * Returns the value of the specified key in the configuration as the specified type. Throws an exception if the key
+     * is not found or the value is not of the specified type.
      *
-     * @param needle the needle to search for
-     * @param haystack the haystack to search in
-     *
-     * @return true if the needle is in the middle of the word, false otherwise
+     * @param key the key to get the value for
+     * @param type the expected type of the value
+     * @param <T> the type parameter
+     * @return the value of the specified key in the configuration as the specified type
      */
-    public boolean isInsideString(char needle, String haystack) {
-        int index = haystack.indexOf(needle);
-        return index > 0 && index < haystack.length() - 1;
+    public <T> T getConfig(String key, Class<T> type) {
+        Object value = TrollCore.instance.getConfig().get(key);
+        if (value == null) {
+            throw new IllegalArgumentException("Key not found: " + key);
+        }
+        if (type.isInstance(value)) {
+            return type.cast(value);
+        } else {
+            throw new IllegalArgumentException("Invalid type for key: " + key);
+        }
+    }
+    /**
+     * Returns the value of the specified key in the configuration as the specified type. Throws an exception if the key
+     * is not found or the value is not of the specified type.
+     *
+     * @param key the key to get the value for
+     * @param type the expected type of the value
+     * @param prefixed whether to apply the prefix specified in the configuration to the value
+     * @param <T> the type parameter
+     * @return the value of the specified key in the configuration as the specified type
+     */
+    public <T> T getConfig(String key, Class<T> type, boolean prefixed) {
+        Object value = TrollCore.instance.config.get(key);
+        if (value == null) {
+            throw new IllegalArgumentException("Key not found: " + key);
+        }
+        if (type.isInstance(value)) {
+            if (type == String.class) {
+                value = ChatColor.translateAlternateColorCodes('&', (String) value);
+                if (prefixed) {
+                    value = TrollCore.instance.getConfig().getString("variables.prefix") + value;
+                }
+            }
+            return type.cast(value);
+        } else {
+            throw new IllegalArgumentException("Invalid type for key: " + key);
+        }
     }
 
+
+    /**
+
+     Cleans the specified collection if possible.
+     @param collection the collection to clean
+     */
     public void cleanCollectionIfPossible(HashMap<?, ?> collection){
         if(collection != null && collection.size() > 0){
             collection.clear();
         }
     }
+    /**
 
+     Cleans the specified collection if possible.
+     @param collection the collection to clean
+     */
     public void cleanCollectionIfPossible(Map<?, ?> collection){
         if(collection != null && collection.size() > 0){
             collection.clear();
         }
     }
+    /**
 
+     Cleans the specified collection if possible.
+     @param collection the collection to clean
+     */
     public void cleanCollectionIfPossible(IndexableMap<?, ?> collection){
         if(collection != null && collection.size() > 0){
             collection.clear();
         }
     }
 
+    /**
 
+     Cleans the specified collection if possible.
+     @param collection the collection to clean
+     */
     public void cleanCollectionIfPossible(List<?> collection){
         if(collection != null && collection.size() > 0){
             collection.clear();

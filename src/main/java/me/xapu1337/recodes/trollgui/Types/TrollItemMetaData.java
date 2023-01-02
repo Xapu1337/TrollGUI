@@ -4,6 +4,7 @@ import com.cryptomorin.xseries.XEnchantment;
 import com.cryptomorin.xseries.XMaterial;
 import me.xapu1337.recodes.trollgui.Cores.TrollCore;
 import me.xapu1337.recodes.trollgui.Enums.TrollAttributes;
+import me.xapu1337.recodes.trollgui.Handlers.TemplateHandler;
 import me.xapu1337.recodes.trollgui.Utilities.Utilities;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemFlag;
@@ -145,6 +146,23 @@ public class TrollItemMetaData {
         for (int i = 0; i < lore.length; i++) {
             lore[i] = lore[i].replace(placeholders, values[i]);
         }
+
+
+
+        _itemMeta.setLore(Arrays.asList(lore));
+        _itemStack.setItemMeta(_itemMeta);
+
+        return this;
+    }
+
+    public TrollItemMetaData formatPlaceholders(TemplateHandler commandTemplateHandler){
+        String[] lore = this.lore;
+        for (int i = 0; i < lore.length; i++) {
+            lore[i] = commandTemplateHandler.$(lore[i]);
+        }
+
+
+
         _itemMeta.setLore(Arrays.asList(lore));
         _itemStack.setItemMeta(_itemMeta);
 
