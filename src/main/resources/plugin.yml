@@ -1,4 +1,4 @@
 name: ms3
 version: ${project.version}
-main: me.xapu1337.recodes.trollgui.Cores.TrollCore
-api-version: 1.13
+main: me.xapu1337.recodes.trollgui.cores.TrollCore
+api-version: 1.16
