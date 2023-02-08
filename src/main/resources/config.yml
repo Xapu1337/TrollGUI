@@ -15,7 +15,7 @@
 # Special:
 # ${config:<key>} - a custom variable that will fetch the value from the path specified (e.g. ${config:MenuItems.trollMenu.items.randomTeleport.name}) (this is case-sensitive & will not work with spaces)
 
-MenuItems:
+Menus:
   clutchesMenu:
     clutches: # Use https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html as a reference.
       - water:
@@ -44,14 +44,14 @@ MenuItems:
     title: '&6Select a dimension'
   playerSelector:
     close:
-      noHistory:
+      lastPage:
         lore: '&7Close this menu'
         name: '&cClose'
-      withHistory:
+      previousPage:
         lore: '&7Goes back to the previous menu'
         name: '&cGo Back'
-    extras:
-      actions:
+    selectors: # titles used for some selectors (e.g. player swap or troll selector)
+      titles:
         openTrollGUI: 'Select a player to troll'
         swapPlayer: 'Select a player to swap with'
         swapPlayerInventory: 'Select a player (swaps inventory)'
@@ -66,11 +66,6 @@ MenuItems:
       lore: '&7Go to the next page'
       name: '&7NEXT &8→'
     title: '&9%ACTION%' # PLACEHOLDERS: %ACTION%
-  settingsMenu:
-    reload:
-      lore: '&7Reload the current config (Commands need a server reload)'
-      name: '&cReload the current configuration.'
-    title: '&9Select settings'
   trollMenu:
     extras:
       canBeDeadlyOrLoseItems: '&c! &cCan be harmful, or cause possible item loss &c!'
@@ -79,7 +74,7 @@ MenuItems:
       canKickPlayer: '&c! &cCan kick the victim &c!'
       isDisabled: '&8> &c✕ &8- Disabled.'
       isEnabled: '&8> &a✓ &8- Enabled.'
-    items:
+    items: # some extra items to click
       randomTroll:
         lore: '&7Select a random troll to use'
         name: '&cRandom Troll'
@@ -87,7 +82,7 @@ MenuItems:
         lore: '&7Return to the Player Selector'
         name: '&cGo Back'
     title: '&8Currently trolling &6&l%VICTIM%' # PLACEHOLDERS: %VICTIM%, %PLAYER%
-    trolls:
+    trolls: # the troll items itself
       burnPlayer:
         lore: '&7Summon Ragnarok the god of fire to punish him!'
         name: '&6Burn the player'
