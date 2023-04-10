@@ -23,10 +23,12 @@ public class ConfigUtils {
     private static final Pattern TEMP_PATTERN = Pattern.compile("VOID=([a-fA-F0-9]{8}(-[a-fA-F0-9]{4}){4}[a-fA-F0-9]{8})");
     private static final Pattern HEX_COLOR_PATTERN = Pattern.compile("&#([a-fA-F0-9]{6})");
 
+    private final Map<String, String> messageCache;
 
     public ConfigUtils() {
         this.placeholders = new ConcurrentHashMap<>();
         this.classPlaceholders = new ConcurrentHashMap<>();
+        this.messageCache = new ConcurrentHashMap<>();
     }
 
     public static ConfigUtils getInstance() {
@@ -60,6 +62,11 @@ public class ConfigUtils {
     }
 
     public String getMessage(String path) {
+        if (messageCache.containsKey(path)) {
+            TrollCore.getInstance().debuggingUtil.log("Got message " + messageCache.get(path) + " for path " + path);
+            return messageCache.get(path);
+        }
+
         String message = TrollCore.getPlugin().getConfig().getString(path, "");
         TrollCore.getInstance().debuggingUtil.log("Got message " + message + " for path " + path);
 
@@ -76,6 +83,7 @@ public class ConfigUtils {
         message = hexColor(message);
         message = ChatColor.translateAlternateColorCodes('&', message);
 
+        messageCache.put(path, message);
         return message;
     }
 
@@ -84,6 +92,11 @@ public class ConfigUtils {
     }
 
     public String translateMessage(String message) {
+        String hash = String.valueOf(HashingUtil.murmurhash3(message.getBytes(), 0));
+        if (messageCache.containsKey(hash)) {
+            TrollCore.getInstance().debuggingUtil.log("Got message " + messageCache.get(hash) + " for message \"" + message + "\" from cache Hash#" + Math.abs(Integer.parseInt(hash)));
+            return messageCache.get(hash);
+        }
         TrollCore.getInstance().debuggingUtil.log("Translating message " + message);
 
         // Translate color codes
@@ -126,6 +139,7 @@ public class ConfigUtils {
             TrollCore.getInstance().debuggingUtil.log("Replaced temp pool key " + key + " with " + value);
         }
 
+        messageCache.put(hash, message);
         return message;
     }
 

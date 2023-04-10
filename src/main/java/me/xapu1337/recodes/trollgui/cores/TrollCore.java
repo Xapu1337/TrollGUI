@@ -3,6 +3,7 @@ package me.xapu1337.recodes.trollgui.cores;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIConfig;
 import me.xapu1337.recodes.trollgui.commands.TrollCommand;
+import me.xapu1337.recodes.trollgui.loaders.TrollLoader;
 import me.xapu1337.recodes.trollgui.utilities.DebuggingUtil;
 import me.xapu1337.recodes.trollgui.utilities.SingletonBase;
 import me.xapu1337.recodes.trollgui.utilities.TempPool;
@@ -33,7 +34,7 @@ public class TrollCore extends JavaPlugin implements Listener {
     public void onEnable() {
         super.onEnable();
 
-        TrollCore.getInstance().debuggingUtil.log("siuü");
+        TrollLoader.getInstance().refreshTrolls();
 
         CommandAPI.onEnable(this);
 
@@ -50,7 +51,6 @@ public class TrollCore extends JavaPlugin implements Listener {
     @Override
     public void onLoad() {
         super.onLoad();
-
 
         CommandAPI.onLoad(new CommandAPIConfig().silentLogs(true));
     }

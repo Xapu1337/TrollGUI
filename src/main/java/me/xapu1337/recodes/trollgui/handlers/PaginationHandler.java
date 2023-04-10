@@ -93,6 +93,7 @@ public class PaginationHandler {
                     currentPage--;
                 }
             }
+            case CLOSE -> event.getWhoClicked().closeInventory();
         }
 
         onPageChange.accept(currentPage, maxPage);

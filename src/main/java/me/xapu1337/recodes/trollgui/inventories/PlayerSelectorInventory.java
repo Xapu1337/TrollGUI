@@ -10,8 +10,10 @@ import com.cryptomorin.xseries.XMaterial;
 import me.xapu1337.recodes.trollgui.cores.TrollCore;
 import me.xapu1337.recodes.trollgui.handlers.PaginationHandler;
 import me.xapu1337.recodes.trollgui.types.PaginationItemType;
+import me.xapu1337.recodes.trollgui.utilities.ConfigUtils;
 import me.xapu1337.recodes.trollgui.utilities.InventoryBuilder;
 import me.xapu1337.recodes.trollgui.utilities.ItemStackBuilder;
+import me.xapu1337.recodes.trollgui.utilities.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -30,11 +32,9 @@ public class PlayerSelectorInventory implements Listener, InventoryHolder {
 
     private final Inventory inventory;
     private final NamespacedKey UUID_KEY = new NamespacedKey(TrollCore.instance, "uuid");
-    private List<Player> players;
+    private final List<Player> players;
     private final BiConsumer<Player, Player> onClick;
-    private PaginationHandler paginationHandler;
-    private boolean useDummyData = false;
-    private UUID[] dummyData = new UUID[45];
+    private final PaginationHandler paginationHandler;
 
     public PlayerSelectorInventory(BiConsumer<Player, Player> onClick) {
         this.players = List.of(Bukkit.getOnlinePlayers().toArray(new Player[0]));
@@ -44,18 +44,6 @@ public class PlayerSelectorInventory implements Listener, InventoryHolder {
 
         Bukkit.getPluginManager().registerEvents(this, TrollCore.getInstance());
 
-        // fill dummy data with random UUIDs
-        for (int i = 0; i < dummyData.length; i++) {
-            dummyData[i] = UUID.randomUUID();
-        }
-
-        if (useDummyData) {
-            for (int i = 0; i < players.size(); i++) {
-                players.set(i, Bukkit.getPlayer(dummyData[i]));
-                TrollCore.getInstance().debuggingUtil.log("Set player " + i + " (" + dummyData[i] + ")" + " to " + players.get(i).getName());
-            }
-        }
-
         InventoryBuilder builder = new InventoryBuilder();
         builder.setSize(54)
         .setPattern(
@@ -64,12 +52,13 @@ public class PlayerSelectorInventory implements Listener, InventoryHolder {
                 "XXXXXXXXX",
                 "XXXXXXXXX",
                 "XXXXXXXXX",
-                "BBB<B>BBB"
+                "BBB<C>BBB"
         )
         .withDefaults()
         .setItem('>', PaginationItemType.NEXT_PAGE.getItemStack())
         .setItem('<', PaginationItemType.PREVIOUS_PAGE.getItemStack())
         .setItem('X', new ItemStackBuilder(XMaterial.AIR).withDisplayName(" ").build())
+        .setItem('C', PaginationItemType.CLOSE.getItemStack())
         .setItem('B', new ItemStackBuilder(XMaterial.BLACK_STAINED_GLASS_PANE).withDisplayName(" ").build());
 
         this.inventory = builder.build();
@@ -104,6 +93,7 @@ public class PlayerSelectorInventory implements Listener, InventoryHolder {
                 List<String> lore = new ArrayList<>();
                 lore.add("&7" + player.getName());
                 lore.add("&7Health: &f" + player.getHealth() + "&c❤");
+                lore = lore.stream().map(ConfigUtils.getInstance()::$).toList();
                 meta.setLore(lore);
                 item.setItemMeta(meta);
                 TrollCore.getInstance().debuggingUtil.log("Setting item " + i + " to " + player.getName());
@@ -130,9 +120,7 @@ public class PlayerSelectorInventory implements Listener, InventoryHolder {
     }
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        if (!event.getInventory().equals(inventory)) {
-            return;
-        }
+        if (Utils.getInstance().checkUniqueInventory(event, this, this.inventory)) return;
 
         event.setCancelled(true);
 
@@ -147,7 +135,6 @@ public class PlayerSelectorInventory implements Listener, InventoryHolder {
 
         Player player = (Player) event.getWhoClicked();
         UUID uuid = UUID.fromString(Objects.requireNonNull(item.getItemMeta().getPersistentDataContainer().get(UUID_KEY, PersistentDataType.STRING)));
-        if (uuid == null) return;
         Player target = Bukkit.getPlayer(uuid);
         if (target == null) return;
         onClick.accept((Player) event.getWhoClicked(), target);

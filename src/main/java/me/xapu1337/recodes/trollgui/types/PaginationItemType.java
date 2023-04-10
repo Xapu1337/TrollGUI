@@ -9,7 +9,8 @@ import org.bukkit.inventory.ItemStack;
  */
 public enum PaginationItemType {
     NEXT_PAGE(new ItemStackBuilder(XMaterial.ARROW).withDisplayName("&aNext Page").build()),
-    PREVIOUS_PAGE(new ItemStackBuilder(XMaterial.ARROW).withDisplayName("&cPrevious Page").build());
+    PREVIOUS_PAGE(new ItemStackBuilder(XMaterial.ARROW).withDisplayName("&cPrevious Page").build()),
+    CLOSE(new ItemStackBuilder(XMaterial.BARRIER).withDisplayName("&cClose").build());
 
     private final ItemStack itemStack;
 
