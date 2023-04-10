@@ -218,7 +218,7 @@ Messages:
   teleportedToDimension: '&7Teleported &b%PLAYER%&7 to &b%DIMENSION%&7.' # PLACEHOLDERS: %PLAYER%, %DIMENSION%
   unvanished: '&7You have been un-vanished.'
   vanished: '&7You are now vanished.'
-Variables:
+Settings:
   advancedPermission:
     # Basically, this is a check that doesn't have to check if the player has the permission 'ms3.use'
     # It checks if the player name has the name then it allows it. Useful if you want to limit the TrollGUI just for you.

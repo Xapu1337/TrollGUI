@@ -3,6 +3,7 @@ package me.xapu1337.recodes.trollgui.utilities;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.cryptomorin.xseries.XItemStack;
 import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -11,13 +12,24 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class InventoryBuilder {
-    private final Map<Character, XMaterial> materials = new HashMap<>();
+    private final Map<Character, ItemStack> materials = new HashMap<>();
     private String[] pattern = new String[0];
     private int size;
     private Inventory _inventory;
 
     public InventoryBuilder setMaterial(char key, XMaterial material) {
-        this.materials.put(key, material);
+        this.materials.put(key, material.parseItem());
+        return this;
+    }
+
+    public InventoryBuilder setItem(char key, ItemStack item) {
+        this.materials.put(key, item);
+        return this;
+    }
+
+    public InventoryBuilder withDefaults() {
+        this.materials.put('B', new ItemStackBuilder(XMaterial.BLACK_STAINED_GLASS_PANE).withDisplayName(" ").build());
+        this.materials.put('X', new ItemStackBuilder(XMaterial.AIR).build());
         return this;
     }
 
@@ -53,8 +65,31 @@ public class InventoryBuilder {
 
     public Inventory build() {
         ItemStack[] inventory = new ItemStack[size];
-        for (int i = 0; i < pattern.length; i++) for (int j = 0; j < pattern[i].length(); j++) inventory[(i * 9) + j] = materials.containsKey(pattern[i].charAt(j)) ? new ItemStack(materials.get(pattern[i].charAt(j)).parseMaterial()) : new ItemStack(Material.AIR);
+        _inventory = Bukkit.createInventory(null, size);
+        for (int i = 0; i < pattern.length; i++) for (int j = 0; j < pattern[i].length(); j++) inventory[(i * 9) + j] = materials.containsKey(pattern[i].charAt(j)) ? materials.get(pattern[i].charAt(j)) : new ItemStack(Material.AIR);
         _inventory.setContents(inventory);
         return _inventory;
     }
+
+    public Inventory getInventory() {
+        return _inventory;
+    }
+
+    public void refresh() {
+        ItemStack[] inventory = new ItemStack[size];
+        for (int i = 0; i < pattern.length; i++) {
+            for (int j = 0; j < pattern[i].length(); j++) {
+                char key = pattern[i].charAt(j);
+                if (materials.containsKey(key)) {
+                    ItemStack item = materials.get(key).clone();
+                    if (item.getAmount() == 0) item.setAmount(1);
+                    inventory[(i * 9) + j] = item;
+                } else {
+                    inventory[(i * 9) + j] = new ItemStack(Material.AIR);
+                }
+            }
+        }
+        _inventory.setContents(inventory);
+    }
+
 }
