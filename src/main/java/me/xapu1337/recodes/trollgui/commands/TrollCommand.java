@@ -7,6 +7,7 @@ import dev.jorel.commandapi.arguments.TextArgument;
 import dev.jorel.commandapi.executors.ConsoleCommandExecutor;
 import me.xapu1337.recodes.trollgui.cores.TrollCore;
 import me.xapu1337.recodes.trollgui.inventories.PlayerSelectorInventory;
+import me.xapu1337.recodes.trollgui.inventories.TrollSelectionInventory;
 import me.xapu1337.recodes.trollgui.utilities.ConfigUtils;
 import me.xapu1337.recodes.trollgui.utilities.InventoryBuilder;
 import me.xapu1337.recodes.trollgui.utilities.TempPool;
@@ -58,8 +59,10 @@ public class TrollCommand {
                     player.openInventory(new PlayerSelectorInventory(
                             (player1, player2) -> {
                                 TrollCore.getInstance().debuggingUtil.log("Player " + player1.getName() + " selected " + player2.getName());
+                                new TrollSelectionInventory(player1, player2).openInventory(player1);
                             }
-                    ).getInventory());
+                    )
+                            .getInventory());
                 })
                 .executesConsole((ConsoleCommandExecutor) (consoleCommandSender, objects) -> CommandAPI.failWithString(""))
                 .register();

@@ -16,8 +16,8 @@
 # ${config:<key>} - a custom variable that will fetch the value from the path specified (e.g. ${config:MenuItems.trollMenu.items.randomTeleport.name}) (this is case-sensitive & will not work with spaces)
 
 menus:
-  Clutches:
-    clutches: # Use https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html as a reference.
+  clutches:
+    items: # Use https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html as a reference.
       - water:
           lore: '&7Catapults the player and gives them a water bucket'
           name: '&a&lWATER'
@@ -31,7 +31,7 @@ menus:
           name: '&c&lSLIME'
           type: 'SLIME_BLOCK'
     title: '&6Select a clutch'
-  DimensionSelector:
+  dimension-selector:
     end:
       lore: '&7Teleport to the End'
       name: '&d&lEND'
@@ -42,7 +42,7 @@ menus:
       lore: '&7Teleport to the Overworld'
       name: '&a&lOVERWORLD'
     title: '&6Select a dimension'
-  PlayerSelector:
+  player-selector:
     close:
       lastPage:
         lore: '&7Close this menu'
@@ -66,7 +66,7 @@ menus:
       lore: '&7Go to the next page'
       name: '&7NEXT &8→'
     title: '&9%ACTION%' # PLACEHOLDERS: %ACTION%
-  TrollMenu:
+  troll-menu:
     extras:
       canBeDeadlyOrLoseItems: '&c! &cCan be harmful, or cause possible item loss &c!'
       canCrash: '&c! &cCan freeze or crash the victim &c!'
@@ -96,6 +96,9 @@ menus:
         dropItem:
           lore: '&7Makes the hand from the player slippy'
           name: '&8Drop the item from players hand'
+        debug:
+          lore: '&7Debugs the player'
+          name: '&cDebug'
         explodePlayer:
           lore: '&7Do you also smell gunpowder?'
           name: '&4Explode the player'
@@ -190,7 +193,7 @@ menus:
           lore: '&7Return to the Player Selector'
           name: '&cGo Back'
     title: '&8Currently trolling &6&l%VICTIM%' # PLACEHOLDERS: %VICTIM%, %PLAYER%
-Messages:
+messages:
   alreadyOnFirstPage: '&cYou are already on the first page.'
   alreadyOnLastPage: '&cYou are already on the last page.'
   enterMessage: >-
@@ -218,7 +221,7 @@ Messages:
   teleportedToDimension: '&7Teleported &b%PLAYER%&7 to &b%DIMENSION%&7.' # PLACEHOLDERS: %PLAYER%, %DIMENSION%
   unvanished: '&7You have been un-vanished.'
   vanished: '&7You are now vanished.'
-Settings:
+settings:
   advancedPermission:
     # Basically, this is a check that doesn't have to check if the player has the permission 'ms3.use'
     # It checks if the player name has the name then it allows it. Useful if you want to limit the TrollGUI just for you.
@@ -236,7 +239,6 @@ Settings:
           - mysystem3
         enabled: false
       name: ms3
-  disableTrollWarning: false
   enableSneakRightClickSelection: false # Allows shift right-clicking a player to open the troll menu.
   missingPermissionsMessage: true
   prefix: '&9&lMS3 &8| &7'
