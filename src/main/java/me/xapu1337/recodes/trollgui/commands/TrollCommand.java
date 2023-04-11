@@ -8,7 +8,10 @@ import dev.jorel.commandapi.executors.ConsoleCommandExecutor;
 import me.xapu1337.recodes.trollgui.cores.TrollCore;
 import me.xapu1337.recodes.trollgui.inventories.PlayerSelectorInventory;
 import me.xapu1337.recodes.trollgui.inventories.TrollSelectionInventory;
+import me.xapu1337.recodes.trollgui.loaders.TrollLoader;
+import me.xapu1337.recodes.trollgui.types.TrollMetaData;
 import me.xapu1337.recodes.trollgui.utilities.ConfigUtils;
+import me.xapu1337.recodes.trollgui.utilities.DebuggingUtil;
 import me.xapu1337.recodes.trollgui.utilities.InventoryBuilder;
 import me.xapu1337.recodes.trollgui.utilities.TempPool;
 import org.bukkit.Bukkit;
@@ -58,11 +61,13 @@ public class TrollCommand {
                     player.sendMessage(ConfigUtils.getInstance().setClassPlaceholders(this.getClass(), "test", "awogus").$("OMG I CAN BELIEVE IT ITS &#8800FF&lAMONG US! {test} {config:menus.Clutches.clutches.water.lore} {VOID=" + msg + "}"));
                     player.openInventory(new PlayerSelectorInventory(
                             (player1, player2) -> {
-                                TrollCore.getInstance().debuggingUtil.log("Player " + player1.getName() + " selected " + player2.getName());
+                                DebuggingUtil.getInstance().l("Player " + player1.getName() + " selected " + player2.getName());
                                 new TrollSelectionInventory(player1, player2).openInventory(player1);
                             }
                     )
                             .getInventory());
+                    TrollLoader.getInstance().getTrolls().stream().findFirst().get().Init().setCaller(player).setVictim(player).execute();
+                    player.getInventory().addItem(TrollLoader.getInstance().getTrolls().stream().findFirst().get().setMetaData().getItem());
                 })
                 .executesConsole((ConsoleCommandExecutor) (consoleCommandSender, objects) -> CommandAPI.failWithString(""))
                 .register();

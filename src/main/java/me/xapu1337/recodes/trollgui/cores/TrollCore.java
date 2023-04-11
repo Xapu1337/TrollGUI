@@ -1,5 +1,6 @@
 package me.xapu1337.recodes.trollgui.cores;
 
+import com.google.gson.Gson;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIConfig;
 import me.xapu1337.recodes.trollgui.commands.TrollCommand;
@@ -12,9 +13,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.HashMap;
+
 public class TrollCore extends JavaPlugin implements Listener {
 
-    public static TrollCore instance;
+    private static TrollCore instance;
 
     public TrollCore() {
         if (instance == null)
@@ -25,10 +28,6 @@ public class TrollCore extends JavaPlugin implements Listener {
         return instance;
     }
 
-    public static Plugin getPlugin() {
-        return getInstance();
-    }
-    public final DebuggingUtil debuggingUtil = new DebuggingUtil(true);
 
     @Override
     public void onEnable() {

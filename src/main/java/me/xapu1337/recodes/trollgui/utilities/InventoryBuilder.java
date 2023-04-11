@@ -1,7 +1,8 @@
 package me.xapu1337.recodes.trollgui.utilities;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import com.cryptomorin.xseries.XItemStack;
 import com.cryptomorin.xseries.XMaterial;
@@ -14,8 +15,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class InventoryBuilder {
     private final Map<Character, ItemStack> materials = new HashMap<>();
     private String[] pattern = new String[0];
-    private int size;
+    private int size = 54;
     private Inventory _inventory;
+    private Function<Inventory, Inventory> _inventoryContents;
 
     public InventoryBuilder setMaterial(char key, XMaterial material) {
         this.materials.put(key, material.parseItem());
@@ -33,6 +35,64 @@ public class InventoryBuilder {
         return this;
     }
 
+    public InventoryBuilder setInventoryContents(Function<Inventory, Inventory> contents) {
+        DebuggingUtil.getInstance().l(materials.toString());
+        DebuggingUtil.getInstance().l(Arrays.toString(pattern));
+        this._inventoryContents = contents;
+        return this;
+    }
+    public int countSimilar(char key) {
+        int count = 0;
+        for (String line : pattern) {
+            for (char c : line.toCharArray()) {
+                if (c == key) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    public int countSimilar(ItemStack itemStack) {
+        int count = 0;
+        for (ItemStack item : materials.values()) {
+            if (item.isSimilar(itemStack)) {
+                count++;
+            }
+        }
+        return count * countSimilar(itemStack.getType().toString().charAt(0));
+    }
+
+    public int[] getItemSlots(ItemStack item) {
+        List<Integer> slots = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            ItemStack slotItem = _inventory.getItem(i);
+
+            if (slotItem == null) {
+                slots.add(i);
+            }
+
+            if (slotItem != null && slotItem.isSimilar(item)) {
+                slots.add(i);
+            }
+        }
+        int[] slotArray = new int[slots.size()];
+        for (int i = 0; i < slots.size(); i++) {
+            slotArray[i] = slots.get(i);
+        }
+        return slotArray;
+    }
+
+    public int[] getItemSlots(char key) {
+        ItemStack item = this.materials.get(key);
+        if (item == null) {
+            return getItemSlots(new ItemStackBuilder(XMaterial.AIR).build());
+        }
+        return getItemSlots(item);
+    }
+
+
+
     public InventoryBuilder setPattern(String... pattern) {
         if (pattern.length < 1 || pattern.length > 6) throw new IllegalArgumentException("Pattern must have between 1 and 6 lines");
         int numCols = pattern[0].length();
@@ -40,6 +100,7 @@ public class InventoryBuilder {
         for (String line : pattern) if (line.length() != numCols) throw new IllegalArgumentException("Pattern lines must have the same length");
         this.pattern = pattern;
         this.size = pattern.length * 9;
+        this._inventory = Bukkit.createInventory(null, size);
         return this;
     }
 
@@ -65,31 +126,19 @@ public class InventoryBuilder {
 
     public Inventory build() {
         ItemStack[] inventory = new ItemStack[size];
-        _inventory = Bukkit.createInventory(null, size);
         for (int i = 0; i < pattern.length; i++) for (int j = 0; j < pattern[i].length(); j++) inventory[(i * 9) + j] = materials.containsKey(pattern[i].charAt(j)) ? materials.get(pattern[i].charAt(j)) : new ItemStack(Material.AIR);
         _inventory.setContents(inventory);
+        if (_inventoryContents != null) {
+            _inventory = _inventoryContents.apply(_inventory);
+        }
         return _inventory;
     }
 
+    // update the inventory
+    //
     public Inventory getInventory() {
         return _inventory;
     }
 
-    public void refresh() {
-        ItemStack[] inventory = new ItemStack[size];
-        for (int i = 0; i < pattern.length; i++) {
-            for (int j = 0; j < pattern[i].length(); j++) {
-                char key = pattern[i].charAt(j);
-                if (materials.containsKey(key)) {
-                    ItemStack item = materials.get(key).clone();
-                    if (item.getAmount() == 0) item.setAmount(1);
-                    inventory[(i * 9) + j] = item;
-                } else {
-                    inventory[(i * 9) + j] = new ItemStack(Material.AIR);
-                }
-            }
-        }
-        _inventory.setContents(inventory);
-    }
 
 }
