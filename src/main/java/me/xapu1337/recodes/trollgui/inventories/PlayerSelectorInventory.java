@@ -10,10 +10,7 @@ import com.cryptomorin.xseries.XMaterial;
 import me.xapu1337.recodes.trollgui.cores.TrollCore;
 import me.xapu1337.recodes.trollgui.handlers.PaginationHandler;
 import me.xapu1337.recodes.trollgui.types.PaginationItemType;
-import me.xapu1337.recodes.trollgui.utilities.ConfigUtils;
-import me.xapu1337.recodes.trollgui.utilities.InventoryBuilder;
-import me.xapu1337.recodes.trollgui.utilities.ItemStackBuilder;
-import me.xapu1337.recodes.trollgui.utilities.Utils;
+import me.xapu1337.recodes.trollgui.utilities.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -31,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
 public class PlayerSelectorInventory implements Listener, InventoryHolder {
 
     private final Inventory inventory;
-    private final NamespacedKey UUID_KEY = new NamespacedKey(TrollCore.instance, "uuid");
+    private final NamespacedKey UUID_KEY = new NamespacedKey(TrollCore.getInstance(), "uuid");
     private final List<Player> players;
     private final BiConsumer<Player, Player> onClick;
     private final PaginationHandler paginationHandler;
@@ -96,7 +93,7 @@ public class PlayerSelectorInventory implements Listener, InventoryHolder {
                 lore = lore.stream().map(ConfigUtils.getInstance()::$).toList();
                 meta.setLore(lore);
                 item.setItemMeta(meta);
-                TrollCore.getInstance().debuggingUtil.log("Setting item " + i + " to " + player.getName());
+                DebuggingUtil.getInstance().l("Setting item " + i + " to " + player.getName());
                 this.inventory.setItem(i, item);
             }
         }

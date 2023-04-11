@@ -13,7 +13,7 @@ import java.util.List;
 
 public class TrollMetaData {
     private String trollName;
-    private ItemStack itemStack;
+    private final ItemStack itemStack;
     private ItemMeta itemMeta;
     private boolean isTogglable;
     private boolean isToggled;
@@ -21,19 +21,17 @@ public class TrollMetaData {
     private List<String> lore;
 
     public TrollMetaData(XMaterial material) {
-        // set default values
-        this.trollName = "Default Troll";
         this.itemStack = new ItemStackBuilder(material).build();
         this.itemMeta = this.itemStack.getItemMeta();
+        setDefaults();
+    }
+
+    private void setDefaults() {
+        this.trollName = "Default Troll";
         this.isTogglable = false;
         this.isToggled = false;
         this.name = "";
-        this.lore = new ArrayList<>();
-    }
-
-    public TrollMetaData setLore(String... lore) {
-        this.lore = List.of(lore);
-        return this;
+        this.lore = Collections.emptyList();
     }
 
     public TrollMetaData setName(String name) {
@@ -49,7 +47,10 @@ public class TrollMetaData {
     public List<String> getLore() {
         return this.lore;
     }
-
+    public TrollMetaData setLore(String... lore) {
+        this.lore = Arrays.asList(lore);
+        return this;
+    }
     public String getName() {
         return this.name;
     }
@@ -78,23 +79,22 @@ public class TrollMetaData {
 
     public TrollMetaData loadConfigData(String trollName) {
         this.trollName = trollName;
-        this.name = ConfigUtils.getInstance().$(ConfigUtils.getInstance().$("{config:menus.troll-menu.items.trolls." + trollName + ".name}"));
-        this.lore = Collections.singletonList(ConfigUtils.getInstance().$(ConfigUtils.getInstance().$("{config:menus.troll-menu.items.trolls." + trollName + ".lore}")));
-
+        String trollPath = "{config:menus.troll-menu.items.trolls." + trollName + ".";
+        setName(ConfigUtils.getInstance().$(trollPath + "name}"));
+        setLore(ConfigUtils.getInstance().$(trollPath + "lore}"));
         return this;
     }
 
     public ItemStack getItem() {
         if (!this.name.isEmpty()) {
             itemMeta.setDisplayName(ConfigUtils.getInstance().$(this.name));
-            if (this.lore != null && this.lore.size() > 0) {
-                itemMeta.setLore(this.getLore().stream().map(ConfigUtils.getInstance()::$).toList());
+            if (!this.lore.isEmpty()) {
+                itemMeta.setLore(this.lore.stream().map(ConfigUtils.getInstance()::$).toList());
             }
             itemStack.setItemMeta(itemMeta);
         }
         return itemStack;
     }
-
     public ItemMeta getItemMeta() {
         return itemMeta;
     }
@@ -104,20 +104,12 @@ public class TrollMetaData {
         return this;
     }
 
-    public TrollMetaData setAttributes(TrollAttributes ...attributes){
-
-        if (attributes.length == 0)
-            return this;
-
-
+    public TrollMetaData setAttributes(TrollAttributes... attributes) {
         for (TrollAttributes attribute : attributes) {
             this.lore.add(attribute.getAttributeLore());
         }
-
         itemMeta.setLore(lore);
-
         itemStack.setItemMeta(itemMeta);
-
         return this;
     }
 

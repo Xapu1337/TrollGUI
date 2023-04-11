@@ -10,7 +10,7 @@ public abstract class Troll {
     private Player caller;
     private Player victim;
     private TrollMetaData trollMetaData;
-    public static final NamespacedKey trollClassKey = new NamespacedKey(TrollCore.instance, "assigned-troll-class");
+    public static final NamespacedKey trollClassKey = new NamespacedKey(TrollCore.getInstance(), "assigned-troll-class");
 
     public Troll() {
     }
