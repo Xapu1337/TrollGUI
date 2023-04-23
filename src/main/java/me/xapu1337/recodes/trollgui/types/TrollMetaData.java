@@ -2,7 +2,9 @@ package me.xapu1337.recodes.trollgui.types;
 
 import com.cryptomorin.xseries.XMaterial;
 import me.xapu1337.recodes.trollgui.utilities.ConfigUtils;
+import me.xapu1337.recodes.trollgui.utilities.DebuggingUtil;
 import me.xapu1337.recodes.trollgui.utilities.ItemStackBuilder;
+import me.xapu1337.recodes.trollgui.utilities.TrollToggablesStorage;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -15,8 +17,6 @@ public class TrollMetaData {
     private String trollName;
     private final ItemStack itemStack;
     private ItemMeta itemMeta;
-    private boolean isTogglable;
-    private boolean isToggled;
     private String name;
     private List<String> lore;
 
@@ -28,10 +28,8 @@ public class TrollMetaData {
 
     private void setDefaults() {
         this.trollName = "Default Troll";
-        this.isTogglable = false;
-        this.isToggled = false;
         this.name = "";
-        this.lore = Collections.emptyList();
+        this.lore = new ArrayList<>();
     }
 
     public TrollMetaData setName(String name) {
@@ -41,14 +39,14 @@ public class TrollMetaData {
 
     public TrollMetaData setTrollName(String trollName) {
         this.trollName = trollName;
-        return this;
+        return loadConfigData();
     }
 
     public List<String> getLore() {
         return this.lore;
     }
     public TrollMetaData setLore(String... lore) {
-        this.lore = Arrays.asList(lore);
+        this.lore = new ArrayList<>(Arrays.asList(lore));
         return this;
     }
     public String getName() {
@@ -59,27 +57,9 @@ public class TrollMetaData {
         return this.trollName;
     }
 
-    public boolean isToggled() {
-        return this.isToggled;
-    }
 
-    public TrollMetaData setToggled(boolean isToggled) {
-        this.isToggled = isToggled;
-        return this;
-    }
-
-    public boolean isTogglable() {
-        return this.isTogglable;
-    }
-
-    public TrollMetaData setTogglable(boolean isTogglable) {
-        this.isTogglable = isTogglable;
-        return this;
-    }
-
-    public TrollMetaData loadConfigData(String trollName) {
-        this.trollName = trollName;
-        String trollPath = "{config:menus.troll-menu.items.trolls." + trollName + ".";
+    public TrollMetaData loadConfigData() {
+        String trollPath = "{config:menus.troll-menu.items.trolls." + this.trollName + ".";
         setName(ConfigUtils.getInstance().$(trollPath + "name}"));
         setLore(ConfigUtils.getInstance().$(trollPath + "lore}"));
         return this;
@@ -104,12 +84,16 @@ public class TrollMetaData {
         return this;
     }
 
+
+
     public TrollMetaData setAttributes(TrollAttributes... attributes) {
         for (TrollAttributes attribute : attributes) {
-            this.lore.add(attribute.getAttributeLore());
+            lore.add(attribute.getAttributeLore());
         }
         itemMeta.setLore(lore);
+        DebuggingUtil.getInstance().logObject(itemMeta);
         itemStack.setItemMeta(itemMeta);
+        DebuggingUtil.getInstance().logObject(itemStack);
         return this;
     }
 
