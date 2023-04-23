@@ -43,8 +43,9 @@ public class TrollLoader {
                     .filter(Troll.class::isAssignableFrom)
                     .map(clazz -> {
                         try {
-                            return (Troll) clazz.getConstructor().newInstance();
+                            return (Troll) ((Troll) clazz.getConstructor().newInstance()).Init();
                         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                            DebuggingUtil.getInstance().error("Error while instantiating troll", e, null);
                             throw new RuntimeException(e);
                         } catch (NoSuchMethodException ignored) {
                             return null;
@@ -56,7 +57,7 @@ public class TrollLoader {
             trolls.addAll(newTrolls);
             DebuggingUtil.getInstance().l("Successfully refreshed trolls. Total trolls: " + trolls.size());
         } catch (RuntimeException e) {
-            DebuggingUtil.getInstance().error("Error while refreshing trolls");
+            DebuggingUtil.getInstance().error("Error while refreshing trolls", e, null);
             Bukkit.getLogger().severe("Failed to fetch classes! (please report this to Ram#1337 on Discord)");
             e.printStackTrace();
         }

@@ -52,10 +52,11 @@ public class ItemStackBuilder {
         ItemStack itemStack = null;
 
         if (material == XMaterial.PLAYER_HEAD && owner != null) {
+            DebuggingUtil.getInstance().log("Creating player head with owner: " + owner);
             itemStack = new ItemStack(Material.PLAYER_HEAD);
             SkullMeta meta = (SkullMeta) itemStack.getItemMeta();
             meta.setOwningPlayer(Bukkit.getOfflinePlayer(owner));
-            meta.getPersistentDataContainer().set(new NamespacedKey(TrollCore.getInstance(), "uuid"), PersistentDataType.STRING, owner.toString());
+            meta.getPersistentDataContainer().set(Utils.getInstance().UUID_KEY, PersistentDataType.STRING, owner.toString());
             itemStack.setItemMeta(meta);
         } else {
             itemStack = material.parseItem();

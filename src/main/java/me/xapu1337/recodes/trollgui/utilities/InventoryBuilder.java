@@ -9,6 +9,7 @@ import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -18,6 +19,10 @@ public class InventoryBuilder {
     private int size = 54;
     private Inventory _inventory;
     private Function<Inventory, Inventory> _inventoryContents;
+
+    public InventoryBuilder(InventoryHolder holder) {
+        this._inventory = Bukkit.createInventory(holder, size);
+    }
 
     public InventoryBuilder setMaterial(char key, XMaterial material) {
         this.materials.put(key, material.parseItem());
@@ -36,8 +41,6 @@ public class InventoryBuilder {
     }
 
     public InventoryBuilder setInventoryContents(Function<Inventory, Inventory> contents) {
-        DebuggingUtil.getInstance().l(materials.toString());
-        DebuggingUtil.getInstance().l(Arrays.toString(pattern));
         this._inventoryContents = contents;
         return this;
     }
@@ -100,7 +103,8 @@ public class InventoryBuilder {
         for (String line : pattern) if (line.length() != numCols) throw new IllegalArgumentException("Pattern lines must have the same length");
         this.pattern = pattern;
         this.size = pattern.length * 9;
-        this._inventory = Bukkit.createInventory(null, size);
+        _inventory = Bukkit.createInventory(_inventory.getHolder(), size);
+
         return this;
     }
 

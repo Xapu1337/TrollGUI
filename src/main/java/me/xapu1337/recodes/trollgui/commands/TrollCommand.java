@@ -66,7 +66,7 @@ public class TrollCommand {
                             }
                     )
                             .getInventory());
-                    TrollLoader.getInstance().getTrolls().stream().findFirst().get().Init().setCaller(player).setVictim(player).execute();
+                    TrollLoader.getInstance().getTrolls().stream().findFirst().get().setCaller(player).setVictim(player).execute();
                     player.getInventory().addItem(TrollLoader.getInstance().getTrolls().stream().findFirst().get().setMetaData().getItem());
                 })
                 .executesConsole((ConsoleCommandExecutor) (consoleCommandSender, objects) -> CommandAPI.failWithString(""))

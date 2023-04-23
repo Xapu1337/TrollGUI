@@ -1,13 +1,22 @@
 package me.xapu1337.recodes.trollgui.utilities;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import me.xapu1337.recodes.trollgui.types.Troll;
+import me.xapu1337.recodes.trollgui.types.TrollMetaData;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -19,6 +28,8 @@ public class DebuggingUtil {
 
     private static final SingletonBase<DebuggingUtil> instance = new SingletonBase<>(DebuggingUtil.class);
     private final boolean debuggingEnabled = true;
+
+    private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     public DebuggingUtil() {}
 
@@ -52,6 +63,88 @@ public class DebuggingUtil {
     public void l(String message, Object... args) {
         log(Level.INFO, String.format(message, args), 2);
     }
+
+
+    public void logObject(Object obj) {
+        l(" \n ");
+        l(" \n ");
+        if (obj == null) {
+            l("Object is null");
+            return;
+        }
+        l("| START OF OBJECT " + obj.getClass().getName() + " \n ");
+        Class<?> objClass = obj.getClass();
+        if (objClass.isArray()) {
+            int length = Array.getLength(obj);
+            for (int i = 0; i < length; i++) {
+                logObject(Array.get(obj, i));
+            }
+            return;
+        }
+        String typeName = objClass.getName();
+        switch (typeName) {
+            case "java.util.HashMap", "java.util.Map" -> {
+                Map<?, ?> map = (Map<?, ?>) obj;
+                if (map.isEmpty()) {
+                    l("|  Empty Map");
+                } else {
+                    l("|  Map Contents:");
+                    l("|    " + gson.toJson(map));
+                }
+            }
+            case "java.util.List" -> {
+                List<?> list = (List<?>) obj;
+                if (list.isEmpty()) {
+                    l("|  Empty List");
+                } else {
+                    l("|  List Contents:");
+                    for (Object element : list) {
+                        l("|    "+(String) element);
+                    }
+                }
+            }
+            case "org.bukkit.inventory.ItemStack" -> {
+                ItemStack itemStack = (ItemStack) obj;
+                l("|  ItemStack Contents:");
+                l("|    Type: " + itemStack.getType());
+                l("|    Amount: " + itemStack.getAmount());
+                l("|    Durability: " + itemStack.getDurability());
+                l("|    Meta: " + itemStack.getItemMeta());
+            }
+            case "org.bukkit.inventory.meta.ItemMeta" -> {
+                ItemMeta itemMeta = (ItemMeta) obj;
+                l("|  ItemMeta Contents:");
+                l("|    DisplayName: " + itemMeta.getDisplayName());
+                l("|    Lore: " + itemMeta.getLore());
+                l("|    Enchants: " + itemMeta.getEnchants());
+            }
+            case "me.xapu1337.recodes.trollgui.types.Troll", "me.xapu1337.recodes.trollgui.types.TrollMetaData" -> {
+                TrollMetaData metaData = typeName.equals("me.xapu1337.recodes.trollgui.types.Troll") ? ((Troll) obj).getTrollMetaData() : (TrollMetaData) obj;
+                l("|  Logging contents of TrollMetaData:");
+                l("|    Troll name: " + metaData.getTrollName());
+                l("|    Item Name: " + metaData.getItemMeta().getDisplayName());
+                l("|    Item Lore: " + metaData.getItemMeta().getLore());
+                l("|    Item Enchants: " + metaData.getItemMeta().getEnchants());
+                l("|    Item Type: " + metaData.getItem().getType());
+            }
+            default -> {
+                l("|  Object fields:");
+                Field[] fields = objClass.getDeclaredFields();
+                for (Field field : fields) {
+                    try {
+                        if(!field.trySetAccessible()) continue;
+                        l("|    " + field.getName() + ": " + field.get(obj));
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+                l("|   String representation:" + obj.toString());
+                break;
+            }
+        }
+    }
+
+
 
     public void send(CommandSender sender, String message) {
         if (debuggingEnabled && sender != null && message != null) {

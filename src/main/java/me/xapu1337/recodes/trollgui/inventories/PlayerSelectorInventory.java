@@ -1,10 +1,9 @@
 package me.xapu1337.recodes.trollgui.inventories;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.lang.ref.WeakReference;
+import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.stream.Stream;
 
 import com.cryptomorin.xseries.XMaterial;
 import me.xapu1337.recodes.trollgui.cores.TrollCore;
@@ -13,7 +12,6 @@ import me.xapu1337.recodes.trollgui.types.PaginationItemType;
 import me.xapu1337.recodes.trollgui.utilities.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -26,22 +24,19 @@ import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
 public class PlayerSelectorInventory implements Listener, InventoryHolder {
-
+    private final InventoryBuilder builder = new InventoryBuilder(this);
     private final Inventory inventory;
-    private final NamespacedKey UUID_KEY = new NamespacedKey(TrollCore.getInstance(), "uuid");
     private final List<Player> players;
     private final BiConsumer<Player, Player> onClick;
     private final PaginationHandler paginationHandler;
 
+    private WeakReference<Inventory> previousInventory;
     public PlayerSelectorInventory(BiConsumer<Player, Player> onClick) {
         this.players = List.of(Bukkit.getOnlinePlayers().toArray(new Player[0]));
         this.onClick = onClick;
         this.paginationHandler = new PaginationHandler(45);
-        paginationHandler.setOnPageChange( (page, maxPage) -> { refresh(); });
-
         Bukkit.getPluginManager().registerEvents(this, TrollCore.getInstance());
 
-        InventoryBuilder builder = new InventoryBuilder();
         builder.setSize(54)
         .setPattern(
                 "XXXXXXXXX",
@@ -55,85 +50,107 @@ public class PlayerSelectorInventory implements Listener, InventoryHolder {
         .setItem('>', PaginationItemType.NEXT_PAGE.getItemStack())
         .setItem('<', PaginationItemType.PREVIOUS_PAGE.getItemStack())
         .setItem('X', new ItemStackBuilder(XMaterial.AIR).withDisplayName(" ").build())
-        .setItem('C', PaginationItemType.CLOSE.getItemStack())
-        .setItem('B', new ItemStackBuilder(XMaterial.BLACK_STAINED_GLASS_PANE).withDisplayName(" ").build());
+        .setItem('C', previousInventory == null || previousInventory.get() == null ? new ItemStackBuilder(XMaterial.BARRIER).withDisplayName("Close").build() : new ItemStackBuilder(XMaterial.BARRIER).withDisplayName("Go Back").build())
+        .setItem('B', new ItemStackBuilder(XMaterial.BLACK_STAINED_GLASS_PANE).withDisplayName(" ").build())
+                .setInventoryContents((inventory) -> {
 
+                    paginationHandler.setMaxPage((int) Math.ceil(players.size() / 45.0));
+                    if (paginationHandler.getCurrentPage() > paginationHandler.getMaxPage()) paginationHandler.setCurrentPage(paginationHandler.getMaxPage());
+                    if (paginationHandler.getCurrentPage() < 1) paginationHandler.setCurrentPage(paginationHandler.getCurrentPage() + 1);
+
+                    int startIndex = (paginationHandler.getCurrentPage() - 1) * 45;
+                    int endIndex = startIndex + 45;
+                    if (endIndex > players.size()) endIndex = players.size();
+                    String displayName;
+                    ItemStack item;
+                    ItemMeta meta;
+
+                    for (int i = 0; i < 45; i++) {
+                        int index = startIndex + i;
+
+                        if (index < endIndex) {
+                            Player player = players.get(index);
+                            displayName = player.getDisplayName();
+                            if (displayName.length() > 32) {
+                                displayName = displayName.substring(0, 32);
+                            }
+                            item = new ItemStackBuilder(XMaterial.PLAYER_HEAD).withPlayerHead(player.getUniqueId()).withDisplayName(displayName).build();
+                            meta = item.getItemMeta();
+
+                            meta.setLore(Stream.of(
+                                    "&7Health: &f" + player.getHealth() + "&c❤",
+                                    player.isOp() ? "hasop" : ""
+                            ).filter(s -> !s.isEmpty()).map(ConfigUtils.getInstance()::$).toList());
+                            item.setItemMeta(meta);
+                            inventory.setItem(i, item);
+                        }
+                    }
+
+                    inventory.setItem(53, paginationHandler.getCurrentPage() < paginationHandler.getMaxPage() && paginationHandler.getCurrentPage() > 1
+                            ? PaginationItemType.NEXT_PAGE.getItemStack()
+                            : createPoppyItem("Last Page"));
+
+                    inventory.setItem(45, paginationHandler.getCurrentPage() > 1 && paginationHandler.getCurrentPage() > 1
+                            ? PaginationItemType.PREVIOUS_PAGE.getItemStack()
+                            : createPoppyItem("First Page"));
+
+
+                    return inventory;
+                });
         this.inventory = builder.build();
-        this.refresh();
+        paginationHandler.setOnPageChange( (page, maxPage) -> {
+            builder.build();
+        });
     }
 
-    public void refresh() {
-        ItemMeta meta;
-        ItemStack item;
-        String displayName;
-
-        paginationHandler.setMaxPage((int) Math.ceil(players.size() / 45.0));
-        if (paginationHandler.getCurrentPage() > paginationHandler.getMaxPage()) paginationHandler.setCurrentPage(paginationHandler.getMaxPage());
-        if (paginationHandler.getCurrentPage() < 1) paginationHandler.setCurrentPage(paginationHandler.getCurrentPage() + 1);
-
-        int startIndex = (paginationHandler.getCurrentPage() - 1) * 45;
-        int endIndex = startIndex + 45;
-        if (endIndex > players.size()) endIndex = players.size();
-
-        for (int i = 0; i < 45; i++) {
-            int index = startIndex + i;
-
-            if (index < endIndex) {
-                Player player = players.get(index);
-                displayName = player.getDisplayName();
-                if (displayName.length() > 32) {
-                    displayName = displayName.substring(0, 32);
-                }
-                item = new ItemStackBuilder(XMaterial.PLAYER_HEAD).withPlayerHead(player.getUniqueId()).withDisplayName(displayName).build();
-                meta = item.getItemMeta();
-
-                List<String> lore = new ArrayList<>();
-                lore.add("&7" + player.getName());
-                lore.add("&7Health: &f" + player.getHealth() + "&c❤");
-                lore = lore.stream().map(ConfigUtils.getInstance()::$).toList();
-                meta.setLore(lore);
-                item.setItemMeta(meta);
-                DebuggingUtil.getInstance().l("Setting item " + i + " to " + player.getName());
-                this.inventory.setItem(i, item);
-            }
-        }
-
-        if (paginationHandler.getCurrentPage() < paginationHandler.getMaxPage()) {
-            this.inventory.setItem(53, PaginationItemType.NEXT_PAGE.getItemStack());
-        } else {
-            this.inventory.setItem(53, new ItemStackBuilder(XMaterial.GRAY_STAINED_GLASS_PANE).withDisplayName("Last Page").build());
-        }
-        if (paginationHandler.getCurrentPage() > 1) {
-            this.inventory.setItem(45, PaginationItemType.PREVIOUS_PAGE.getItemStack());
-        } else {
-            this.inventory.setItem(45, new ItemStackBuilder(XMaterial.GRAY_STAINED_GLASS_PANE).withDisplayName("First Page").build());
-        }
+    public void setPreviousInventory(Inventory previousInventory) {
+        this.previousInventory = new WeakReference<>(previousInventory);
     }
 
-    @NotNull
+    public Inventory getPreviousInventory() {
+        return previousInventory.get();
+    }
     @Override
-    public Inventory getInventory() {
+    public @NotNull Inventory getInventory() {
         return inventory;
     }
+
+    public void open(Player player) {
+        player.openInventory(inventory);
+    }
+
+    private ItemStack createPoppyItem(String displayName) {
+        return new ItemStackBuilder(XMaterial.POPPY)
+                .withDisplayName(displayName)
+                .withInvisibleEnchantmentGlint()
+                .build();
+    }
+
+
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        if (Utils.getInstance().checkUniqueInventory(event, this, this.inventory)) return;
-
+        if (!Utils.getInstance().checkUniqueInventory(event, this)) return;
         event.setCancelled(true);
+
 
         ItemStack item = event.getCurrentItem();
 
-        if (item == null || item.getItemMeta() == null || item.getItemMeta().getDisplayName() == null || item.getType() == Material.AIR || item.getType() == Material.BLACK_STAINED_GLASS_PANE || item.getType() == Material.GRAY_STAINED_GLASS_PANE) return;
-
-        paginationHandler.handleOnInventoryClick(event);
+        if (item == null || item.getItemMeta() == null || item.getType() == Material.AIR || item.getType() == Material.BLACK_STAINED_GLASS_PANE || item.getType() == Material.GRAY_STAINED_GLASS_PANE) return;
+        if (previousInventory != null && previousInventory.get() != null && item.getType() == Material.BARRIER && item.getItemMeta().getDisplayName().equals("Go Back")) {
+            event.getWhoClicked().openInventory(previousInventory.get());
+            return;
+        }
 
 
         if (item.getItemMeta().getPersistentDataContainer().isEmpty()) return;
 
         Player player = (Player) event.getWhoClicked();
-        UUID uuid = UUID.fromString(Objects.requireNonNull(item.getItemMeta().getPersistentDataContainer().get(UUID_KEY, PersistentDataType.STRING)));
+        DebuggingUtil.getInstance().l("Clicked on " + item.getItemMeta().getDisplayName());
+        UUID uuid = UUID.fromString(item.getItemMeta().getPersistentDataContainer().get(Utils.getInstance().UUID_KEY, PersistentDataType.STRING));
+        if (uuid == null) return;
         Player target = Bukkit.getPlayer(uuid);
         if (target == null) return;
+        player.closeInventory();
         onClick.accept((Player) event.getWhoClicked(), target);
     }
 }

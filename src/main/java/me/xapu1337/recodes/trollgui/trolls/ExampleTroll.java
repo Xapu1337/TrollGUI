@@ -9,7 +9,7 @@ public class ExampleTroll extends Troll {
     @Override
     public TrollMetaData setMetaData() {
         return new TrollMetaData(XMaterial.COMMAND_BLOCK)
-                .loadConfigData("debug");
+                .setTrollName("debug");
     }
 
     @Override

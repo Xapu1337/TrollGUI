@@ -2,6 +2,7 @@ package me.xapu1337.recodes.trollgui.handlers;
 
 import me.xapu1337.recodes.trollgui.types.PaginationItemType;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.function.BiConsumer;
@@ -70,6 +71,10 @@ public class PaginationHandler {
      * @param event The click event to handle.
      */
     public void handleOnInventoryClick(InventoryClickEvent event) {
+        assert onPageChange != null;
+        assert event.getClickedInventory() != null;
+        assert event.getCurrentItem() != null;
+        assert event != null;
         event.setCancelled(true);
 
         if (event.getClickedInventory() == null || event.getCurrentItem() == null) {
@@ -94,6 +99,43 @@ public class PaginationHandler {
                 }
             }
             case CLOSE -> event.getWhoClicked().closeInventory();
+        }
+
+        onPageChange.accept(currentPage, maxPage);
+    }
+
+    /**
+     * Handles a click event within the inventory.
+     * @param event The click event to handle.
+     */
+    public void handleOnInventoryClick(InventoryClickEvent event, Inventory previousInventory) {
+        event.setCancelled(true);
+
+        if (event.getClickedInventory() == null || event.getCurrentItem() == null) {
+            return;
+        }
+
+        PaginationItemType itemType = getItemType(event.getCurrentItem());
+
+        if (itemType == null) {
+            return;
+        }
+
+        switch (itemType) {
+            case NEXT_PAGE -> {
+                if (currentPage < maxPage) {
+                    currentPage++;
+                }
+            }
+            case PREVIOUS_PAGE -> {
+                if (currentPage > 1) {
+                    currentPage--;
+                }
+            }
+            case CLOSE -> {
+                event.getWhoClicked().closeInventory();
+                event.getWhoClicked().openInventory(previousInventory);
+            }
         }
 
         onPageChange.accept(currentPage, maxPage);
