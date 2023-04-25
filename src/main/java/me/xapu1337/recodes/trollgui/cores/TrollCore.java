@@ -66,7 +66,7 @@ public class TrollCore extends JavaPlugin implements Listener {
         eventManager.registerEvent(BlockPlaceEvent.class, (event) -> {
             DebuggingUtil.getInstance().l("BlockPlaceEvent");
             Player player = event.getPlayer();
-            if (TrollToggablesStorage.getInstance().hasToggle(player.getUniqueId(), "noPlace")) {
+            if (TrollToggablesStorage.getInstance().hasToggle(player.getUniqueId(), "noBuild")) {
                 event.setCancelled(true);
             }
         });
