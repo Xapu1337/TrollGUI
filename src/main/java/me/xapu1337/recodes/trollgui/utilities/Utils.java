@@ -26,6 +26,8 @@ public class Utils {
     public final NamespacedKey UUID_KEY = new NamespacedKey(TrollCore.getInstance(), "uuid");
     public final NamespacedKey SELECTION_ITEM_ID = new NamespacedKey(TrollCore.getInstance(), "selectionItemID");
 
+    public final NamespacedKey ITEM_ID_KEY = new NamespacedKey(TrollCore.getInstance(), "menuSelectionID");
+
    public boolean checkUniqueInventory(InventoryClickEvent clickEvent, InventoryHolder inventoryHolder) {
        return Objects.equals(clickEvent.getInventory().getHolder(), inventoryHolder);
    }

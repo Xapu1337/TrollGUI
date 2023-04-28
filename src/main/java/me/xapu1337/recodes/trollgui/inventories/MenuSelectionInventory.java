@@ -1,15 +1,8 @@
 package me.xapu1337.recodes.trollgui.inventories;
 
-import java.lang.ref.WeakReference;
-import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.stream.Stream;
-
-import com.cryptomorin.xseries.XMaterial;
 import me.xapu1337.recodes.trollgui.cores.TrollCore;
-import me.xapu1337.recodes.trollgui.handlers.PaginationHandler;
-import me.xapu1337.recodes.trollgui.types.PaginationItemType;
-import me.xapu1337.recodes.trollgui.utilities.*;
+import me.xapu1337.recodes.trollgui.utilities.DebuggingUtil;
+import me.xapu1337.recodes.trollgui.utilities.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -20,131 +13,83 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.NotNull;
 
-public class MenuSelectionInventory implements Listener, InventoryHolder {
-    private ItemStack _tmpItem;
-    private ItemMeta _tmpMeta;
-    private Inventory _inventory;
-    private String _title;
-    private InventoryHolder _callbackClass;
-    public final List<ItemStack> selectableItems = new ArrayList<>();
-    public BiConsumer<ItemStack, String>callback;
-    private WeakReference<Inventory> previousInventory;
-    public MenuSelectionInventory() {
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.BiConsumer;
 
+public class MenuSelectionInventory implements InventoryHolder, Listener {
+    private final int size = 9;
+    private final String title;
+    private final List<ItemStack> items = new ArrayList<>();
+    private final BiConsumer<Player, String> clickHandler;
+    private MenuSelectionInventory(String title, List<ItemStack> items, BiConsumer<Player, String> clickHandler) {
+        this.title = title;
+        this.items.addAll(items);
+        this.clickHandler = clickHandler;
     }
 
+    @Override
+    public Inventory getInventory() {
+        Inventory inventory = Bukkit.createInventory(this, size, title);
 
-    public MenuSelectionInventory newItem() {
-        _tmpItem = null;
-        _tmpMeta = null;
-        return this;
-    }
-
-    public MenuSelectionInventory setMaterial(XMaterial material) {
-        _tmpItem = material.parseItem();
-        return this;
-    }
-
-    public MenuSelectionInventory setDisplayName(String displayName) {
-        _tmpMeta = _tmpItem.getItemMeta();
-        _tmpMeta.setDisplayName(ConfigUtils.getInstance().$(displayName));
-        _tmpItem.setItemMeta(_tmpMeta);
-        return this;
-    }
-
-    public MenuSelectionInventory setLore(String... lore) {
-        _tmpMeta = _tmpItem.getItemMeta();
-        _tmpMeta.setLore(Arrays.stream(lore).map(s -> ConfigUtils.getInstance().$(s)).toList());
-        _tmpItem.setItemMeta(_tmpMeta);
-        return this;
-    }
-
-    public MenuSelectionInventory setItemID(String itemID) {
-        _tmpMeta = _tmpItem.getItemMeta();
-        _tmpMeta.getPersistentDataContainer().set(Utils.getInstance().UUID_KEY, org.bukkit.persistence.PersistentDataType.STRING, itemID);
-        _tmpItem.setItemMeta(_tmpMeta);
-        return this;
-    }
-
-    public MenuSelectionInventory finishItem() {
-        selectableItems.add(_tmpItem);
-        return this;
-    }
-
-    public MenuSelectionInventory setCallback(BiConsumer<ItemStack, String> callback) {
-        this.callback = callback;
-        return this;
-    }
-
-    public MenuSelectionInventory setTitle(String title) {
-        this._title = title;
-        return this;
-    }
-
-    public MenuSelectionInventory addNewItemFixed(String itemID, String displayName, XMaterial material, String... lore) {
-        this.newItem();
-        this.setMaterial(material);
-        this.setDisplayName(displayName);
-        this.setLore(lore);
-        this.setItemID(itemID);
-        this.finishItem();
-        return this;
-    }
-
-    public void setInventoryHolderClass(InventoryHolder _callbackClass) {
-        this._callbackClass = _callbackClass;
-    }
-
-    public Inventory build() {
         Bukkit.getPluginManager().registerEvents(this, TrollCore.getInstance());
-        _inventory = TrollCore.getInstance().getServer().createInventory(this, 9, _title);
-        ItemStack placeholder = new ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE).withName("§r").build();
-        for (int i = 0; i < 9; i++) {
-            int placeHolderCount = (9 - selectableItems.size()) / 2;
-            if (i < placeHolderCount) {
-                _inventory.setItem(i, placeholder);
-            } else if (i >= placeHolderCount && i < placeHolderCount + selectableItems.size()) {
-                _inventory.setItem(i, selectableItems.get(i - placeHolderCount));
+        for (int i = 0; i < size; i++) {
+            if (i < items.size()) {
+                inventory.setItem(i, items.get(i));
             } else {
-                _inventory.setItem(i, placeholder);
+                inventory.setItem(i, new ItemStack(Material.GLASS_PANE));
             }
         }
-        return _inventory;
+        return inventory;
     }
 
     @EventHandler
-    public void onClick(InventoryClickEvent event) {
-        if (event.getInventory().getHolder() != this) return;
+    public void handleClick(InventoryClickEvent event) {
+        if (!Utils.getInstance().checkUniqueInventory(event, this)) return;
         event.setCancelled(true);
         int slot = event.getSlot();
-        if (slot >= 0 && slot < selectableItems.size()) {
-            ItemStack clickedItem = event.getCurrentItem();
-            if (clickedItem != null) {
-                String itemID = clickedItem.getItemMeta().getPersistentDataContainer().get(Utils.getInstance().UUID_KEY, org.bukkit.persistence.PersistentDataType.STRING);
-                if (callback != null && itemID != null) {
-                    callback.accept(clickedItem, itemID);
-                }
+        if (slot < items.size()) {
+            DebuggingUtil.getInstance().l("Clicked item");
+            ItemStack item = items.get(slot);
+            PersistentDataContainer itemData = item.getItemMeta().getPersistentDataContainer();
+            if (itemData.has(Utils.getInstance().ITEM_ID_KEY, PersistentDataType.STRING)) {
+                DebuggingUtil.getInstance().l("Clicked item has valid key.");
+                String itemId = itemData.get(Utils.getInstance().ITEM_ID_KEY, PersistentDataType.STRING);
+                Player player = (Player) event.getWhoClicked();
+                DebuggingUtil.getInstance().l("%s clicked by %s", itemId, player.getDisplayName());
+                clickHandler.accept(player, itemId);
             }
         }
     }
 
+    public static class Builder {
+        private final List<ItemStack> items = new ArrayList<>();
+        private BiConsumer<Player, String> clickHandler;
 
-    public MenuSelectionInventory openForPlayer(Player player) {
-        player.openInventory(build());
-        return this;
-    }
+        public Builder() {
+            this.clickHandler = (player, itemId) -> {};
+        }
 
-    /**
-     * @return
-     */
-    @NotNull
-    @Override
-    public Inventory getInventory() {
-        return _inventory;
+        public Builder item(ItemStack itemStack, String itemId) {
+            ItemMeta itemMeta = itemStack.getItemMeta();
+            itemMeta.getPersistentDataContainer().set(Utils.getInstance().ITEM_ID_KEY, PersistentDataType.STRING, itemId);
+            itemStack.setItemMeta(itemMeta);
+            items.add(itemStack);
+            return this;
+        }
+
+        public Builder onClick(BiConsumer<Player, String> clickHandler) {
+            this.clickHandler = clickHandler;
+            return this;
+        }
+
+        public MenuSelectionInventory build(String title) {
+            return new MenuSelectionInventory(title, items, clickHandler);
+        }
     }
 }
-
-
