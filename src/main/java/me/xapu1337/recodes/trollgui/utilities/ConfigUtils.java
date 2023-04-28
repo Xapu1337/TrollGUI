@@ -1,10 +1,7 @@
 package me.xapu1337.recodes.trollgui.utilities;
 
 import me.xapu1337.recodes.trollgui.cores.TrollCore;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +15,7 @@ public class ConfigUtils {
     private static final SingletonBase<ConfigUtils> instance = new SingletonBase<>(ConfigUtils.class);
     private final Map<String, String> placeholders;
     private final Map<Class<?>, Map<String, String>> classPlaceholders;
+    private final DynamicCache<Object> cache = new DynamicCache<>();
     private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("\\{([A-Za-z0-9_-]+)}");
     private static final Pattern CONFIG_PATTERN = Pattern.compile("config:([A-Za-z0-9._-]+)");
     private static final Pattern TEMP_PATTERN = Pattern.compile("VOID=([a-fA-F0-9]{8}(-[a-fA-F0-9]{4}){4}[a-fA-F0-9]{8})");
@@ -125,7 +123,8 @@ public class ConfigUtils {
         while (matcher.find()) {
             String key = matcher.group(1);
             UUID uuid = UUID.fromString(key);
-            String value = TempPool.getInstance().getMessageAndDelete(uuid);
+            String value = (String) cache.get(uuid);
+            cache.remove(uuid);
             message = message.replace("{" + matcher.group() + "}", value);
         }
 
@@ -149,13 +148,6 @@ public class ConfigUtils {
         }
         return message;
     }
-
-
-
-
-
-
-
 
 
 }
