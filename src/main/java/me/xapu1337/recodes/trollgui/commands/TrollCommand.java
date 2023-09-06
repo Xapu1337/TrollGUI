@@ -10,7 +10,8 @@ import me.xapu1337.recodes.trollgui.inventories.PlayerSelectorInventory;
 import me.xapu1337.recodes.trollgui.inventories.TrollSelectionInventory;
 import me.xapu1337.recodes.trollgui.loaders.TrollLoader;
 import me.xapu1337.recodes.trollgui.types.TrollMetaData;
-import me.xapu1337.recodes.trollgui.utilities.ConfigUtils;
+import me.xapu1337.recodes.trollgui.utilities.DynamicCache;
+import me.xapu1337.recodes.trollgui.utilities.MessageUtils;
 import me.xapu1337.recodes.trollgui.utilities.DebuggingUtil;
 import me.xapu1337.recodes.trollgui.utilities.InventoryBuilder;
 import org.bukkit.Bukkit;
@@ -45,21 +46,21 @@ public class TrollCommand {
                                 .withAliases("repeat")
                                 .withArguments(new TextArgument("message"))
                                 .executesPlayer((player, args) -> {
-                                    player.sendMessage(ConfigUtils.getInstance().setClassPlaceholders(this.getClass(), "test", "awogus").$((String) args[0]));
+                                    player.sendMessage(MessageUtils.getInstance().setClassPlaceholders(this.getClass(), "test", "awogus").$((String) args[0]));
                                 })
                                 .executesConsole((ConsoleCommandExecutor) (consoleCommandSender, objects) -> CommandAPI.failWithString(""))
                 )
                 .executesPlayer((player, args) -> {
                     if (!hasPermission(player)) {
-                        player.sendMessage(ConfigUtils.getInstance().$("{config:Messages.missingPermission}"));
+                        player.sendMessage(MessageUtils.getInstance().$("{config:Messages.missingPermission}"));
                         return;
                     }
                     player.sendMessage("§aOpening trollgui...");
                     UUID msg = UUID.randomUUID();
                     player.sendMessage("generated uuid: " + msg);
-                    TempPool.getInstance().setMessage(msg, "§aOpening trollgui...");
+                    MessageUtils.getInstance().getCache().set(msg, "&8800ff&lthere appears to me an impostor, among us.");
 
-                    player.sendMessage(ConfigUtils.getInstance().setClassPlaceholders(this.getClass(), "test", "awogus").$("OMG I CAN BELIEVE IT ITS &#8800FF&lAMONG US! {test} {config:menus.Clutches.clutches.water.lore} {VOID=" + msg + "}"));
+                    player.sendMessage(MessageUtils.getInstance().setClassPlaceholders(this.getClass(), "test", "awogus").$("OMG I CAN BELIEVE IT ITS &#8800FF&lAMONG US! {test} {config:menus.Clutches.clutches.water.lore} {VOID=" + msg + "}"));
                     player.openInventory(new PlayerSelectorInventory(
                             (player1, player2) -> {
                                 DebuggingUtil.getInstance().l("Player " + player1.getName() + " selected " + player2.getName());

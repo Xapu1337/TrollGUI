@@ -4,7 +4,7 @@ import com.cryptomorin.xseries.XMaterial;
 import me.xapu1337.recodes.trollgui.types.Troll;
 import me.xapu1337.recodes.trollgui.types.TrollAttributes;
 import me.xapu1337.recodes.trollgui.types.TrollMetaData;
-import me.xapu1337.recodes.trollgui.utilities.ConfigUtils;
+import me.xapu1337.recodes.trollgui.utilities.MessageUtils;
 import org.bukkit.Location;
 import org.bukkit.entity.Item;
 
@@ -26,8 +26,8 @@ public class DropItemTroll extends Troll {
     @Override
     public void execute() {
         if (getVictim().getInventory().getItemInMainHand() == null || getVictim().getInventory().getItemInMainHand().getType() == XMaterial.AIR.parseMaterial()) {
-            ConfigUtils.getInstance().setClassPlaceholders(DropItemTroll.class, "player", getVictim().getName());
-            getCaller().sendMessage(ConfigUtils.getInstance().$("{config:Messages.noItemInHand}"));
+            MessageUtils.getInstance().setClassPlaceholders(DropItemTroll.class, "player", getVictim().getName());
+            getCaller().sendMessage(MessageUtils.getInstance().$("{config:Messages.noItemInHand}"));
         } else {
             Location loc = getVictim().getLocation();
             loc.setY(loc.getY() + 1.45);

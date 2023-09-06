@@ -6,7 +6,7 @@ import me.xapu1337.recodes.trollgui.inventories.PlayerSelectorInventory;
 import me.xapu1337.recodes.trollgui.types.Troll;
 import me.xapu1337.recodes.trollgui.types.TrollAttributes;
 import me.xapu1337.recodes.trollgui.types.TrollMetaData;
-import me.xapu1337.recodes.trollgui.utilities.ConfigUtils;
+import me.xapu1337.recodes.trollgui.utilities.MessageUtils;
 import org.bukkit.Location;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -36,10 +36,10 @@ public class SwapPlayersTroll extends Troll {
                     getVictim().teleport(loc2);
                     selectedPlayer.teleport(loc1);
 
-                    ConfigUtils.getInstance().setClassPlaceholders(this.getClass(), "caller.name", caller.getName());
-                    ConfigUtils.getInstance().setClassPlaceholders(this.getClass(), "victim.name", getVictim().getName());
+                    MessageUtils.getInstance().setClassPlaceholders(this.getClass(), "caller.name", caller.getName());
+                    MessageUtils.getInstance().setClassPlaceholders(this.getClass(), "victim.name", getVictim().getName());
 
-                    caller.sendMessage(ConfigUtils.getInstance().$("{config:messages.swapPlayerInventorySuccess}"));
+                    caller.sendMessage(MessageUtils.getInstance().$("{config:messages.swapPlayerInventorySuccess}"));
                 })
         );
 

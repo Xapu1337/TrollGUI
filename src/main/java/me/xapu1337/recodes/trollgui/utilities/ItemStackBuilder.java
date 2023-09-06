@@ -29,12 +29,12 @@ public class ItemStackBuilder {
     }
 
     public ItemStackBuilder withDisplayName(String displayName) {
-        this.displayName = ConfigUtils.getInstance().$(displayName);
+        this.displayName = MessageUtils.getInstance().$(displayName);
         return this;
     }
 
     public ItemStackBuilder withLore(List<String> lore) {
-        this.lore = lore.stream().map(ConfigUtils.getInstance()::$).toList();
+        this.lore = lore.stream().map(MessageUtils.getInstance()::$).toList();
         return this;
     }
 
@@ -68,11 +68,11 @@ public class ItemStackBuilder {
         }
 
         if (displayName != null) {
-            meta.setDisplayName(ConfigUtils.getInstance().$(displayName));
+            meta.setDisplayName(MessageUtils.getInstance().$(displayName));
         }
 
         if (!lore.isEmpty()) {
-            meta.setLore(lore.stream().map(ConfigUtils.getInstance()::$).toList());
+            meta.setLore(lore.stream().map(MessageUtils.getInstance()::$).toList());
         }
 
         if (isEnchantGlint) {
