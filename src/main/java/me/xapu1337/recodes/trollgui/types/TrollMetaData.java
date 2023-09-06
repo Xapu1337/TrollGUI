@@ -1,7 +1,7 @@
 package me.xapu1337.recodes.trollgui.types;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.xapu1337.recodes.trollgui.utilities.ConfigUtils;
+import me.xapu1337.recodes.trollgui.utilities.MessageUtils;
 import me.xapu1337.recodes.trollgui.utilities.DebuggingUtil;
 import me.xapu1337.recodes.trollgui.utilities.ItemStackBuilder;
 import me.xapu1337.recodes.trollgui.utilities.TrollToggablesStorage;
@@ -60,16 +60,16 @@ public class TrollMetaData {
 
     public TrollMetaData loadConfigData() {
         String trollPath = "{config:menus.troll-menu.items.trolls." + this.trollName + ".";
-        setName(ConfigUtils.getInstance().$(trollPath + "name}"));
-        setLore(ConfigUtils.getInstance().$(trollPath + "lore}"));
+        setName(MessageUtils.getInstance().$(trollPath + "name}"));
+        setLore(MessageUtils.getInstance().$(trollPath + "lore}"));
         return this;
     }
 
     public ItemStack getItem() {
         if (!this.name.isEmpty()) {
-            itemMeta.setDisplayName(ConfigUtils.getInstance().$(this.name));
+            itemMeta.setDisplayName(MessageUtils.getInstance().$(this.name));
             if (!this.lore.isEmpty()) {
-                itemMeta.setLore(this.lore.stream().map(ConfigUtils.getInstance()::$).toList());
+                itemMeta.setLore(this.lore.stream().map(MessageUtils.getInstance()::$).toList());
             }
             itemStack.setItemMeta(itemMeta);
         }

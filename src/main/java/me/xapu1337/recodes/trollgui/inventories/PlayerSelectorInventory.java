@@ -80,7 +80,7 @@ public class PlayerSelectorInventory implements Listener, InventoryHolder {
                             meta.setLore(Stream.of(
                                     "&7Health: &f" + player.getHealth() + "&c❤",
                                     player.isOp() ? "hasop" : ""
-                            ).filter(s -> !s.isEmpty()).map(ConfigUtils.getInstance()::$).toList());
+                            ).filter(s -> !s.isEmpty()).map(MessageUtils.getInstance()::$).toList());
                             item.setItemMeta(meta);
                             inventory.setItem(i, item);
                         }

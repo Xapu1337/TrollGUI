@@ -44,7 +44,7 @@ public class DebuggingUtil {
             String logMessage = String.format("%s%s&7: %s",
                     CLASS_NAME_COLOR, className, message);
             String formattedMessage = formatLogMessage(level, logMessage);
-            Bukkit.getConsoleSender().sendMessage(ConfigUtils.getInstance().$(formattedMessage));
+            Bukkit.getConsoleSender().sendMessage(MessageUtils.getInstance().$(formattedMessage));
         }
     }
 
@@ -201,21 +201,21 @@ public class DebuggingUtil {
 
     public void error(String message, Throwable throwable, Map<String, Object> data) {
         String formattedMessage = formatLogMessage(SEVERE, message);
-        Bukkit.getConsoleSender().sendMessage(ConfigUtils.getInstance().$(formattedMessage));
+        Bukkit.getConsoleSender().sendMessage(MessageUtils.getInstance().$(formattedMessage));
 
         if (throwable != null) {
             String stackTrace = getStackTraceAsString(throwable);
-            String stackTraceMessage = ConfigUtils.getInstance().$("&c&lStackTrace: &r\n" + stackTrace);
+            String stackTraceMessage = MessageUtils.getInstance().$("&c&lStackTrace: &r\n" + stackTrace);
             Bukkit.getConsoleSender().sendMessage(stackTraceMessage);
         }
 
         if (data != null && !data.isEmpty()) {
-            Bukkit.getConsoleSender().sendMessage(ConfigUtils.getInstance().$("&c&lData:"));
+            Bukkit.getConsoleSender().sendMessage(MessageUtils.getInstance().$("&c&lData:"));
             for (Map.Entry<String, Object> entry : data.entrySet()) {
                 Object value = entry.getValue();
                 String valueString = value != null ? value.toString() : "null";
                 String entryMessage = String.format("%s: %s (%s)", entry.getKey(), valueString, value != null ? value.getClass().getSimpleName() : "null");
-                Bukkit.getConsoleSender().sendMessage(ConfigUtils.getInstance().$("┆ " + entryMessage));
+                Bukkit.getConsoleSender().sendMessage(MessageUtils.getInstance().$("┆ " + entryMessage));
             }
             Bukkit.getConsoleSender().sendMessage("╰");
         }

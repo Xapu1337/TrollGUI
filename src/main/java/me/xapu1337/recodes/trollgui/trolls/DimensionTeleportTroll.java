@@ -6,7 +6,7 @@ import me.xapu1337.recodes.trollgui.inventories.MenuSelectionInventory;
 import me.xapu1337.recodes.trollgui.types.Troll;
 import me.xapu1337.recodes.trollgui.types.TrollAttributes;
 import me.xapu1337.recodes.trollgui.types.TrollMetaData;
-import me.xapu1337.recodes.trollgui.utilities.ConfigUtils;
+import me.xapu1337.recodes.trollgui.utilities.MessageUtils;
 import me.xapu1337.recodes.trollgui.utilities.ItemStackBuilder;
 import me.xapu1337.recodes.trollgui.utilities.Utils;
 import org.bukkit.Bukkit;
@@ -35,7 +35,7 @@ public class DimensionTeleportTroll extends Troll {
     @Override
     public void execute() {
         getCaller().sendMessage(" \n ");
-        getCaller().sendMessage(ConfigUtils.getInstance().$("{config:messages.selectDimensionToTeleport}"));
+        getCaller().sendMessage(MessageUtils.getInstance().$("{config:messages.selectDimensionToTeleport}"));
         getCaller().sendMessage(" \n ");
         getCaller().openInventory(
                 new MenuSelectionInventory
@@ -56,17 +56,17 @@ public class DimensionTeleportTroll extends Troll {
                                 .build(), "world_theend"
                         )
                         .onClick( (caller, clickedItemName) -> {
-                            ConfigUtils.getInstance().setClassPlaceholders(this.getClass(), "WORLD_NAME", clickedItemName);
+                            MessageUtils.getInstance().setClassPlaceholders(this.getClass(), "WORLD_NAME", clickedItemName);
                             World selectedWorld = Bukkit.getWorld(clickedItemName);
                             if (selectedWorld == null) {
                                 getCaller().playSound(getCaller().getLocation(), XSound.ENTITY_VILLAGER_NO.parseSound(), 0.5f, 0.5f);
-                                getCaller().sendMessage(ConfigUtils.getInstance().$("The world {WORLD_NAME} does not exist. (has it been loaded yet?)"));
+                                getCaller().sendMessage(MessageUtils.getInstance().$("The world {WORLD_NAME} does not exist. (has it been loaded yet?)"));
                                 return;
                             }
                             if (Utils.getInstance().teleportTo(selectedWorld, getVictim(), getVictim().getLocation().getX(), getVictim().getLocation().getZ()))
-                                getCaller().sendMessage(ConfigUtils.getInstance().$("{config:messages.teleportedToDimension}").replaceAll("%PLAYER%", getVictim().getDisplayName()).replaceAll("%DIMENSION%", selectedWorld.getName().toUpperCase()));
+                                getCaller().sendMessage(MessageUtils.getInstance().$("{config:messages.teleportedToDimension}").replaceAll("%PLAYER%", getVictim().getDisplayName()).replaceAll("%DIMENSION%", selectedWorld.getName().toUpperCase()));
                             else
-                                getCaller().sendMessage(ConfigUtils.getInstance().$("{config:messages.teleportFailed}"));
+                                getCaller().sendMessage(MessageUtils.getInstance().$("{config:messages.teleportFailed}"));
                         })
                         .build("test")
                         .getInventory()

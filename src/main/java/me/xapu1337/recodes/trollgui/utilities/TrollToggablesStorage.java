@@ -9,7 +9,7 @@ public class TrollToggablesStorage {
 
     private static final SingletonBase<TrollToggablesStorage> instance = new SingletonBase<>(TrollToggablesStorage.class);
 
-    private static ConcurrentMap<UUID, Map<String, Boolean>> playerToggles = new ConcurrentHashMap<>();
+    private static final ConcurrentMap<UUID, Map<String, Boolean>> playerToggles = new ConcurrentHashMap<>();
 
 
     public boolean hasToggle(UUID playerUUID, String toggleName) {
