@@ -8,20 +8,12 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
 import java.util.Objects;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Utils {
-
-
-    private static final SingletonBase<Utils> instance = new SingletonBase<>(Utils.class);
-
-    public static Utils getInstance() {
-        return instance.get();
-    }
 
     public final NamespacedKey UUID_KEY = new NamespacedKey(TrollCore.getInstance(), "uuid");
     public final NamespacedKey SELECTION_ITEM_ID = new NamespacedKey(TrollCore.getInstance(), "selectionItemID");
@@ -106,7 +98,6 @@ public class Utils {
         return res.toString();
     }
     public int getRandomNumberInRange(int min, int max) {
-        Random r = new Random();
-        return r.nextInt((max - min) + 1) + min;
+        return ThreadLocalRandom.current().nextInt(min, max + 1);
     }
 }

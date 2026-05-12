@@ -16,7 +16,7 @@ public class GiveAllBadEffects extends Troll {
     @Override
     public TrollMetaData setMetaData() {
         return (
-                new TrollMetaData(XMaterial.SPLASH_POTION)
+                new TrollMetaData(XMaterial.SPLASH_POTION, services)
                         .setTrollName("giveAllBadEffects")
                         .setAttributes( TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS )
 

@@ -7,16 +7,17 @@ import java.util.concurrent.ConcurrentMap;
 
 public class TrollToggablesStorage {
 
-    private static final SingletonBase<TrollToggablesStorage> instance = new SingletonBase<>(TrollToggablesStorage.class);
+    private final DebuggingUtil debug;
+    private final ConcurrentMap<UUID, Map<String, Boolean>> playerToggles = new ConcurrentHashMap<>();
 
-    private static final ConcurrentMap<UUID, Map<String, Boolean>> playerToggles = new ConcurrentHashMap<>();
+    public TrollToggablesStorage(DebuggingUtil debug) {
+        this.debug = debug;
+    }
 
 
     public boolean hasToggle(UUID playerUUID, String toggleName) {
-        synchronized (playerToggles) {
-            Map<String, Boolean> playerTogglesMap = playerToggles.computeIfAbsent(playerUUID, id -> new ConcurrentHashMap<>());
-            return playerTogglesMap != null && playerTogglesMap.getOrDefault(toggleName, false);
-        }
+        Map<String, Boolean> playerTogglesMap = playerToggles.computeIfAbsent(playerUUID, id -> new ConcurrentHashMap<>());
+        return playerTogglesMap.getOrDefault(toggleName, false);
     }
 
 
@@ -34,22 +35,19 @@ public class TrollToggablesStorage {
 
     public boolean toggle(UUID playerUUID, String toggleName) {
         Map<String, Boolean> playerTogglesMap = playerToggles.computeIfAbsent(playerUUID, id -> new ConcurrentHashMap<>());
-        DebuggingUtil.getInstance().l("Toggling " + toggleName + " for " + playerUUID);
+        debug.l("Toggling " + toggleName + " for " + playerUUID);
         Boolean currentValue = playerTogglesMap.get(toggleName);
-        DebuggingUtil.getInstance().l("Current value: " + currentValue);
+        debug.l("Current value: " + currentValue);
         boolean newValue = currentValue == null || !currentValue;
-        DebuggingUtil.getInstance().l("New value: " + newValue);
+        debug.l("New value: " + newValue);
         playerTogglesMap.put(toggleName, newValue);
-        DebuggingUtil.getInstance().l("Toggled " + toggleName + " for " + playerUUID + " to " + newValue);
-        DebuggingUtil.getInstance().logObject(playerTogglesMap);
+        debug.l("Toggled " + toggleName + " for " + playerUUID + " to " + newValue);
+        debug.logObject(playerTogglesMap);
         return newValue;
     }
 
-    public static void removePlayer(UUID playerId) {
+    public void removePlayer(UUID playerId) {
         playerToggles.remove(playerId);
     }
 
-    public static TrollToggablesStorage getInstance() {
-        return instance.get();
-    }
 }

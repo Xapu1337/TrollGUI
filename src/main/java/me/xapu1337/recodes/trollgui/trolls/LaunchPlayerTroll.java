@@ -23,7 +23,7 @@ public class LaunchPlayerTroll extends Troll {
     @Override
     public TrollMetaData setMetaData() {
         return (
-                new TrollMetaData(XMaterial.FIREWORK_ROCKET)
+                new TrollMetaData(XMaterial.FIREWORK_ROCKET, services)
                         .setTrollName("launchPlayer")
                         .setAttributes( TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS )
 

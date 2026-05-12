@@ -17,7 +17,7 @@ public class ExplodePlayerTroll extends Troll {
     @Override
     public TrollMetaData setMetaData() {
         return (
-                new TrollMetaData(XMaterial.TNT)
+                new TrollMetaData(XMaterial.TNT, services)
                         .setTrollName("explodePlayer")
                         .setAttributes( TrollAttributes.POSSIBLE_DESTRUCTION, TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS, TrollAttributes.POSSIBLE_CRASH_OR_FREEZE )
 

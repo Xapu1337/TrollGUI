@@ -1,7 +1,6 @@
 package me.xapu1337.recodes.trollgui.handlers;
 
 import me.xapu1337.recodes.trollgui.cores.TrollCore;
-import me.xapu1337.recodes.trollgui.utilities.SingletonBase;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.Map;
@@ -13,12 +12,6 @@ public class AdvancedConfigHandler {
 
 
 
-
-    public static final SingletonBase<AdvancedConfigHandler> instance = new SingletonBase<>(AdvancedConfigHandler.class);
-
-    public static AdvancedConfigHandler getInstance() {
-        return instance.get();
-    }
 
     public static FileConfiguration con = TrollCore.getInstance().getConfig();
 

@@ -1,10 +1,8 @@
 package me.xapu1337.recodes.trollgui.utilities;
 
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
-import com.cryptomorin.xseries.XItemStack;
 import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -19,9 +17,11 @@ public class InventoryBuilder {
     private int size = 54;
     private Inventory _inventory;
     private Function<Inventory, Inventory> _inventoryContents;
+    private final Services services;
 
-    public InventoryBuilder(InventoryHolder holder) {
+    public InventoryBuilder(InventoryHolder holder, Services services) {
         this._inventory = Bukkit.createInventory(holder, size);
+        this.services = services;
     }
 
     public InventoryBuilder setMaterial(char key, XMaterial material) {
@@ -35,8 +35,8 @@ public class InventoryBuilder {
     }
 
     public InventoryBuilder withDefaults() {
-        this.materials.put('B', new ItemStackBuilder(XMaterial.BLACK_STAINED_GLASS_PANE).withDisplayName(" ").build());
-        this.materials.put('X', new ItemStackBuilder(XMaterial.AIR).build());
+        this.materials.put('B', new ItemStackBuilder(XMaterial.BLACK_STAINED_GLASS_PANE, services).withDisplayName(" ").build());
+        this.materials.put('X', new ItemStackBuilder(XMaterial.AIR, services).build());
         return this;
     }
 
@@ -89,7 +89,7 @@ public class InventoryBuilder {
     public int[] getItemSlots(char key) {
         ItemStack item = this.materials.get(key);
         if (item == null) {
-            return getItemSlots(new ItemStackBuilder(XMaterial.AIR).build());
+            return getItemSlots(new ItemStackBuilder(XMaterial.AIR, services).build());
         }
         return getItemSlots(item);
     }

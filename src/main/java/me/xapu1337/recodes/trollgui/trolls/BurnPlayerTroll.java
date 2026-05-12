@@ -12,7 +12,7 @@ public class BurnPlayerTroll extends Troll {
     @Override
     public TrollMetaData setMetaData() {
         return
-                new TrollMetaData(XMaterial.BLAZE_POWDER)
+                new TrollMetaData(XMaterial.BLAZE_POWDER, services)
                         .setTrollName("burnPlayer")
                         .setAttributes( TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS );
 

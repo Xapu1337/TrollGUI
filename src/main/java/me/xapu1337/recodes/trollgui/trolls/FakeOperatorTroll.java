@@ -11,7 +11,7 @@ public class FakeOperatorTroll extends Troll {
     @Override
     public TrollMetaData setMetaData() {
         return (
-                new TrollMetaData(XMaterial.COMMAND_BLOCK)
+                new TrollMetaData(XMaterial.COMMAND_BLOCK, services)
                         .setTrollName("fakeOperator")
 
         );

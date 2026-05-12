@@ -17,7 +17,7 @@ public class PostedCringeTroll extends Troll {
     @Override
     public TrollMetaData setMetaData() {
         return (
-                new TrollMetaData( XMaterial.COMMAND_BLOCK_MINECART )
+                new TrollMetaData( XMaterial.COMMAND_BLOCK_MINECART , services)
                         .setTrollName("postedCringe")
                         .setAttributes( TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS )
         );

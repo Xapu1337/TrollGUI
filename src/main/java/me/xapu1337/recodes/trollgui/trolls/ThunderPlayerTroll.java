@@ -14,7 +14,7 @@ public class ThunderPlayerTroll extends Troll {
     @Override
     public TrollMetaData setMetaData() {
         return (
-                new TrollMetaData(XMaterial.PRISMARINE_SHARD)
+                new TrollMetaData(XMaterial.PRISMARINE_SHARD, services)
                         .setTrollName("thunder")
                         .setAttributes( TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS, TrollAttributes.POSSIBLE_DESTRUCTION )
 

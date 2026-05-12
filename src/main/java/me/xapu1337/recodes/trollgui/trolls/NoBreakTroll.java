@@ -10,7 +10,7 @@ public class NoBreakTroll extends Troll {
     @Override
     public TrollMetaData setMetaData() {
         return (
-                new TrollMetaData(XMaterial.STONE)
+                new TrollMetaData(XMaterial.STONE, services)
                         .setTrollName("noBreak")
 
         );

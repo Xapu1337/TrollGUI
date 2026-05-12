@@ -2,11 +2,9 @@ package me.xapu1337.recodes.trollgui.utilities;
 
 import com.cryptomorin.xseries.XEnchantment;
 import com.cryptomorin.xseries.XMaterial;
-import me.xapu1337.recodes.trollgui.cores.TrollCore;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.enchantments.Enchantment;
+
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -17,24 +15,25 @@ import java.util.*;
 
 public class ItemStackBuilder {
 
-    
     private final XMaterial material;
+    private final Services services;
     private String displayName;
     private List<String> lore = new ArrayList<>();
     private boolean isEnchantGlint;
     private UUID owner;
 
-    public ItemStackBuilder(XMaterial material) {
+    public ItemStackBuilder(XMaterial material, Services services) {
         this.material = material;
+        this.services = services;
     }
 
     public ItemStackBuilder withDisplayName(String displayName) {
-        this.displayName = MessageUtils.getInstance().$(displayName);
+        this.displayName = services.messages().$(displayName);
         return this;
     }
 
     public ItemStackBuilder withLore(List<String> lore) {
-        this.lore = lore.stream().map(MessageUtils.getInstance()::$).toList();
+        this.lore = lore.stream().map(services.messages()::$).toList();
         return this;
     }
 
@@ -52,14 +51,18 @@ public class ItemStackBuilder {
         ItemStack itemStack = null;
 
         if (material == XMaterial.PLAYER_HEAD && owner != null) {
-            DebuggingUtil.getInstance().log("Creating player head with owner: " + owner);
+            services.debug().log("Creating player head with owner: " + owner);
             itemStack = new ItemStack(Material.PLAYER_HEAD);
             SkullMeta meta = (SkullMeta) itemStack.getItemMeta();
             meta.setOwningPlayer(Bukkit.getOfflinePlayer(owner));
-            meta.getPersistentDataContainer().set(Utils.getInstance().UUID_KEY, PersistentDataType.STRING, owner.toString());
+            meta.getPersistentDataContainer().set(services.utils().UUID_KEY, PersistentDataType.STRING, owner.toString());
             itemStack.setItemMeta(meta);
         } else {
             itemStack = material.parseItem();
+        }
+
+        if (itemStack == null) {
+            return null;
         }
 
         ItemMeta meta = itemStack.getItemMeta();
@@ -68,11 +71,11 @@ public class ItemStackBuilder {
         }
 
         if (displayName != null) {
-            meta.setDisplayName(MessageUtils.getInstance().$(displayName));
+            meta.setDisplayName(services.messages().$(displayName));
         }
 
         if (!lore.isEmpty()) {
-            meta.setLore(lore.stream().map(MessageUtils.getInstance()::$).toList());
+            meta.setLore(lore.stream().map(services.messages()::$).toList());
         }
 
         if (isEnchantGlint) {

@@ -57,8 +57,11 @@ public class TrollVariableStorage {
         permanentStorage.remove(key);
     }
 
+    public static void shutdown() {
+        cleanupScheduler.shutdown();
+    }
+
     private static void cleanupExpiredVariables() {
-        long expirationTime = System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(30);
         storage.values().forEach(playerVariables -> playerVariables.entrySet().removeIf(entry -> entry.getValue() instanceof CachedValue && ((CachedValue) entry.getValue()).isExpired()));
     }
 

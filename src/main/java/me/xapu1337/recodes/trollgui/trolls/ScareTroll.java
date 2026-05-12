@@ -17,7 +17,7 @@ public class ScareTroll extends Troll {
     @Override
     public TrollMetaData setMetaData() {
         return (
-                new TrollMetaData(XMaterial.CARVED_PUMPKIN)
+                new TrollMetaData(XMaterial.CARVED_PUMPKIN, services)
                         .setTrollName("scarePlayer")
 
         );

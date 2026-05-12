@@ -11,7 +11,7 @@ public class NoDropTroll extends Troll {
     @Override
     public TrollMetaData setMetaData() {
         return (
-                new TrollMetaData(XMaterial.DROPPER)
+                new TrollMetaData(XMaterial.DROPPER, services)
                         .setTrollName("noDrop")
 
         );

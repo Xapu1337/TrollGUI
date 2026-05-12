@@ -12,7 +12,7 @@ public class InvSeeTroll extends Troll {
     @Override
     public TrollMetaData setMetaData() {
         return (
-                new TrollMetaData(XMaterial.TRAPPED_CHEST)
+                new TrollMetaData(XMaterial.TRAPPED_CHEST, services)
                         .setTrollName("invSee")
                         .setAttributes( TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS )
 

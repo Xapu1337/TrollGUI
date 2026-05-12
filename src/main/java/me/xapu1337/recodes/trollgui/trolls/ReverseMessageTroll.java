@@ -11,7 +11,7 @@ public class ReverseMessageTroll extends Troll {
     @Override
     public TrollMetaData setMetaData() {
         return (
-                new TrollMetaData(XMaterial.PAPER)
+                new TrollMetaData(XMaterial.PAPER, services)
                         .setTrollName("reverseMessage")
 
         );

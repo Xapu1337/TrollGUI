@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
+@SuppressWarnings("unchecked")
 public class EventManager implements Listener {
     private final Plugin plugin;
     private final Map<Class<? extends Event>, Consumer<? extends Event>> eventHandlers;

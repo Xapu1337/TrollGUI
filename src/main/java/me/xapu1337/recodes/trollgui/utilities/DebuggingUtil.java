@@ -7,7 +7,6 @@ import me.xapu1337.recodes.trollgui.types.TrollMetaData;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -15,7 +14,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -26,15 +24,13 @@ import static java.util.logging.Level.WARNING;
 
 public class DebuggingUtil {
 
-    private static final SingletonBase<DebuggingUtil> instance = new SingletonBase<>(DebuggingUtil.class);
+    private final MessageUtils messages;
     private final boolean debuggingEnabled = true;
 
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-    public DebuggingUtil() {}
-
-    public static DebuggingUtil getInstance() {
-        return instance.get();
+    public DebuggingUtil(MessageUtils messages) {
+        this.messages = messages;
     }
 
     public void log(Level level, String message, int depth) {
@@ -44,7 +40,7 @@ public class DebuggingUtil {
             String logMessage = String.format("%s%s&7: %s",
                     CLASS_NAME_COLOR, className, message);
             String formattedMessage = formatLogMessage(level, logMessage);
-            Bukkit.getConsoleSender().sendMessage(MessageUtils.getInstance().$(formattedMessage));
+            Bukkit.getConsoleSender().sendMessage(messages.$(formattedMessage));
         }
     }
 
@@ -108,7 +104,9 @@ public class DebuggingUtil {
                 l("|  ItemStack Contents:");
                 l("|    Type: " + itemStack.getType());
                 l("|    Amount: " + itemStack.getAmount());
-                l("|    Durability: " + itemStack.getDurability());
+                ItemMeta durMeta = itemStack.getItemMeta();
+                int damage = (durMeta instanceof org.bukkit.inventory.meta.Damageable) ? ((org.bukkit.inventory.meta.Damageable) durMeta).getDamage() : 0;
+                l("|    Damage: " + damage);
                 l("|    Meta: " + itemStack.getItemMeta());
             }
             case "org.bukkit.inventory.meta.ItemMeta" -> {
@@ -201,21 +199,21 @@ public class DebuggingUtil {
 
     public void error(String message, Throwable throwable, Map<String, Object> data) {
         String formattedMessage = formatLogMessage(SEVERE, message);
-        Bukkit.getConsoleSender().sendMessage(MessageUtils.getInstance().$(formattedMessage));
+        Bukkit.getConsoleSender().sendMessage(messages.$(formattedMessage));
 
         if (throwable != null) {
             String stackTrace = getStackTraceAsString(throwable);
-            String stackTraceMessage = MessageUtils.getInstance().$("&c&lStackTrace: &r\n" + stackTrace);
+            String stackTraceMessage = messages.$("&c&lStackTrace: &r\n" + stackTrace);
             Bukkit.getConsoleSender().sendMessage(stackTraceMessage);
         }
 
         if (data != null && !data.isEmpty()) {
-            Bukkit.getConsoleSender().sendMessage(MessageUtils.getInstance().$("&c&lData:"));
+            Bukkit.getConsoleSender().sendMessage(messages.$("&c&lData:"));
             for (Map.Entry<String, Object> entry : data.entrySet()) {
                 Object value = entry.getValue();
                 String valueString = value != null ? value.toString() : "null";
                 String entryMessage = String.format("%s: %s (%s)", entry.getKey(), valueString, value != null ? value.getClass().getSimpleName() : "null");
-                Bukkit.getConsoleSender().sendMessage(MessageUtils.getInstance().$("┆ " + entryMessage));
+                Bukkit.getConsoleSender().sendMessage(messages.$("┆ " + entryMessage));
             }
             Bukkit.getConsoleSender().sendMessage("╰");
         }

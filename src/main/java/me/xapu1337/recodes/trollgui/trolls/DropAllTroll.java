@@ -12,7 +12,7 @@ public class DropAllTroll extends Troll {
     @Override
     public TrollMetaData setMetaData() {
         return (
-                new TrollMetaData(XMaterial.CAULDRON)
+                new TrollMetaData(XMaterial.CAULDRON, services)
                         .setTrollName("dropAll")
                         .setAttributes( TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS )
 

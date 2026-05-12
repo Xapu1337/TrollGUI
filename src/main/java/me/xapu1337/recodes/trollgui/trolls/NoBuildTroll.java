@@ -11,7 +11,7 @@ public class NoBuildTroll extends Troll {
     @Override
     public TrollMetaData setMetaData() {
         return (
-                new TrollMetaData(XMaterial.GRASS_BLOCK)
+                new TrollMetaData(XMaterial.GRASS_BLOCK, services)
                         .setTrollName("noBuild")
 
         );

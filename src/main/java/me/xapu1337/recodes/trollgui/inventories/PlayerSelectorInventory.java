@@ -24,21 +24,22 @@ import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
 public class PlayerSelectorInventory implements Listener, InventoryHolder {
-    private final InventoryBuilder builder = new InventoryBuilder(this);
+    private final InventoryBuilder builder;
     private final Inventory inventory;
     private final List<Player> players;
     private final BiConsumer<Player, Player> onClick;
     private final PaginationHandler paginationHandler;
+    private final Services services;
 
     private WeakReference<Inventory> previousInventory;
-    public PlayerSelectorInventory(BiConsumer<Player, Player> onClick) {
+    public PlayerSelectorInventory(BiConsumer<Player, Player> onClick, Services services) {
         this.players = List.of(Bukkit.getOnlinePlayers().toArray(new Player[0]));
         this.onClick = onClick;
+        this.services = services;
         this.paginationHandler = new PaginationHandler(45);
         Bukkit.getPluginManager().registerEvents(this, TrollCore.getInstance());
-
-        builder.setSize(54)
-        .setPattern(
+        this.builder = new InventoryBuilder(this, services);
+        this.builder.setPattern(
                 "XXXXXXXXX",
                 "XXXXXXXXX",
                 "XXXXXXXXX",
@@ -49,9 +50,9 @@ public class PlayerSelectorInventory implements Listener, InventoryHolder {
         .withDefaults()
         .setItem('>', PaginationItemType.NEXT_PAGE.getItemStack())
         .setItem('<', PaginationItemType.PREVIOUS_PAGE.getItemStack())
-        .setItem('X', new ItemStackBuilder(XMaterial.AIR).withDisplayName(" ").build())
-        .setItem('C', previousInventory == null || previousInventory.get() == null ? new ItemStackBuilder(XMaterial.BARRIER).withDisplayName("Close").build() : new ItemStackBuilder(XMaterial.BARRIER).withDisplayName("Go Back").build())
-        .setItem('B', new ItemStackBuilder(XMaterial.BLACK_STAINED_GLASS_PANE).withDisplayName(" ").build())
+        .setItem('X', new ItemStackBuilder(XMaterial.AIR, services).withDisplayName(" ").build())
+        .setItem('C', previousInventory == null || previousInventory.get() == null ? new ItemStackBuilder(XMaterial.BARRIER, services).withDisplayName("Close").build() : new ItemStackBuilder(XMaterial.BARRIER, services).withDisplayName("Go Back").build())
+        .setItem('B', new ItemStackBuilder(XMaterial.BLACK_STAINED_GLASS_PANE, services).withDisplayName(" ").build())
                 .setInventoryContents((inventory) -> {
 
                     paginationHandler.setMaxPage((int) Math.ceil(players.size() / 45.0));
@@ -74,13 +75,13 @@ public class PlayerSelectorInventory implements Listener, InventoryHolder {
                             if (displayName.length() > 32) {
                                 displayName = displayName.substring(0, 32);
                             }
-                            item = new ItemStackBuilder(XMaterial.PLAYER_HEAD).withPlayerHead(player.getUniqueId()).withDisplayName(displayName).build();
+                            item = new ItemStackBuilder(XMaterial.PLAYER_HEAD, services).withPlayerHead(player.getUniqueId()).withDisplayName(displayName).build();
                             meta = item.getItemMeta();
 
                             meta.setLore(Stream.of(
                                     "&7Health: &f" + player.getHealth() + "&c❤",
                                     player.isOp() ? "hasop" : ""
-                            ).filter(s -> !s.isEmpty()).map(MessageUtils.getInstance()::$).toList());
+                            ).filter(s -> !s.isEmpty()).map(services.messages()::$).toList());
                             item.setItemMeta(meta);
                             inventory.setItem(i, item);
                         }
@@ -90,7 +91,7 @@ public class PlayerSelectorInventory implements Listener, InventoryHolder {
                             ? PaginationItemType.NEXT_PAGE.getItemStack()
                             : createPoppyItem("Last Page"));
 
-                    inventory.setItem(45, paginationHandler.getCurrentPage() > 1 && paginationHandler.getCurrentPage() > 1
+                    inventory.setItem(45, paginationHandler.getCurrentPage() > 1
                             ? PaginationItemType.PREVIOUS_PAGE.getItemStack()
                             : createPoppyItem("First Page"));
 
@@ -120,7 +121,7 @@ public class PlayerSelectorInventory implements Listener, InventoryHolder {
     }
 
     private ItemStack createPoppyItem(String displayName) {
-        return new ItemStackBuilder(XMaterial.POPPY)
+        return new ItemStackBuilder(XMaterial.POPPY, services)
                 .withDisplayName(displayName)
                 .withInvisibleEnchantmentGlint()
                 .build();
@@ -129,7 +130,7 @@ public class PlayerSelectorInventory implements Listener, InventoryHolder {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        if (!Utils.getInstance().checkUniqueInventory(event, this)) return;
+        if (!services.utils().checkUniqueInventory(event, this)) return;
         event.setCancelled(true);
 
 
@@ -145,9 +146,10 @@ public class PlayerSelectorInventory implements Listener, InventoryHolder {
         if (item.getItemMeta().getPersistentDataContainer().isEmpty()) return;
 
         Player player = (Player) event.getWhoClicked();
-        DebuggingUtil.getInstance().l("Clicked on " + item.getItemMeta().getDisplayName());
-        UUID uuid = UUID.fromString(item.getItemMeta().getPersistentDataContainer().get(Utils.getInstance().UUID_KEY, PersistentDataType.STRING));
-        if (uuid == null) return;
+        services.debug().l("Clicked on " + item.getItemMeta().getDisplayName());
+        String uuidStr = item.getItemMeta().getPersistentDataContainer().get(services.utils().UUID_KEY, PersistentDataType.STRING);
+        if (uuidStr == null) return;
+        UUID uuid = UUID.fromString(uuidStr);
         Player target = Bukkit.getPlayer(uuid);
         if (target == null) return;
         player.closeInventory();

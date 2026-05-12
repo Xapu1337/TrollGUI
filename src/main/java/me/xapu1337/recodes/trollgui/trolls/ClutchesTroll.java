@@ -40,7 +40,7 @@
 //    @Override
 //    public TrollMetaData setMetaData() {
 //        return (
-//                new TrollMetaData(XMaterial.WATER_BUCKET)
+//                new TrollMetaData(XMaterial.WATER_BUCKET, services)
 //                        .setTrollName("clutches")
 //                        .setAttributes( TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS )
 //        );

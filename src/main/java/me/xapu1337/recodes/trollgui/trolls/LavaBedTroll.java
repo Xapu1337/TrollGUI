@@ -16,7 +16,7 @@ public class LavaBedTroll extends Troll {
     @Override
     public TrollMetaData setMetaData() {
         return (
-                new TrollMetaData(XMaterial.LAVA_BUCKET)
+                new TrollMetaData(XMaterial.LAVA_BUCKET, services)
                         .setTrollName("lavaBed")
                         .setAttributes( TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS, TrollAttributes.POSSIBLE_DESTRUCTION )
 

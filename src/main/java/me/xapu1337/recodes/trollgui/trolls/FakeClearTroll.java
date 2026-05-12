@@ -5,7 +5,6 @@ import com.cryptomorin.xseries.XMaterial;
 import me.xapu1337.recodes.trollgui.cores.TrollCore;
 import me.xapu1337.recodes.trollgui.types.Troll;
 import me.xapu1337.recodes.trollgui.types.TrollMetaData;
-import me.xapu1337.recodes.trollgui.utilities.TrollToggablesStorage;
 import me.xapu1337.recodes.trollgui.utilities.TrollVariableStorage;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
@@ -16,7 +15,7 @@ public class FakeClearTroll extends Troll {
     @Override
     public TrollMetaData setMetaData() {
         return (
-                new TrollMetaData(XMaterial.PUFFERFISH)
+                new TrollMetaData(XMaterial.PUFFERFISH, services)
                         .setTrollName("fakeClear")
 
         );
@@ -45,14 +44,14 @@ public class FakeClearTroll extends Troll {
 //                Singleton.getSingleInstance().clearedPlayerInventories.remove(Utilities.getSingleInstance().uuidOrName(victim.getPlayer(), TrollCore.instance.getServer().getOnlineMode()));
 //            }, ((long) seconds * TrollCore.instance.config.getInt("MenuItems.trollMenu.trolls.fakeClear.options.fakeClearDelay")));
 //        }
-        if (TrollToggablesStorage.getInstance().toggle(getVictim().getUniqueId(), getTrollMetaData().getTrollName())){
+        if (services.toggles().toggle(getVictim().getUniqueId(), getTrollMetaData().getTrollName())){
             TrollVariableStorage.setPermanentVariable(getVictim().getUniqueId() + "-FC-" + getTrollMetaData().getTrollName(), getVictim().getInventory().getContents());
             getVictim().getInventory().clear();
 
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TrollCore.getInstance(), () -> {
                 getVictim().getInventory().setContents((ItemStack[]) TrollVariableStorage.getPermanentVariable(getVictim().getUniqueId() + "-FC-" + getTrollMetaData().getTrollName()));
                 TrollVariableStorage.removePermanentVariable(getVictim().getUniqueId() + "-FC-" + getTrollMetaData().getTrollName());
-                TrollToggablesStorage.removePlayer(getVictim().getUniqueId());
+                services.toggles().removePlayer(getVictim().getUniqueId());
             }, ((long) 10 * TrollCore.getInstance().getConfig().getInt("menus.troll-menu.items.trolls.fakeClear.options.fakeClearDelay")));
         }
 

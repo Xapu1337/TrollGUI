@@ -7,7 +7,6 @@ import me.xapu1337.recodes.trollgui.inventories.PlayerSelectorInventory;
 import me.xapu1337.recodes.trollgui.types.Troll;
 import me.xapu1337.recodes.trollgui.types.TrollAttributes;
 import me.xapu1337.recodes.trollgui.types.TrollMetaData;
-import me.xapu1337.recodes.trollgui.utilities.MessageUtils;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -18,7 +17,7 @@ public class SwapPlayerInventoryTroll extends Troll {
     @Override
     public TrollMetaData setMetaData() {
         return (
-                new TrollMetaData( XMaterial.CHEST )
+                new TrollMetaData( XMaterial.CHEST , services)
                         .setTrollName( "swapPlayerInventory" )
                         .setAttributes( TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS )
         );
@@ -42,11 +41,12 @@ public class SwapPlayerInventoryTroll extends Troll {
                     getVictim().updateInventory();
                     selectedPlayer.updateInventory();
 
-                    MessageUtils.getInstance().setClassPlaceholders(this.getClass(), "caller.name", caller.getName());
-                    MessageUtils.getInstance().setClassPlaceholders(this.getClass(), "victim.name", getVictim().getName());
+                    services.messages().setClassPlaceholders(this.getClass(), "caller.name", caller.getName());
+                    services.messages().setClassPlaceholders(this.getClass(), "victim.name", getVictim().getName());
 
-                    caller.sendMessage(MessageUtils.getInstance().$("{config:messages.swapPlayerInventorySuccess}"));
-                })
+                    caller.sendMessage(services.messages().$("{config:messages.swapPlayerInventorySuccess}"));
+                }),
+                services
         );
 
         playerSelectorInventory.setPreviousInventory(getCallingGUI().getInventory());

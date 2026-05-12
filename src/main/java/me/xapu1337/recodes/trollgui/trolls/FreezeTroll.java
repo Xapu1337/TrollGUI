@@ -12,9 +12,9 @@ public class FreezeTroll extends Troll {
     @Override
     public TrollMetaData setMetaData() {
         return (
-                new TrollMetaData(XMaterial.SNOWBALL)
+                new TrollMetaData(XMaterial.SNOWBALL, services)
                         .setTrollName("freezePlayer")
-                        .setAttributes( TrollAttributes.POSSIBLE_DESTRUCTION )
+                        .setAttributes( TrollAttributes.POSSIBLE_CRASH_OR_FREEZE )
 
         );
     }

@@ -16,7 +16,7 @@ public class VoidTeleportTroll extends Troll {
     @Override
     public TrollMetaData setMetaData() {
         return (
-                new TrollMetaData(XMaterial.BEDROCK)
+                new TrollMetaData(XMaterial.BEDROCK, services)
                         .setTrollName("voidTeleport")
                         .setAttributes( TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS )
                 ) ;

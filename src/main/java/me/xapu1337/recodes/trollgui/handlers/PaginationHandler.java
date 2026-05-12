@@ -6,7 +6,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 /**
  * A handler for pagination within an inventory.
@@ -71,13 +70,9 @@ public class PaginationHandler {
      * @param event The click event to handle.
      */
     public void handleOnInventoryClick(InventoryClickEvent event) {
-        assert onPageChange != null;
-        assert event.getClickedInventory() != null;
-        assert event.getCurrentItem() != null;
-        assert event != null;
         event.setCancelled(true);
 
-        if (event.getClickedInventory() == null || event.getCurrentItem() == null) {
+        if (onPageChange == null || event.getClickedInventory() == null || event.getCurrentItem() == null) {
             return;
         }
 

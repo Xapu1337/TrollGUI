@@ -11,7 +11,7 @@ public class FakeTimeoutTroll extends Troll {
     @Override
     public TrollMetaData setMetaData() {
         return (
-                new TrollMetaData(XMaterial.LEAD)
+                new TrollMetaData(XMaterial.LEAD, services)
                         .setTrollName("fakeTimeout")
                         .setAttributes( TrollAttributes.POSSIBLE_KICK )
 

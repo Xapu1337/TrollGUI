@@ -3,8 +3,7 @@ package me.xapu1337.recodes.trollgui.types;
 import com.cryptomorin.xseries.XEnchantment;
 import me.xapu1337.recodes.trollgui.cores.TrollCore;
 import me.xapu1337.recodes.trollgui.inventories.TrollSelectionInventory;
-import me.xapu1337.recodes.trollgui.utilities.DebuggingUtil;
-import me.xapu1337.recodes.trollgui.utilities.TrollToggablesStorage;
+import me.xapu1337.recodes.trollgui.utilities.Services;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -13,10 +12,12 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.lang.ref.WeakReference;
 
+@SuppressWarnings("unchecked")
 public abstract class Troll {
     private Player caller;
     private Player victim;
     private TrollMetaData trollMetaData;
+    protected Services services;
     public static final NamespacedKey trollClassKey = new NamespacedKey(TrollCore.getInstance(), "assigned-troll-class");
 
     private WeakReference<TrollSelectionInventory> callingGUI;
@@ -24,11 +25,15 @@ public abstract class Troll {
     public Troll() {
     }
 
+    public void injectServices(Services services) {
+        this.services = services;
+    }
+
     public <T extends Troll> T Init() {
         this.trollMetaData = setMetaData();
-        DebuggingUtil.getInstance().logObject(this.trollMetaData);
+        services.debug().logObject(this.trollMetaData);
         ItemMeta itemMeta = this.trollMetaData.getItemMeta();
-        DebuggingUtil.getInstance().logObject(itemMeta);
+        services.debug().logObject(itemMeta);
         itemMeta.getPersistentDataContainer().set(trollClassKey, PersistentDataType.STRING, getClass().getName());
         this.trollMetaData.setItemMeta(itemMeta);
 
@@ -66,7 +71,7 @@ public abstract class Troll {
         return (T) this;
     }
 
-    public void toggleTroll(Player v) { TrollToggablesStorage.getInstance().toggle(v.getUniqueId(), trollMetaData.getTrollName()); checkToggled(); }
+    public void toggleTroll(Player v) { services.toggles().toggle(v.getUniqueId(), trollMetaData.getTrollName()); checkToggled(); }
 
     public <T extends Troll> T setCallingGUI(TrollSelectionInventory callingGUI) {
         this.callingGUI = new WeakReference<>(callingGUI);
@@ -75,23 +80,24 @@ public abstract class Troll {
 
 
     public <T extends Troll> T checkToggled() {
-        DebuggingUtil.getInstance().log("Checking if troll is toggled");
-        if (TrollToggablesStorage.getInstance().hasToggle(victim.getUniqueId(), trollMetaData.getTrollName())) {
-            DebuggingUtil.getInstance().log("Troll is toggled");
+        services.debug().log("Checking if troll is toggled");
+        TrollSelectionInventory gui = getCallingGUI();
+        if (services.toggles().hasToggle(victim.getUniqueId(), trollMetaData.getTrollName())) {
+            services.debug().log("Troll is toggled");
             ItemMeta itemMeta = trollMetaData.getItemMeta();
-            DebuggingUtil.getInstance().logObject(itemMeta);
+            services.debug().logObject(itemMeta);
             itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             itemMeta.addEnchant(XEnchantment.DURABILITY.getEnchant(), 1, true);
             getTrollMetaData().setItemMeta(itemMeta);
-            getCallingGUI().builder.build();
+            if (gui != null) gui.builder.build();
         } else {
-            DebuggingUtil.getInstance().log("Troll is not toggled");
+            services.debug().log("Troll is not toggled");
             ItemMeta itemMeta = trollMetaData.getItemMeta();
-            DebuggingUtil.getInstance().logObject(itemMeta);
+            services.debug().logObject(itemMeta);
             itemMeta.removeItemFlags(ItemFlag.HIDE_ENCHANTS);
             itemMeta.removeEnchant(XEnchantment.DURABILITY.getEnchant());
             getTrollMetaData().setItemMeta(itemMeta);
-            getCallingGUI().builder.build();
+            if (gui != null) gui.builder.build();
         }
         return (T) this;
     }

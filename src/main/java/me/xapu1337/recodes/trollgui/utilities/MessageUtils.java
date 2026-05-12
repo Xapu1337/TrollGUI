@@ -12,7 +12,6 @@ import me.xapu1337.recodes.trollgui.cores.TrollCore;
 import net.md_5.bungee.api.ChatColor;
 
 public class MessageUtils {
-    private static final SingletonBase<MessageUtils> INSTANCE = new SingletonBase<>(MessageUtils.class);
     private final Map<String, String> placeholders = new ConcurrentHashMap<>();
     private final Map<Class<?>, Map<String, String>> classPlaceholders = new ConcurrentHashMap<>();
     private final DynamicCache<Object> cache = new DynamicCache<>();
@@ -22,11 +21,7 @@ public class MessageUtils {
     private static final Pattern TEMP_PATTERN = Pattern.compile("VOID=([a-fA-F0-9]{8}(-[a-fA-F0-9]{4}){4}[a-fA-F0-9]{8})");
     private static final Pattern HEX_COLOR_PATTERN = Pattern.compile("&#([a-fA-F0-9]{6})");
 
-    private MessageUtils() {
-    }
-
-    public static MessageUtils getInstance() {
-        return INSTANCE.get();
+    public MessageUtils() {
     }
 
     public MessageUtils setPlaceholder(String key, String value) {

@@ -21,7 +21,7 @@ public class DynamicCache < T > {
     private final int maxCacheSize;
     private boolean refreshing;
     private int taskId = -1;
-
+    @SuppressWarnings("unused")
     private long lastRefreshTime = 0;
     private static final int DEFAULT_MAX_CACHE_SIZE = 100;
     private final LinkedHashMap< UUID,
@@ -83,7 +83,7 @@ public class DynamicCache < T > {
         tempCacheExpireTimes.remove(key);
         stopRefreshTaskIfNoValues();
     }
-    public < T > T orElse(Optional< T > optional, T defaultValue) {
+    public T orElse(Optional<T> optional, T defaultValue) {
         return optional.orElse(defaultValue);
     }
     private void startRefreshTaskIfNotRunning() {

@@ -4,8 +4,6 @@ import com.cryptomorin.xseries.XMaterial;
 import me.xapu1337.recodes.trollgui.cores.TrollCore;
 import me.xapu1337.recodes.trollgui.types.Troll;
 import me.xapu1337.recodes.trollgui.types.TrollMetaData;
-import me.xapu1337.recodes.trollgui.utilities.MessageUtils;
-import me.xapu1337.recodes.trollgui.utilities.DebuggingUtil;
 import me.xapu1337.recodes.trollgui.utilities.MessageCollector;
 
 public class SendMessageTroll extends Troll {
@@ -17,7 +15,7 @@ public class SendMessageTroll extends Troll {
     @Override
     public TrollMetaData setMetaData() {
         return (
-                new TrollMetaData(XMaterial.PAPER)
+                new TrollMetaData(XMaterial.PAPER, services)
                         .setTrollName("sendMessage")
                 );
     }
@@ -25,11 +23,11 @@ public class SendMessageTroll extends Troll {
     @Override
     public void execute() {
         getCaller().sendMessage(" \n ");
-        MessageUtils.getInstance().setClassPlaceholders(this.getClass(), "victim.name", getVictim().getName());
-        getCaller().sendMessage(MessageUtils.getInstance().$("{config:messages.sendMessage}"));
+        services.messages().setClassPlaceholders(this.getClass(), "victim.name", getVictim().getName());
+        getCaller().sendMessage(services.messages().$("{config:messages.sendMessage}"));
         getCaller().sendMessage(" \n ");
         new MessageCollector(getVictim(), TrollCore.getInstance(), (reply) -> {
-            DebuggingUtil.getInstance().l("MessageCollector", "Message received: " + reply);
+            services.debug().l("MessageCollector", "Message received: " + reply);
             getVictim().chat(reply);
         });
     }

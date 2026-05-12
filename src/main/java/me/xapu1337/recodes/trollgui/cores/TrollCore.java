@@ -1,13 +1,11 @@
 package me.xapu1337.recodes.trollgui.cores;
 
-import com.google.gson.Gson;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIConfig;
 import me.xapu1337.recodes.trollgui.commands.TrollCommand;
 import me.xapu1337.recodes.trollgui.loaders.TrollLoader;
 import me.xapu1337.recodes.trollgui.managers.EventManager;
 import me.xapu1337.recodes.trollgui.utilities.*;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -16,15 +14,14 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.HashMap;
 
 public class TrollCore extends JavaPlugin implements Listener {
 
     private static TrollCore instance;
     private EventManager eventManager = new EventManager(this);
+
+    private Services services;
 
     public TrollCore() {
         if (instance == null)
@@ -40,47 +37,54 @@ public class TrollCore extends JavaPlugin implements Listener {
     public void onEnable() {
         super.onEnable();
 
-        TrollLoader.getInstance().refreshTrolls();
+        MessageUtils messages   = new MessageUtils();
+        DebuggingUtil debug     = new DebuggingUtil(messages);
+        Utils utils             = new Utils();
+
+        TrollToggablesStorage toggles   = new TrollToggablesStorage(debug);
+        TrollLoader           trollLoader = new TrollLoader(debug);
+        services = new Services(debug, messages, utils, toggles, trollLoader);
+        trollLoader.refreshTrolls(services);
 
         CommandAPI.onEnable(this);
 
-        new TrollCommand();
+        new TrollCommand(services);
 
 
         eventManager.registerEvent(PlayerMoveEvent.class, (event) -> {
-            DebuggingUtil.getInstance().l("MoveEvent");
+            services.debug().l("MoveEvent");
             Player player = event.getPlayer();
-            if (TrollToggablesStorage.getInstance().hasToggle(player.getUniqueId(), "freezePlayer")) {
+            if (services.toggles().hasToggle(player.getUniqueId(), "freezePlayer")) {
                 event.setCancelled(true);
             }
         });
 
         eventManager.registerEvent(BlockBreakEvent.class, (event) -> {
-            DebuggingUtil.getInstance().l("BlockBreakEvent");
+            services.debug().l("BlockBreakEvent");
             Player player = event.getPlayer();
-            if (TrollToggablesStorage.getInstance().hasToggle(player.getUniqueId(), "noBreak")) {
+            if (services.toggles().hasToggle(player.getUniqueId(), "noBreak")) {
                 event.setCancelled(true);
             }
         });
 
         eventManager.registerEvent(BlockPlaceEvent.class, (event) -> {
-            DebuggingUtil.getInstance().l("BlockPlaceEvent");
+            services.debug().l("BlockPlaceEvent");
             Player player = event.getPlayer();
-            if (TrollToggablesStorage.getInstance().hasToggle(player.getUniqueId(), "noBuild")) {
+            if (services.toggles().hasToggle(player.getUniqueId(), "noBuild")) {
                 event.setCancelled(true);
             }
         });
 
         eventManager.registerEvent(PlayerDropItemEvent.class, (event) -> {
-            DebuggingUtil.getInstance().l("DropEvent");
+            services.debug().l("DropEvent");
             Player player = event.getPlayer();
-            if (TrollToggablesStorage.getInstance().hasToggle(player.getUniqueId(), "noDrop")) {
+            if (services.toggles().hasToggle(player.getUniqueId(), "noDrop")) {
                 event.setCancelled(true);
             }
         });
 
         eventManager.registerEvent(AsyncPlayerChatEvent.class, (event) -> {
-            DebuggingUtil.getInstance().l("ChatEvent");
+            services.debug().l("ChatEvent");
             Player player = event.getPlayer();
             MessageCollector collector = MessageCollector.getCollector(player);
             if (collector != null) {
@@ -88,15 +92,10 @@ public class TrollCore extends JavaPlugin implements Listener {
                 event.setCancelled(true);
             }
 
-            if (TrollToggablesStorage.getInstance().hasToggle(player.getUniqueId(), "reverseMessage")) {
-                event.setMessage(Utils.getInstance().reverseMessage(event.getMessage()));
+            if (services.toggles().hasToggle(player.getUniqueId(), "reverseMessage")) {
+                event.setMessage(services.utils().reverseMessage(event.getMessage()));
             }
         }, EventPriority.HIGH);
-
-
-
-
-
 
     }
 
@@ -104,6 +103,7 @@ public class TrollCore extends JavaPlugin implements Listener {
     public void onDisable() {
         super.onDisable();
 
+        TrollVariableStorage.shutdown();
         CommandAPI.onDisable();
         eventManager = null;
     }

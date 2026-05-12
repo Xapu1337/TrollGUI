@@ -18,7 +18,7 @@ public class RandomLookTroll extends Troll {
     @Override
     public TrollMetaData setMetaData() {
         return (
-                new TrollMetaData(XMaterial.BARRIER)
+                new TrollMetaData(XMaterial.BARRIER, services)
                         .setTrollName("randomLook")
                         .setAttributes( TrollAttributes.POSSIBLE_KICK )
 

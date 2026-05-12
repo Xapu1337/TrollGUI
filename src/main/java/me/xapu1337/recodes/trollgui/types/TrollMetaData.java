@@ -1,16 +1,14 @@
 package me.xapu1337.recodes.trollgui.types;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.xapu1337.recodes.trollgui.utilities.MessageUtils;
-import me.xapu1337.recodes.trollgui.utilities.DebuggingUtil;
 import me.xapu1337.recodes.trollgui.utilities.ItemStackBuilder;
-import me.xapu1337.recodes.trollgui.utilities.TrollToggablesStorage;
+import me.xapu1337.recodes.trollgui.utilities.Services;
+
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class TrollMetaData {
@@ -19,9 +17,11 @@ public class TrollMetaData {
     private ItemMeta itemMeta;
     private String name;
     private List<String> lore;
+    private final Services services;
 
-    public TrollMetaData(XMaterial material) {
-        this.itemStack = new ItemStackBuilder(material).build();
+    public TrollMetaData(XMaterial material, Services services) {
+        this.services = services;
+        this.itemStack = new ItemStackBuilder(material, services).build();
         this.itemMeta = this.itemStack.getItemMeta();
         setDefaults();
     }
@@ -60,16 +60,16 @@ public class TrollMetaData {
 
     public TrollMetaData loadConfigData() {
         String trollPath = "{config:menus.troll-menu.items.trolls." + this.trollName + ".";
-        setName(MessageUtils.getInstance().$(trollPath + "name}"));
-        setLore(MessageUtils.getInstance().$(trollPath + "lore}"));
+        setName(services.messages().$(trollPath + "name}"));
+        setLore(services.messages().$(trollPath + "lore}"));
         return this;
     }
 
     public ItemStack getItem() {
         if (!this.name.isEmpty()) {
-            itemMeta.setDisplayName(MessageUtils.getInstance().$(this.name));
+            itemMeta.setDisplayName(services.messages().$(this.name));
             if (!this.lore.isEmpty()) {
-                itemMeta.setLore(this.lore.stream().map(MessageUtils.getInstance()::$).toList());
+                itemMeta.setLore(this.lore.stream().map(services.messages()::$).toList());
             }
             itemStack.setItemMeta(itemMeta);
         }
@@ -84,19 +84,14 @@ public class TrollMetaData {
         return this;
     }
 
-
-
     public TrollMetaData setAttributes(TrollAttributes... attributes) {
         for (TrollAttributes attribute : attributes) {
-            lore.add(attribute.getAttributeLore());
+            lore.add(attribute.getAttributeLore(services.messages()));
         }
         itemMeta.setLore(lore);
-        DebuggingUtil.getInstance().logObject(itemMeta);
+        services.debug().logObject(itemMeta);
         itemStack.setItemMeta(itemMeta);
-        DebuggingUtil.getInstance().logObject(itemStack);
+        services.debug().logObject(itemStack);
         return this;
     }
-
-
-
 }
