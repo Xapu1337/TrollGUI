@@ -19,7 +19,7 @@ public class GiveAllEffectsTroll extends Troll {
 
             getVictim().addPotionEffect(Objects.requireNonNull(effect.buildPotionEffect(
                     services.config()
-                            .getInt("menus.troll-menu.items.trolls.giveAllBadEffects.options.effectDuration") * 20,
+                            .getInt("menus.troll-menu.items.trolls.giveAllEffects.options.effectDuration") * 20,
                     0)));
         });
     }
