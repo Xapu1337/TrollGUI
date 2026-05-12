@@ -25,17 +25,3 @@ https://github.com/CryptoMorin/XSeries
 (https://www.spigotmc.org/threads/xseries-xmaterial-xparticle-xsound-xpotion-titles-actionbar-etc.378136/)
 XSeries gives support for versions 1.13 - 1.16
 
-## Build and Run
-
-Use the helper scripts located in the `scripts` directory to build and launch the plugin.
-
-```bash
-# Install Maven (if not already installed)
-./scripts/install-maven.sh
-
-# Compile the project
-./scripts/build.sh
-
-# Run the resulting jar
-./scripts/start.sh
-```

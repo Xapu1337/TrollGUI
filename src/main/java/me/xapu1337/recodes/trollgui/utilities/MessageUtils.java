@@ -18,7 +18,8 @@ public class MessageUtils {
     private final Map<String, String> messageCache = new ConcurrentHashMap<>();
     private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("\\{([A-Za-z0-9_-]+)}");
     private static final Pattern CONFIG_PATTERN = Pattern.compile("config:([A-Za-z0-9._-]+)");
-    private static final Pattern TEMP_PATTERN = Pattern.compile("VOID=([a-fA-F0-9]{8}(-[a-fA-F0-9]{4}){4}[a-fA-F0-9]{8})");
+    private static final Pattern TEMP_PATTERN = Pattern
+            .compile("VOID=([a-fA-F0-9]{8}(-[a-fA-F0-9]{4}){4}[a-fA-F0-9]{8})");
     private static final Pattern HEX_COLOR_PATTERN = Pattern.compile("&#([a-fA-F0-9]{6})");
 
     public MessageUtils() {
@@ -50,7 +51,8 @@ public class MessageUtils {
                     .orElse("< - Error: Config value not found - >");
             message = translateMessage(message);
             Map<String, String> combinedPlaceholders = new HashMap<>(placeholders);
-            Map<String, String> classPlaceholders = this.classPlaceholders.getOrDefault(TrollCore.getInstance().getClass(), Map.of());
+            Map<String, String> classPlaceholders = this.classPlaceholders
+                    .getOrDefault(TrollCore.getInstance().getClass(), Map.of());
             combinedPlaceholders.putAll(classPlaceholders);
             Matcher matcher = PLACEHOLDER_PATTERN.matcher(message);
             while (matcher.find()) {
@@ -64,7 +66,6 @@ public class MessageUtils {
         });
     }
 
-
     public String $(String message) {
         return translateMessage(message);
     }
@@ -73,16 +74,17 @@ public class MessageUtils {
         Matcher matcher = CONFIG_PATTERN.matcher(message);
         while (matcher.find()) {
             String configPath = matcher.group(1);
-            message = message.replace(matcher.group(), Optional.ofNullable(TrollCore.getInstance().getConfig().getString(configPath))
-                    .orElse("< - Error: Config value not found - >"));
+            message = message.replace(matcher.group(),
+                    Optional.ofNullable(TrollCore.getInstance().getConfig().getString(configPath))
+                            .orElse("< - Error: Config value not found - >"));
         }
         matcher = TEMP_PATTERN.matcher(message);
         while (matcher.find()) {
             String uuid = matcher.group(1);
-            message = message.replace(matcher.group(), cache.getOrElse(UUID.fromString(uuid), () ->
-                    "< - Error: Placeholder value not found - >").toString());
+            message = message.replace(matcher.group(), cache
+                    .getOrElse(UUID.fromString(uuid), () -> "< - Error: Placeholder value not found - >").toString());
         }
-        message  = getMessage(message);
+        message = getMessage(message);
         return message;
     }
 
@@ -104,6 +106,7 @@ public class MessageUtils {
         }
         return message;
     }
+
     public void cache(Object object) {
         cache.set(UUID.randomUUID(), object);
     }
@@ -120,4 +123,3 @@ public class MessageUtils {
         return cache;
     }
 }
-

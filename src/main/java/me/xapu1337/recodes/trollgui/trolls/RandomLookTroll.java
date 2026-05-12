@@ -14,27 +14,26 @@ import java.util.Random;
 public class RandomLookTroll extends Troll {
     Random random = new Random();
 
-
     @Override
     public TrollMetaData setMetaData() {
-        return (
-                new TrollMetaData(XMaterial.BARRIER, services)
-                        .setTrollName("randomLook")
-                        .setAttributes( TrollAttributes.POSSIBLE_KICK )
+        return (new TrollMetaData(XMaterial.BARRIER, services)
+                .setTrollName("randomLook")
+                .setAttributes(TrollAttributes.POSSIBLE_KICK)
 
         );
     }
-
 
     @Override
     public void execute() {
         Location loc = getVictim().getLocation();
         float restoreYaw = loc.getYaw();
         float restorePitch = loc.getPitch();
-        new BukkitRunnable(){
+        new BukkitRunnable() {
             private int i = 0;
+
             public void run() {
-                if(i >= TrollCore.getInstance().getConfig().getInt("menus.troll-menu.items.trolls.randomLook.options.randomLookTime") * 20) {
+                if (i >= TrollCore.getInstance().getConfig()
+                        .getInt("menus.troll-menu.items.trolls.randomLook.options.randomLookTime") * 20) {
                     loc.setPitch(restorePitch);
                     loc.setYaw(restoreYaw);
                     getVictim().teleport(loc);

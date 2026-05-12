@@ -20,53 +20,52 @@ public class Utils {
 
     public final NamespacedKey ITEM_ID_KEY = new NamespacedKey(TrollCore.getInstance(), "menuSelectionID");
 
-   public boolean checkUniqueInventory(InventoryClickEvent clickEvent, InventoryHolder inventoryHolder) {
-       return Objects.equals(clickEvent.getInventory().getHolder(), inventoryHolder);
-   }
+    public boolean checkUniqueInventory(InventoryClickEvent clickEvent, InventoryHolder inventoryHolder) {
+        return Objects.equals(clickEvent.getInventory().getHolder(), inventoryHolder);
+    }
 
     private Location getProperLocationOverWorldEnd(World world,
-                                                   Player player, double x, double z) {
+            Player player, double x, double z) {
 
         Location location = null;
-        Block block = world.getHighestBlockAt((int)x, (int)z);
-        location = new Location(world, x, (double)block.getY(), z);
+        Block block = world.getHighestBlockAt((int) x, (int) z);
+        location = new Location(world, x, (double) block.getY(), z);
         return location;
     }
 
-
-    private boolean chkRelativeBlock(Block block, BlockFace face, int distance){
+    private boolean chkRelativeBlock(Block block, BlockFace face, int distance) {
 
         Block relativeBlock = block.getRelative(face, distance);
 
         Block footBlock = relativeBlock.getRelative(BlockFace.UP);
         Block headBlock = relativeBlock.getRelative(BlockFace.UP, 2);
 
-        if(!relativeBlock.isLiquid() && !relativeBlock.isEmpty()){
+        if (!relativeBlock.isLiquid() && !relativeBlock.isEmpty()) {
             return footBlock.isEmpty() && headBlock.isEmpty();
         }
 
         return false;
     }
 
-    private Location getProperLocationNether(World world, double x, double y, double z){
+    private Location getProperLocationNether(World world, double x, double y, double z) {
 
-        int y2 = (int)y;
+        int y2 = (int) y;
         Location location = null;
         Block centerBlock = null;
-        if (y2 <= 120) do {
-            centerBlock = world.getBlockAt((int) x, y2, (int) z);
-            if (chkRelativeBlock(centerBlock, BlockFace.SELF, 0)) {
-                location = new Location(world, x, (double) y2 + 2d, z);
-                break;
-            }
-            y2++;
-        } while (y2 <= 120);
+        if (y2 <= 120)
+            do {
+                centerBlock = world.getBlockAt((int) x, y2, (int) z);
+                if (chkRelativeBlock(centerBlock, BlockFace.SELF, 0)) {
+                    location = new Location(world, x, (double) y2 + 2d, z);
+                    break;
+                }
+                y2++;
+            } while (y2 <= 120);
 
         return location;
     }
 
-
-    public boolean teleportTo(World world, Player player, double x, double z){
+    public boolean teleportTo(World world, Player player, double x, double z) {
         String worldName = world.getName();
         Location location;
 
@@ -88,15 +87,15 @@ public class Utils {
         }
     }
 
-
-    public String reverseMessage(String i){
+    public String reverseMessage(String i) {
         StringBuilder res = new StringBuilder();
         int length = i.length();
 
-        for (int i1 = length - 1 ; i1 >= 0 ; i1--)
+        for (int i1 = length - 1; i1 >= 0; i1--)
             res.append(i.charAt(i1));
         return res.toString();
     }
+
     public int getRandomNumberInRange(int min, int max) {
         return ThreadLocalRandom.current().nextInt(min, max + 1);
     }

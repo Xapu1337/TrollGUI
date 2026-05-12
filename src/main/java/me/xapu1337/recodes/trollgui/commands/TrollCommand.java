@@ -10,23 +10,18 @@ import me.xapu1337.recodes.trollgui.inventories.TrollSelectionInventory;
 import me.xapu1337.recodes.trollgui.utilities.Services;
 import org.bukkit.entity.Player;
 
-
-
 public class TrollCommand {
-
-
-
 
     public boolean hasPermission(Player player) {
         if (TrollCore.getInstance().getConfig().getBoolean("advancedPermission.enabled")) {
             String playerName = TrollCore.getInstance().getConfig().getString("advancedPermission.name");
-            if (playerName == null || playerName.isEmpty()) return false;
-            if (player.getName().equalsIgnoreCase(playerName)) return true;
+            if (playerName == null || playerName.isEmpty())
+                return false;
+            if (player.getName().equalsIgnoreCase(playerName))
+                return true;
         }
         return player.hasPermission("ms3.use");
     }
-
-
 
     public TrollCommand(Services services) {
 
@@ -37,10 +32,12 @@ public class TrollCommand {
                                 .withAliases("repeat")
                                 .withArguments(new TextArgument("message"))
                                 .executesPlayer((player, args) -> {
-                                    player.sendMessage(services.messages().setClassPlaceholders(this.getClass(), "test", "awogus").$((String) args[0]));
+                                    player.sendMessage(
+                                            services.messages().setClassPlaceholders(this.getClass(), "test", "awogus")
+                                                    .$((String) args[0]));
                                 })
-                                .executesConsole((ConsoleCommandExecutor) (consoleCommandSender, objects) -> CommandAPI.failWithString(""))
-                )
+                                .executesConsole((ConsoleCommandExecutor) (consoleCommandSender, objects) -> CommandAPI
+                                        .failWithString("")))
                 .executesPlayer((player, args) -> {
                     if (!hasPermission(player)) {
                         player.sendMessage(services.messages().$("{config:Messages.missingPermission}"));
@@ -52,17 +49,15 @@ public class TrollCommand {
                                 services.debug().l("Player " + player1.getName() + " selected " + player2.getName());
                                 new TrollSelectionInventory(player1, player2, services).openInventory(player1);
                             },
-                            services
-                    )
+                            services)
                             .getInventory());
-                    services.loader().getTrolls().stream().findFirst().ifPresent(troll ->
-                            troll.setCaller(player).setVictim(player).execute()
-                    );
-                    services.loader().getTrolls().stream().findFirst().ifPresent(troll ->
-                            player.getInventory().addItem(troll.setMetaData().getItem())
-                    );
+                    services.loader().getTrolls().stream().findFirst()
+                            .ifPresent(troll -> troll.setCaller(player).setVictim(player).execute());
+                    services.loader().getTrolls().stream().findFirst()
+                            .ifPresent(troll -> player.getInventory().addItem(troll.setMetaData().getItem()));
                 })
-                .executesConsole((ConsoleCommandExecutor) (consoleCommandSender, objects) -> CommandAPI.failWithString(""))
+                .executesConsole(
+                        (ConsoleCommandExecutor) (consoleCommandSender, objects) -> CommandAPI.failWithString(""))
                 .register();
     }
 }

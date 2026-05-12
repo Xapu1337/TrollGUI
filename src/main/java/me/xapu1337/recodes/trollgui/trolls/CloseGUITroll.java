@@ -8,9 +8,8 @@ public class CloseGUITroll extends Troll {
 
     @Override
     public TrollMetaData setMetaData() {
-        return (
-                new TrollMetaData(XMaterial.BARRIER, services)
-                        .setTrollName("closeGUI")
+        return (new TrollMetaData(XMaterial.BARRIER, services)
+                .setTrollName("closeGUI")
 
         );
     }

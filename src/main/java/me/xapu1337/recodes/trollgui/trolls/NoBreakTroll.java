@@ -4,20 +4,19 @@ import com.cryptomorin.xseries.XMaterial;
 import me.xapu1337.recodes.trollgui.types.Troll;
 import me.xapu1337.recodes.trollgui.types.TrollMetaData;
 
-
 public class NoBreakTroll extends Troll {
 
     @Override
     public TrollMetaData setMetaData() {
-        return (
-                new TrollMetaData(XMaterial.STONE, services)
-                        .setTrollName("noBreak")
+        return (new TrollMetaData(XMaterial.STONE, services)
+                .setTrollName("noBreak")
 
         );
     }
 
-
     @Override
 
-    public void execute() { this.toggleTroll(getVictim()); }
+    public void execute() {
+        this.toggleTroll(getVictim());
+    }
 }

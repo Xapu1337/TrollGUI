@@ -14,13 +14,11 @@ public class TrollToggablesStorage {
         this.debug = debug;
     }
 
-
     public boolean hasToggle(UUID playerUUID, String toggleName) {
-        Map<String, Boolean> playerTogglesMap = playerToggles.computeIfAbsent(playerUUID, id -> new ConcurrentHashMap<>());
+        Map<String, Boolean> playerTogglesMap = playerToggles.computeIfAbsent(playerUUID,
+                id -> new ConcurrentHashMap<>());
         return playerTogglesMap.getOrDefault(toggleName, false);
     }
-
-
 
     public void enableToggle(UUID playerUUID, String toggleName) {
         playerToggles.computeIfAbsent(playerUUID, id -> new ConcurrentHashMap<>()).put(toggleName, true);
@@ -34,7 +32,8 @@ public class TrollToggablesStorage {
     }
 
     public boolean toggle(UUID playerUUID, String toggleName) {
-        Map<String, Boolean> playerTogglesMap = playerToggles.computeIfAbsent(playerUUID, id -> new ConcurrentHashMap<>());
+        Map<String, Boolean> playerTogglesMap = playerToggles.computeIfAbsent(playerUUID,
+                id -> new ConcurrentHashMap<>());
         debug.l("Toggling " + toggleName + " for " + playerUUID);
         Boolean currentValue = playerTogglesMap.get(toggleName);
         debug.l("Current value: " + currentValue);

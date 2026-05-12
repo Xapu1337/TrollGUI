@@ -9,7 +9,8 @@ public class HashingUtil {
         int i = 0;
 
         while (len - i >= 4) {
-            int k1 = (data[i] & 0xff) | ((data[i + 1] & 0xff) << 8) | ((data[i + 2] & 0xff) << 16) | (data[i + 3] << 24);
+            int k1 = (data[i] & 0xff) | ((data[i + 1] & 0xff) << 8) | ((data[i + 2] & 0xff) << 16)
+                    | (data[i + 3] << 24);
             k1 *= c1;
             k1 = Integer.rotateLeft(k1, 15);
             k1 *= c2;

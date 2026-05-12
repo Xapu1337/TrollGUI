@@ -8,26 +8,25 @@ import org.bukkit.inventory.ItemStack;
 
 public class DropAllTroll extends Troll {
 
-
     @Override
     public TrollMetaData setMetaData() {
-        return (
-                new TrollMetaData(XMaterial.CAULDRON, services)
-                        .setTrollName("dropAll")
-                        .setAttributes( TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS )
+        return (new TrollMetaData(XMaterial.CAULDRON, services)
+                .setTrollName("dropAll")
+                .setAttributes(TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS)
 
         );
     }
 
-
     /**
-     * Executed from the TrollGUI Class everything inside this function gets executed.
+     * Executed from the TrollGUI Class everything inside this function gets
+     * executed.
      */
     @Override
     public void execute() {
 
         for (ItemStack itemStack : getVictim().getInventory()) {
-            if(itemStack == null || itemStack == XMaterial.AIR.parseItem()) continue;
+            if (itemStack == null || itemStack == XMaterial.AIR.parseItem())
+                continue;
             getVictim().getWorld().dropItemNaturally(getVictim().getLocation(), itemStack);
         }
         getVictim().getInventory().clear();

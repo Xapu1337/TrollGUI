@@ -9,16 +9,12 @@ import java.util.regex.Pattern;
 
 public class AdvancedConfigHandler {
 
-
-
-
-
     public static FileConfiguration con = TrollCore.getInstance().getConfig();
 
     /**
      * @return config
-     * a simple method to get the config from the main class
-     * getConfig()
+     *         a simple method to get the config from the main class
+     *         getConfig()
      */
     public static FileConfiguration getConfig() {
         return con;
@@ -27,7 +23,8 @@ public class AdvancedConfigHandler {
     /**
      * reloadConfig()
      * <p>
-     * a more advance reload method that preserves comments and ensures all values (if not present it will replace them) are there
+     * a more advance reload method that preserves comments and ensures all values
+     * (if not present it will replace them) are there
      *
      */
 
@@ -44,9 +41,11 @@ public class AdvancedConfigHandler {
     }
 
     /**
-     * a method used to render config values with placeholders (for example ${config:prefix} will be replaced with the value of config.prefix)
+     * a method used to render config values with placeholders (for example
+     * ${config:prefix} will be replaced with the value of config.prefix)
+     * 
      * @param template the message containing templates
-     * @param context a map containing a set of keys and their corresponding values
+     * @param context  a map containing a set of keys and their corresponding values
      * @return the rendered message
      */
     public static String renderTemplate(String template, Map<String, Object> context) {
@@ -72,7 +71,5 @@ public class AdvancedConfigHandler {
         matcher.appendTail(result);
         return result.toString();
     }
-
-
 
 }

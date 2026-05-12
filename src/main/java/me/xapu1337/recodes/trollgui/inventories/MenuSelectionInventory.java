@@ -25,7 +25,9 @@ public class MenuSelectionInventory implements InventoryHolder, Listener {
     private final List<ItemStack> items = new ArrayList<>();
     private final BiConsumer<Player, String> clickHandler;
     private final Services services;
-    private MenuSelectionInventory(String title, List<ItemStack> items, BiConsumer<Player, String> clickHandler, Services services) {
+
+    private MenuSelectionInventory(String title, List<ItemStack> items, BiConsumer<Player, String> clickHandler,
+            Services services) {
         this.title = title;
         this.items.addAll(items);
         this.clickHandler = clickHandler;
@@ -49,7 +51,8 @@ public class MenuSelectionInventory implements InventoryHolder, Listener {
 
     @EventHandler
     public void handleClick(InventoryClickEvent event) {
-        if (!services.utils().checkUniqueInventory(event, this)) return;
+        if (!services.utils().checkUniqueInventory(event, this))
+            return;
         event.setCancelled(true);
         int slot = event.getSlot();
         if (slot < items.size()) {
@@ -73,7 +76,8 @@ public class MenuSelectionInventory implements InventoryHolder, Listener {
 
         public Builder(Services services) {
             this.services = services;
-            this.clickHandler = (player, itemId) -> {};
+            this.clickHandler = (player, itemId) -> {
+            };
         }
 
         public Builder item(ItemStack itemStack, String itemId) {

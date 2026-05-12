@@ -32,6 +32,7 @@ public class PlayerSelectorInventory implements Listener, InventoryHolder {
     private final Services services;
 
     private WeakReference<Inventory> previousInventory;
+
     public PlayerSelectorInventory(BiConsumer<Player, Player> onClick, Services services) {
         this.players = List.of(Bukkit.getOnlinePlayers().toArray(new Player[0]));
         this.onClick = onClick;
@@ -45,23 +46,29 @@ public class PlayerSelectorInventory implements Listener, InventoryHolder {
                 "XXXXXXXXX",
                 "XXXXXXXXX",
                 "XXXXXXXXX",
-                "BBB<C>BBB"
-        )
-        .withDefaults()
-        .setItem('>', PaginationItemType.NEXT_PAGE.getItemStack())
-        .setItem('<', PaginationItemType.PREVIOUS_PAGE.getItemStack())
-        .setItem('X', new ItemStackBuilder(XMaterial.AIR, services).withDisplayName(" ").build())
-        .setItem('C', previousInventory == null || previousInventory.get() == null ? new ItemStackBuilder(XMaterial.BARRIER, services).withDisplayName("Close").build() : new ItemStackBuilder(XMaterial.BARRIER, services).withDisplayName("Go Back").build())
-        .setItem('B', new ItemStackBuilder(XMaterial.BLACK_STAINED_GLASS_PANE, services).withDisplayName(" ").build())
+                "BBB<C>BBB")
+                .withDefaults()
+                .setItem('>', PaginationItemType.NEXT_PAGE.getItemStack())
+                .setItem('<', PaginationItemType.PREVIOUS_PAGE.getItemStack())
+                .setItem('X', new ItemStackBuilder(XMaterial.AIR, services).withDisplayName(" ").build())
+                .setItem('C',
+                        previousInventory == null || previousInventory.get() == null
+                                ? new ItemStackBuilder(XMaterial.BARRIER, services).withDisplayName("Close").build()
+                                : new ItemStackBuilder(XMaterial.BARRIER, services).withDisplayName("Go Back").build())
+                .setItem('B',
+                        new ItemStackBuilder(XMaterial.BLACK_STAINED_GLASS_PANE, services).withDisplayName(" ").build())
                 .setInventoryContents((inventory) -> {
 
                     paginationHandler.setMaxPage((int) Math.ceil(players.size() / 45.0));
-                    if (paginationHandler.getCurrentPage() > paginationHandler.getMaxPage()) paginationHandler.setCurrentPage(paginationHandler.getMaxPage());
-                    if (paginationHandler.getCurrentPage() < 1) paginationHandler.setCurrentPage(paginationHandler.getCurrentPage() + 1);
+                    if (paginationHandler.getCurrentPage() > paginationHandler.getMaxPage())
+                        paginationHandler.setCurrentPage(paginationHandler.getMaxPage());
+                    if (paginationHandler.getCurrentPage() < 1)
+                        paginationHandler.setCurrentPage(paginationHandler.getCurrentPage() + 1);
 
                     int startIndex = (paginationHandler.getCurrentPage() - 1) * 45;
                     int endIndex = startIndex + 45;
-                    if (endIndex > players.size()) endIndex = players.size();
+                    if (endIndex > players.size())
+                        endIndex = players.size();
                     String displayName;
                     ItemStack item;
                     ItemMeta meta;
@@ -75,31 +82,33 @@ public class PlayerSelectorInventory implements Listener, InventoryHolder {
                             if (displayName.length() > 32) {
                                 displayName = displayName.substring(0, 32);
                             }
-                            item = new ItemStackBuilder(XMaterial.PLAYER_HEAD, services).withPlayerHead(player.getUniqueId()).withDisplayName(displayName).build();
+                            item = new ItemStackBuilder(XMaterial.PLAYER_HEAD, services)
+                                    .withPlayerHead(player.getUniqueId()).withDisplayName(displayName).build();
                             meta = item.getItemMeta();
 
                             meta.setLore(Stream.of(
                                     "&7Health: &f" + player.getHealth() + "&c❤",
-                                    player.isOp() ? "hasop" : ""
-                            ).filter(s -> !s.isEmpty()).map(services.messages()::$).toList());
+                                    player.isOp() ? "hasop" : "").filter(s -> !s.isEmpty()).map(services.messages()::$)
+                                    .toList());
                             item.setItemMeta(meta);
                             inventory.setItem(i, item);
                         }
                     }
 
-                    inventory.setItem(53, paginationHandler.getCurrentPage() < paginationHandler.getMaxPage() && paginationHandler.getCurrentPage() > 1
-                            ? PaginationItemType.NEXT_PAGE.getItemStack()
-                            : createPoppyItem("Last Page"));
+                    inventory.setItem(53,
+                            paginationHandler.getCurrentPage() < paginationHandler.getMaxPage()
+                                    && paginationHandler.getCurrentPage() > 1
+                                            ? PaginationItemType.NEXT_PAGE.getItemStack()
+                                            : createPoppyItem("Last Page"));
 
                     inventory.setItem(45, paginationHandler.getCurrentPage() > 1
                             ? PaginationItemType.PREVIOUS_PAGE.getItemStack()
                             : createPoppyItem("First Page"));
 
-
                     return inventory;
                 });
         this.inventory = builder.build();
-        paginationHandler.setOnPageChange( (page, maxPage) -> {
+        paginationHandler.setOnPageChange((page, maxPage) -> {
             builder.build();
         });
     }
@@ -111,6 +120,7 @@ public class PlayerSelectorInventory implements Listener, InventoryHolder {
     public Inventory getPreviousInventory() {
         return previousInventory.get();
     }
+
     @Override
     public @NotNull Inventory getInventory() {
         return inventory;
@@ -127,34 +137,38 @@ public class PlayerSelectorInventory implements Listener, InventoryHolder {
                 .build();
     }
 
-
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        if (!services.utils().checkUniqueInventory(event, this)) return;
+        if (!services.utils().checkUniqueInventory(event, this))
+            return;
         event.setCancelled(true);
-
 
         ItemStack item = event.getCurrentItem();
 
-        if (item == null || item.getItemMeta() == null || item.getType() == Material.AIR || item.getType() == Material.BLACK_STAINED_GLASS_PANE || item.getType() == Material.GRAY_STAINED_GLASS_PANE) return;
-        if (previousInventory != null && previousInventory.get() != null && item.getType() == Material.BARRIER && item.getItemMeta().getDisplayName().equals("Go Back")) {
+        if (item == null || item.getItemMeta() == null || item.getType() == Material.AIR
+                || item.getType() == Material.BLACK_STAINED_GLASS_PANE
+                || item.getType() == Material.GRAY_STAINED_GLASS_PANE)
+            return;
+        if (previousInventory != null && previousInventory.get() != null && item.getType() == Material.BARRIER
+                && item.getItemMeta().getDisplayName().equals("Go Back")) {
             event.getWhoClicked().openInventory(previousInventory.get());
             return;
         }
 
-
-        if (item.getItemMeta().getPersistentDataContainer().isEmpty()) return;
+        if (item.getItemMeta().getPersistentDataContainer().isEmpty())
+            return;
 
         Player player = (Player) event.getWhoClicked();
         services.debug().l("Clicked on " + item.getItemMeta().getDisplayName());
-        String uuidStr = item.getItemMeta().getPersistentDataContainer().get(services.utils().UUID_KEY, PersistentDataType.STRING);
-        if (uuidStr == null) return;
+        String uuidStr = item.getItemMeta().getPersistentDataContainer().get(services.utils().UUID_KEY,
+                PersistentDataType.STRING);
+        if (uuidStr == null)
+            return;
         UUID uuid = UUID.fromString(uuidStr);
         Player target = Bukkit.getPlayer(uuid);
-        if (target == null) return;
+        if (target == null)
+            return;
         player.closeInventory();
         onClick.accept((Player) event.getWhoClicked(), target);
     }
 }
-
-

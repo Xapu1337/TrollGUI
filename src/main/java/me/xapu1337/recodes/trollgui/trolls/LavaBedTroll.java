@@ -3,7 +3,6 @@ package me.xapu1337.recodes.trollgui.trolls;
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 
-
 import me.xapu1337.recodes.trollgui.types.Troll;
 import me.xapu1337.recodes.trollgui.types.TrollAttributes;
 import me.xapu1337.recodes.trollgui.types.TrollMetaData;
@@ -15,10 +14,9 @@ public class LavaBedTroll extends Troll {
 
     @Override
     public TrollMetaData setMetaData() {
-        return (
-                new TrollMetaData(XMaterial.LAVA_BUCKET, services)
-                        .setTrollName("lavaBed")
-                        .setAttributes( TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS, TrollAttributes.POSSIBLE_DESTRUCTION )
+        return (new TrollMetaData(XMaterial.LAVA_BUCKET, services)
+                .setTrollName("lavaBed")
+                .setAttributes(TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS, TrollAttributes.POSSIBLE_DESTRUCTION)
 
         );
     }
@@ -35,7 +33,8 @@ public class LavaBedTroll extends Troll {
             }
         }
 
-        getVictim().playSound(getVictim().getLocation(), Objects.requireNonNull(XSound.BLOCK_FIRE_EXTINGUISH.parseSound()), 3f, 1f);
+        getVictim().playSound(getVictim().getLocation(),
+                Objects.requireNonNull(XSound.BLOCK_FIRE_EXTINGUISH.parseSound()), 3f, 1f);
     }
 
 }

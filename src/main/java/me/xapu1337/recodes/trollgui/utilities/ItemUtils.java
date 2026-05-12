@@ -13,9 +13,11 @@ public class ItemUtils {
 
     public static ItemStack createItem(String name, XMaterial material, String... lore) {
         ItemStack item = material.parseItem();
-        if (item == null) return null;
+        if (item == null)
+            return null;
         ItemMeta meta = item.getItemMeta();
-        if (meta == null) return null;
+        if (meta == null)
+            return null;
 
         meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
         meta.setLore(Arrays.asList(lore));

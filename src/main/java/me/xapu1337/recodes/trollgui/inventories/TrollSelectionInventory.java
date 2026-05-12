@@ -34,7 +34,8 @@ public class TrollSelectionInventory implements Listener, InventoryHolder {
 
     public final InventoryBuilder builder;
     private final Services services;
-    public TrollSelectionInventory(Player caller, Player target, Services services)  {
+
+    public TrollSelectionInventory(Player caller, Player target, Services services) {
         this.paginationHandler = new PaginationHandler(54);
         this.services = services;
 
@@ -51,8 +52,7 @@ public class TrollSelectionInventory implements Listener, InventoryHolder {
                         "BXXXXXXXB",
                         "BXXXXXXXB",
                         "BXXXXXXXB",
-                        "BBB<C>BBR"
-                )
+                        "BBB<C>BBR")
                 .withDefaults()
                 .setItem('>', PaginationItemType.NEXT_PAGE.getItemStack())
                 .setItem('<', PaginationItemType.PREVIOUS_PAGE.getItemStack())
@@ -60,8 +60,10 @@ public class TrollSelectionInventory implements Listener, InventoryHolder {
                 .setItem('R', new ItemStackBuilder(XMaterial.JUKEBOX, services).withDisplayName("Random").build())
                 .setInventoryContents((inventory) -> {
                     paginationHandler.setMaxPage((int) Math.ceil((double) services.loader().getTrolls().size() / 28));
-                    if (paginationHandler.getCurrentPage() > paginationHandler.getMaxPage()) paginationHandler.setCurrentPage(paginationHandler.getMaxPage());
-                    if (paginationHandler.getCurrentPage() < 1) paginationHandler.setCurrentPage(paginationHandler.getCurrentPage() + 1);
+                    if (paginationHandler.getCurrentPage() > paginationHandler.getMaxPage())
+                        paginationHandler.setCurrentPage(paginationHandler.getMaxPage());
+                    if (paginationHandler.getCurrentPage() < 1)
+                        paginationHandler.setCurrentPage(paginationHandler.getCurrentPage() + 1);
 
                     int startIndex = (paginationHandler.getCurrentPage() - 1) * 28;
                     int endIndex = startIndex + 28;
@@ -73,17 +75,20 @@ public class TrollSelectionInventory implements Listener, InventoryHolder {
                             .toList();
                     int totalPages = (int) Math.ceil((double) items.size() / 28);
                     services.debug().l("Total pages: " + totalPages);
-                    if (paginationHandler.getCurrentPage() > totalPages) paginationHandler.setCurrentPage(totalPages);
+                    if (paginationHandler.getCurrentPage() > totalPages)
+                        paginationHandler.setCurrentPage(totalPages);
                     services.debug().l("Current page: " + paginationHandler.getCurrentPage());
                     ItemStack[] inventoryContents = inventory.getContents();
                     for (int i = startIndex; i < endIndex && i < inventoryContents.length; i++) {
                         ItemStack item = items.size() > i ? items.get(i) : null;
 
-                        if (item == null) continue;
+                        if (item == null)
+                            continue;
                         int[] emptySlots = builder.getItemSlots('X');
                         if (emptySlots.length == 0) {
                             emptySlots = builder.getItemSlots('X');
-                            if (emptySlots.length == 0) break;
+                            if (emptySlots.length == 0)
+                                break;
                         }
                         inventory.setItem(emptySlots[0], item);
                     }
@@ -91,25 +96,28 @@ public class TrollSelectionInventory implements Listener, InventoryHolder {
                     if (paginationHandler.getCurrentPage() < paginationHandler.getMaxPage()) {
                         inventory.setItem(53, PaginationItemType.NEXT_PAGE.getItemStack());
                     } else {
-                        inventory.setItem(53, new ItemStackBuilder(XMaterial.POPPY, services).withDisplayName("Last Page").withInvisibleEnchantmentGlint().build());
+                        inventory.setItem(53, new ItemStackBuilder(XMaterial.POPPY, services)
+                                .withDisplayName("Last Page").withInvisibleEnchantmentGlint().build());
                     }
                     if (paginationHandler.getCurrentPage() > 1) {
                         inventory.setItem(45, PaginationItemType.PREVIOUS_PAGE.getItemStack());
                     } else {
-                        inventory.setItem(45, new ItemStackBuilder(XMaterial.POPPY, services).withDisplayName("First Page").withInvisibleEnchantmentGlint().build());
+                        inventory.setItem(45, new ItemStackBuilder(XMaterial.POPPY, services)
+                                .withDisplayName("First Page").withInvisibleEnchantmentGlint().build());
                     }
 
                     return inventory;
-        });
+                });
         this.inventory = builder.build();
-        paginationHandler.setOnPageChange( (page, maxPage) -> {
+        paginationHandler.setOnPageChange((page, maxPage) -> {
             builder.build();
         });
     }
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        if (!services.utils().checkUniqueInventory(event, this)) return;
+        if (!services.utils().checkUniqueInventory(event, this))
+            return;
         event.setCancelled(true);
 
         ItemStack item = event.getCurrentItem();
@@ -126,23 +134,24 @@ public class TrollSelectionInventory implements Listener, InventoryHolder {
                 .filter(troll -> trollContainerFilter(troll.getTrollMetaData().getItem(), item))
                 .findFirst();
 
-        if (!fetchedTroll.isPresent() || fetchedTroll.get().getTrollMetaData() == null) return;
+        if (!fetchedTroll.isPresent() || fetchedTroll.get().getTrollMetaData() == null)
+            return;
 
         fetchedTroll
-            .get()
-            .setVictim(victim)
-            .setCaller(caller)
-            .setCallingGUI(this)
-            .checkToggled()
-            .execute();
-
+                .get()
+                .setVictim(victim)
+                .setCaller(caller)
+                .setCallingGUI(this)
+                .checkToggled()
+                .execute();
 
     }
 
     private boolean trollContainerFilter(ItemStack a, ItemStack b) {
-        return a.getItemMeta().getPersistentDataContainer().get(Troll.trollClassKey, PersistentDataType.STRING).equalsIgnoreCase(b.getItemMeta().getPersistentDataContainer().get(Troll.trollClassKey, PersistentDataType.STRING));
+        return a.getItemMeta().getPersistentDataContainer().get(Troll.trollClassKey, PersistentDataType.STRING)
+                .equalsIgnoreCase(b.getItemMeta().getPersistentDataContainer().get(Troll.trollClassKey,
+                        PersistentDataType.STRING));
     }
-
 
     @NotNull
     @Override
@@ -154,5 +163,3 @@ public class TrollSelectionInventory implements Listener, InventoryHolder {
         player.openInventory(this.inventory);
     }
 }
-
-

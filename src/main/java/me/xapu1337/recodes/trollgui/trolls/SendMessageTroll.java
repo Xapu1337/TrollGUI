@@ -8,16 +8,13 @@ import me.xapu1337.recodes.trollgui.utilities.MessageCollector;
 
 public class SendMessageTroll extends Troll {
 
-
     /**
      * @return
      */
     @Override
     public TrollMetaData setMetaData() {
-        return (
-                new TrollMetaData(XMaterial.PAPER, services)
-                        .setTrollName("sendMessage")
-                );
+        return (new TrollMetaData(XMaterial.PAPER, services)
+                .setTrollName("sendMessage"));
     }
 
     @Override

@@ -1,4 +1,5 @@
 package me.xapu1337.recodes.trollgui.trolls;
+
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 
@@ -10,15 +11,11 @@ import org.bukkit.Location;
 
 public class SwapPlayersTroll extends Troll {
 
-
-
     @Override
     public TrollMetaData setMetaData() {
-        return (
-                new TrollMetaData( XMaterial.EMERALD , services)
-                        .setTrollName( "swapPlayers" )
-                        .setAttributes( TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS, TrollAttributes.POSSIBLE_CRASH_OR_FREEZE )
-        );
+        return (new TrollMetaData(XMaterial.EMERALD, services)
+                .setTrollName("swapPlayers")
+                .setAttributes(TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS, TrollAttributes.POSSIBLE_CRASH_OR_FREEZE));
     }
 
     @Override
@@ -38,8 +35,7 @@ public class SwapPlayersTroll extends Troll {
 
                     caller.sendMessage(services.messages().$("{config:messages.swapPlayerInventorySuccess}"));
                 }),
-                services
-        );
+                services);
 
         playerSelectorInventory.setPreviousInventory(getCallingGUI().getInventory());
         playerSelectorInventory.open(getCaller());

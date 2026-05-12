@@ -20,14 +20,15 @@ public class EventManager implements Listener {
 
     public <T extends Event> void registerEvent(Class<T> eventType, Consumer<T> eventHandler) {
         eventHandlers.put(eventType, eventHandler);
-        Bukkit.getPluginManager().registerEvent(eventType, this, org.bukkit.event.EventPriority.NORMAL, (listener, event) -> {
-            if (eventType.isAssignableFrom(event.getClass())) {
-                Consumer<T> handler = (Consumer<T>) eventHandlers.get(event.getClass());
-                if (handler != null) {
-                    handler.accept((T) event);
-                }
-            }
-        }, plugin, false);
+        Bukkit.getPluginManager().registerEvent(eventType, this, org.bukkit.event.EventPriority.NORMAL,
+                (listener, event) -> {
+                    if (eventType.isAssignableFrom(event.getClass())) {
+                        Consumer<T> handler = (Consumer<T>) eventHandlers.get(event.getClass());
+                        if (handler != null) {
+                            handler.accept((T) event);
+                        }
+                    }
+                }, plugin, false);
     }
 
     public <T extends Event> void registerEvent(Class<T> eventType, Consumer<T> eventHandler, EventPriority priority) {

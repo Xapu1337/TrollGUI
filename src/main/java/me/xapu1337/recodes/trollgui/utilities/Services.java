@@ -7,5 +7,5 @@ public record Services(
         MessageUtils messages,
         Utils utils,
         TrollToggablesStorage toggles,
-        TrollLoader loader
-) {}
+        TrollLoader loader) {
+}

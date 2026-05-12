@@ -18,7 +18,8 @@ public abstract class Troll {
     private Player victim;
     private TrollMetaData trollMetaData;
     protected Services services;
-    public static final NamespacedKey trollClassKey = new NamespacedKey(TrollCore.getInstance(), "assigned-troll-class");
+    public static final NamespacedKey trollClassKey = new NamespacedKey(TrollCore.getInstance(),
+            "assigned-troll-class");
 
     private WeakReference<TrollSelectionInventory> callingGUI;
 
@@ -36,8 +37,6 @@ public abstract class Troll {
         services.debug().logObject(itemMeta);
         itemMeta.getPersistentDataContainer().set(trollClassKey, PersistentDataType.STRING, getClass().getName());
         this.trollMetaData.setItemMeta(itemMeta);
-
-
 
         return (T) this;
     }
@@ -71,13 +70,15 @@ public abstract class Troll {
         return (T) this;
     }
 
-    public void toggleTroll(Player v) { services.toggles().toggle(v.getUniqueId(), trollMetaData.getTrollName()); checkToggled(); }
+    public void toggleTroll(Player v) {
+        services.toggles().toggle(v.getUniqueId(), trollMetaData.getTrollName());
+        checkToggled();
+    }
 
     public <T extends Troll> T setCallingGUI(TrollSelectionInventory callingGUI) {
         this.callingGUI = new WeakReference<>(callingGUI);
         return (T) this;
     }
-
 
     public <T extends Troll> T checkToggled() {
         services.debug().log("Checking if troll is toggled");
@@ -89,7 +90,8 @@ public abstract class Troll {
             itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             itemMeta.addEnchant(XEnchantment.DURABILITY.getEnchant(), 1, true);
             getTrollMetaData().setItemMeta(itemMeta);
-            if (gui != null) gui.builder.build();
+            if (gui != null)
+                gui.builder.build();
         } else {
             services.debug().log("Troll is not toggled");
             ItemMeta itemMeta = trollMetaData.getItemMeta();
@@ -97,7 +99,8 @@ public abstract class Troll {
             itemMeta.removeItemFlags(ItemFlag.HIDE_ENCHANTS);
             itemMeta.removeEnchant(XEnchantment.DURABILITY.getEnchant());
             getTrollMetaData().setItemMeta(itemMeta);
-            if (gui != null) gui.builder.build();
+            if (gui != null)
+                gui.builder.build();
         }
         return (T) this;
     }
@@ -105,5 +108,6 @@ public abstract class Troll {
     public TrollSelectionInventory getCallingGUI() {
         return callingGUI != null ? callingGUI.get() : null;
     }
+
     public abstract void execute();
 }

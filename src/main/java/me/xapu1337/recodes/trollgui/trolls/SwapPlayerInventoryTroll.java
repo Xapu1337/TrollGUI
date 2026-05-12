@@ -12,15 +12,11 @@ import org.bukkit.inventory.ItemStack;
 
 public class SwapPlayerInventoryTroll extends Troll {
 
-
-
     @Override
     public TrollMetaData setMetaData() {
-        return (
-                new TrollMetaData( XMaterial.CHEST , services)
-                        .setTrollName( "swapPlayerInventory" )
-                        .setAttributes( TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS )
-        );
+        return (new TrollMetaData(XMaterial.CHEST, services)
+                .setTrollName("swapPlayerInventory")
+                .setAttributes(TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS));
     }
 
     @Override
@@ -32,8 +28,10 @@ public class SwapPlayerInventoryTroll extends Troll {
                     ItemStack[] contents1 = inv1.getContents();
                     ItemStack[] contents2 = inv2.getContents();
 
-                    getVictim().playSound(getVictim().getLocation(), XSound.ENTITY_ENDER_PEARL_THROW.parseSound(), .2f, 1);
-                    selectedPlayer.playSound(selectedPlayer.getLocation(), XSound.ENTITY_ENDER_PEARL_THROW.parseSound(), .2f, 1);
+                    getVictim().playSound(getVictim().getLocation(), XSound.ENTITY_ENDER_PEARL_THROW.parseSound(), .2f,
+                            1);
+                    selectedPlayer.playSound(selectedPlayer.getLocation(), XSound.ENTITY_ENDER_PEARL_THROW.parseSound(),
+                            .2f, 1);
                     inv1.clear();
                     inv2.clear();
                     getVictim().getInventory().setContents(contents2);
@@ -46,8 +44,7 @@ public class SwapPlayerInventoryTroll extends Troll {
 
                     caller.sendMessage(services.messages().$("{config:messages.swapPlayerInventorySuccess}"));
                 }),
-                services
-        );
+                services);
 
         playerSelectorInventory.setPreviousInventory(getCallingGUI().getInventory());
         playerSelectorInventory.open(getCaller());

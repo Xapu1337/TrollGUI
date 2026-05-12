@@ -45,10 +45,12 @@ public class TrollMetaData {
     public List<String> getLore() {
         return this.lore;
     }
+
     public TrollMetaData setLore(String... lore) {
         this.lore = new ArrayList<>(Arrays.asList(lore));
         return this;
     }
+
     public String getName() {
         return this.name;
     }
@@ -56,7 +58,6 @@ public class TrollMetaData {
     public String getTrollName() {
         return this.trollName;
     }
-
 
     public TrollMetaData loadConfigData() {
         String trollPath = "{config:menus.troll-menu.items.trolls." + this.trollName + ".";
@@ -75,6 +76,7 @@ public class TrollMetaData {
         }
         return itemStack;
     }
+
     public ItemMeta getItemMeta() {
         return itemMeta;
     }

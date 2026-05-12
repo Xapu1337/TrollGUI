@@ -60,7 +60,6 @@ public class DebuggingUtil {
         log(Level.INFO, String.format(message, args), 2);
     }
 
-
     public void logObject(Object obj) {
         l(" \n ");
         l(" \n ");
@@ -95,7 +94,7 @@ public class DebuggingUtil {
                 } else {
                     l("|  List Contents:");
                     for (Object element : list) {
-                        l("|    "+(String) element);
+                        l("|    " + (String) element);
                     }
                 }
             }
@@ -105,7 +104,9 @@ public class DebuggingUtil {
                 l("|    Type: " + itemStack.getType());
                 l("|    Amount: " + itemStack.getAmount());
                 ItemMeta durMeta = itemStack.getItemMeta();
-                int damage = (durMeta instanceof org.bukkit.inventory.meta.Damageable) ? ((org.bukkit.inventory.meta.Damageable) durMeta).getDamage() : 0;
+                int damage = (durMeta instanceof org.bukkit.inventory.meta.Damageable)
+                        ? ((org.bukkit.inventory.meta.Damageable) durMeta).getDamage()
+                        : 0;
                 l("|    Damage: " + damage);
                 l("|    Meta: " + itemStack.getItemMeta());
             }
@@ -117,7 +118,9 @@ public class DebuggingUtil {
                 l("|    Enchants: " + itemMeta.getEnchants());
             }
             case "me.xapu1337.recodes.trollgui.types.Troll", "me.xapu1337.recodes.trollgui.types.TrollMetaData" -> {
-                TrollMetaData metaData = typeName.equals("me.xapu1337.recodes.trollgui.types.Troll") ? ((Troll) obj).getTrollMetaData() : (TrollMetaData) obj;
+                TrollMetaData metaData = typeName.equals("me.xapu1337.recodes.trollgui.types.Troll")
+                        ? ((Troll) obj).getTrollMetaData()
+                        : (TrollMetaData) obj;
                 l("|  Logging contents of TrollMetaData:");
                 l("|    Troll name: " + metaData.getTrollName());
                 l("|    Item Name: " + metaData.getItemMeta().getDisplayName());
@@ -130,7 +133,8 @@ public class DebuggingUtil {
                 Field[] fields = objClass.getDeclaredFields();
                 for (Field field : fields) {
                     try {
-                        if(!field.trySetAccessible()) continue;
+                        if (!field.trySetAccessible())
+                            continue;
                         l("|    " + field.getName() + ": " + field.get(obj));
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
@@ -141,8 +145,6 @@ public class DebuggingUtil {
             }
         }
     }
-
-
 
     public void send(CommandSender sender, String message) {
         if (debuggingEnabled && sender != null && message != null) {
@@ -192,6 +194,7 @@ public class DebuggingUtil {
         throwable.printStackTrace(pw);
         return sw.toString();
     }
+
     private String getCallerClassName(int stackTraceDepth) {
         String fullClassName = Thread.currentThread().getStackTrace()[3 + stackTraceDepth].getClassName();
         return fullClassName.substring(fullClassName.lastIndexOf(".") + 1);
@@ -212,13 +215,12 @@ public class DebuggingUtil {
             for (Map.Entry<String, Object> entry : data.entrySet()) {
                 Object value = entry.getValue();
                 String valueString = value != null ? value.toString() : "null";
-                String entryMessage = String.format("%s: %s (%s)", entry.getKey(), valueString, value != null ? value.getClass().getSimpleName() : "null");
+                String entryMessage = String.format("%s: %s (%s)", entry.getKey(), valueString,
+                        value != null ? value.getClass().getSimpleName() : "null");
                 Bukkit.getConsoleSender().sendMessage(messages.$("┆ " + entryMessage));
             }
             Bukkit.getConsoleSender().sendMessage("╰");
         }
     }
-
-
 
 }

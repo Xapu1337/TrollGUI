@@ -32,24 +32,22 @@ public class TrollCore extends JavaPlugin implements Listener {
         return instance;
     }
 
-
     @Override
     public void onEnable() {
         super.onEnable();
 
-        MessageUtils messages   = new MessageUtils();
-        DebuggingUtil debug     = new DebuggingUtil(messages);
-        Utils utils             = new Utils();
+        MessageUtils messages = new MessageUtils();
+        DebuggingUtil debug = new DebuggingUtil(messages);
+        Utils utils = new Utils();
 
-        TrollToggablesStorage toggles   = new TrollToggablesStorage(debug);
-        TrollLoader           trollLoader = new TrollLoader(debug);
+        TrollToggablesStorage toggles = new TrollToggablesStorage(debug);
+        TrollLoader trollLoader = new TrollLoader(debug);
         services = new Services(debug, messages, utils, toggles, trollLoader);
         trollLoader.refreshTrolls(services);
 
         CommandAPI.onEnable(this);
 
         new TrollCommand(services);
-
 
         eventManager.registerEvent(PlayerMoveEvent.class, (event) -> {
             services.debug().l("MoveEvent");

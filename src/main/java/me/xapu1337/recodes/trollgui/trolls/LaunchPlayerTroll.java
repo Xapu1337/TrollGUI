@@ -2,7 +2,6 @@ package me.xapu1337.recodes.trollgui.trolls;
 
 import com.cryptomorin.xseries.XMaterial;
 
-
 import me.xapu1337.recodes.trollgui.types.Troll;
 import me.xapu1337.recodes.trollgui.types.TrollAttributes;
 import me.xapu1337.recodes.trollgui.types.TrollMetaData;
@@ -16,21 +15,18 @@ import org.bukkit.util.Vector;
 
 public class LaunchPlayerTroll extends Troll {
 
-
     // Variables
     private Firework firework;
     private FireworkMeta fireworkMeta;
+
     @Override
     public TrollMetaData setMetaData() {
-        return (
-                new TrollMetaData(XMaterial.FIREWORK_ROCKET, services)
-                        .setTrollName("launchPlayer")
-                        .setAttributes( TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS )
+        return (new TrollMetaData(XMaterial.FIREWORK_ROCKET, services)
+                .setTrollName("launchPlayer")
+                .setAttributes(TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS)
 
         );
     }
-
-
 
     @Override
     public void execute() {
@@ -48,13 +44,12 @@ public class LaunchPlayerTroll extends Troll {
                 FireworkEffect
                         .builder()
                         .trail(true)
-                        .withColor( Color.fromRGB(0xFF5F0F)   )
-                        .withColor( Color.fromRGB(0xD7FF0F)   )
-                        .withColor( Color.fromRGB(0xFFB259)   )
-                        .withFade ( Color.fromRGB(0xFFD7B0)   )
-                        .with     ( FireworkEffect.Type.STAR  )
-                        .build()
-        );
+                        .withColor(Color.fromRGB(0xFF5F0F))
+                        .withColor(Color.fromRGB(0xD7FF0F))
+                        .withColor(Color.fromRGB(0xFFB259))
+                        .withFade(Color.fromRGB(0xFFD7B0))
+                        .with(FireworkEffect.Type.STAR)
+                        .build());
 
         firework.setFireworkMeta(fireworkMeta);
 

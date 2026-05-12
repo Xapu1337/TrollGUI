@@ -11,20 +11,21 @@ public class DropItemTroll extends Troll {
 
     @Override
     public TrollMetaData setMetaData() {
-        return (
-                new TrollMetaData(XMaterial.WATER_BUCKET, services)
-                        .setTrollName("dropItem")
-                        .setAttributes( TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS )
+        return (new TrollMetaData(XMaterial.WATER_BUCKET, services)
+                .setTrollName("dropItem")
+                .setAttributes(TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS)
 
         );
     }
 
     /**
-     * Executed from the TrollGUI Class everything inside this function gets executed.
+     * Executed from the TrollGUI Class everything inside this function gets
+     * executed.
      */
     @Override
     public void execute() {
-        if (getVictim().getInventory().getItemInMainHand() == null || getVictim().getInventory().getItemInMainHand().getType() == XMaterial.AIR.parseMaterial()) {
+        if (getVictim().getInventory().getItemInMainHand() == null
+                || getVictim().getInventory().getItemInMainHand().getType() == XMaterial.AIR.parseMaterial()) {
             services.messages().setClassPlaceholders(DropItemTroll.class, "player", getVictim().getName());
             getCaller().sendMessage(services.messages().$("{config:Messages.noItemInHand}"));
         } else {

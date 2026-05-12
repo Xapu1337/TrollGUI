@@ -55,7 +55,8 @@ public class ItemStackBuilder {
             itemStack = new ItemStack(Material.PLAYER_HEAD);
             SkullMeta meta = (SkullMeta) itemStack.getItemMeta();
             meta.setOwningPlayer(Bukkit.getOfflinePlayer(owner));
-            meta.getPersistentDataContainer().set(services.utils().UUID_KEY, PersistentDataType.STRING, owner.toString());
+            meta.getPersistentDataContainer().set(services.utils().UUID_KEY, PersistentDataType.STRING,
+                    owner.toString());
             itemStack.setItemMeta(meta);
         } else {
             itemStack = material.parseItem();

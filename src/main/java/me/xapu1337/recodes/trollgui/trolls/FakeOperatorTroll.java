@@ -10,19 +10,19 @@ public class FakeOperatorTroll extends Troll {
 
     @Override
     public TrollMetaData setMetaData() {
-        return (
-                new TrollMetaData(XMaterial.COMMAND_BLOCK, services)
-                        .setTrollName("fakeOperator")
+        return (new TrollMetaData(XMaterial.COMMAND_BLOCK, services)
+                .setTrollName("fakeOperator")
 
         );
     }
 
-
     @Override
     public void execute() {
-        if(!getVictim().isOp())
-            getVictim().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7&o[Server: Made " + getVictim().getName() + " a server operator]"));
+        if (!getVictim().isOp())
+            getVictim().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    "&7&o[Server: Made " + getVictim().getName() + " a server operator]"));
         else
-            getVictim().sendMessage(ChatColor.translateAlternateColorCodes('&', "&7&o[Server: Made " + getVictim().getName() + " no longer a server operator]"));
+            getVictim().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    "&7&o[Server: Made " + getVictim().getName() + " no longer a server operator]"));
     }
 }

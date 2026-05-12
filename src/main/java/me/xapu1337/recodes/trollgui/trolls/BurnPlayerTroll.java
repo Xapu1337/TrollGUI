@@ -8,19 +8,19 @@ import me.xapu1337.recodes.trollgui.types.TrollMetaData;
 
 public class BurnPlayerTroll extends Troll {
 
-
     @Override
     public TrollMetaData setMetaData() {
-        return
-                new TrollMetaData(XMaterial.BLAZE_POWDER, services)
-                        .setTrollName("burnPlayer")
-                        .setAttributes( TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS );
+        return new TrollMetaData(XMaterial.BLAZE_POWDER, services)
+                .setTrollName("burnPlayer")
+                .setAttributes(TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS);
 
     }
 
     @Override
     public void execute() {
 
-        getCaller().setFireTicks(TrollCore.getInstance().getConfig().getInt("menus.troll-menu.trolls.items.burnPlayer.options.burnTime") * 20);
+        getCaller().setFireTicks(
+                TrollCore.getInstance().getConfig().getInt("menus.troll-menu.trolls.items.burnPlayer.options.burnTime")
+                        * 20);
     }
 }

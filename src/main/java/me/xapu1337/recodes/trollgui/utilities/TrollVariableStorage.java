@@ -15,12 +15,14 @@ public class TrollVariableStorage {
     private static final ScheduledExecutorService cleanupScheduler = Executors.newSingleThreadScheduledExecutor();
 
     static {
-        cleanupScheduler.scheduleWithFixedDelay(TrollVariableStorage::cleanupExpiredVariables, 30, 30, TimeUnit.MINUTES);
+        cleanupScheduler.scheduleWithFixedDelay(TrollVariableStorage::cleanupExpiredVariables, 30, 30,
+                TimeUnit.MINUTES);
     }
 
     public static void setVariable(UUID playerId, String key, Object value) {
         Map<String, Object> playerVariables = storage.computeIfAbsent(playerId, k -> new ConcurrentHashMap<>());
-        playerVariables.put(key, value instanceof PermanentValue ? ((PermanentValue) value).getValue() : new CachedValue(value, System.currentTimeMillis()));
+        playerVariables.put(key, value instanceof PermanentValue ? ((PermanentValue) value).getValue()
+                : new CachedValue(value, System.currentTimeMillis()));
     }
 
     public static void setPermanentVariable(String key, Object value) {
@@ -62,7 +64,8 @@ public class TrollVariableStorage {
     }
 
     private static void cleanupExpiredVariables() {
-        storage.values().forEach(playerVariables -> playerVariables.entrySet().removeIf(entry -> entry.getValue() instanceof CachedValue && ((CachedValue) entry.getValue()).isExpired()));
+        storage.values().forEach(playerVariables -> playerVariables.entrySet().removeIf(
+                entry -> entry.getValue() instanceof CachedValue && ((CachedValue) entry.getValue()).isExpired()));
     }
 
     private static class CachedValue {

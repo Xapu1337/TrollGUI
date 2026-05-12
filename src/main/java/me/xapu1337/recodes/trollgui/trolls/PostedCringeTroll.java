@@ -14,16 +14,13 @@ public class PostedCringeTroll extends Troll {
 
     // Variables
     List<String> postedCringeMessages;
+
     @Override
     public TrollMetaData setMetaData() {
-        return (
-                new TrollMetaData( XMaterial.COMMAND_BLOCK_MINECART , services)
-                        .setTrollName("postedCringe")
-                        .setAttributes( TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS )
-        );
+        return (new TrollMetaData(XMaterial.COMMAND_BLOCK_MINECART, services)
+                .setTrollName("postedCringe")
+                .setAttributes(TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS));
     }
-
-
 
     /**
      * The method that gets executed on item click
@@ -34,12 +31,12 @@ public class PostedCringeTroll extends Troll {
         postedCringeMessages = TrollCore.getInstance().getConfig().getStringList("messages.sequences.postedCringe");
 
         // If the list is empty, insert the default messages
-        if(postedCringeMessages.size() == 0) {
+        if (postedCringeMessages.size() == 0) {
             postedCringeMessages.add("Oh no! I think...");
             postedCringeMessages.add("...I just posted cringe!");
         }
 
-        final int[] count = {0};
+        final int[] count = { 0 };
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -54,6 +51,5 @@ public class PostedCringeTroll extends Troll {
         }.runTaskTimer(TrollCore.getInstance(), 0, 2 * 20);
 
     }
-
 
 }

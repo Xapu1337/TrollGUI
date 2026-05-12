@@ -17,7 +17,9 @@ public class PaginationHandler {
     private BiConsumer<Integer, Integer> onPageChange;
 
     /**
-     * Creates a new PaginationHandler with the given maximum page, fixed items, onClick action, and onPageChange event.
+     * Creates a new PaginationHandler with the given maximum page, fixed items,
+     * onClick action, and onPageChange event.
+     * 
      * @param maxPage The maximum page of the inventory.
      */
     public PaginationHandler(int maxPage) {
@@ -27,6 +29,7 @@ public class PaginationHandler {
 
     /**
      * Sets the maximum page of the inventory.
+     * 
      * @param maxPage The maximum page of the inventory.
      */
     public void setMaxPage(int maxPage) {
@@ -35,6 +38,7 @@ public class PaginationHandler {
 
     /**
      * Sets the current page of the inventory.
+     * 
      * @param currentPage The current page of the inventory.
      */
     public void setCurrentPage(int currentPage) {
@@ -43,6 +47,7 @@ public class PaginationHandler {
 
     /**
      * Sets the current page of the inventory.
+     * 
      * @param onPageChange The current page of the inventory.
      */
     public void setOnPageChange(BiConsumer<Integer, Integer> onPageChange) {
@@ -51,6 +56,7 @@ public class PaginationHandler {
 
     /**
      * Gets the current page of the inventory.
+     * 
      * @return The current page of the inventory.
      */
     public int getCurrentPage() {
@@ -59,6 +65,7 @@ public class PaginationHandler {
 
     /**
      * Gets the maximum page of the inventory.
+     * 
      * @return The maximum page of the inventory.
      */
     public int getMaxPage() {
@@ -67,6 +74,7 @@ public class PaginationHandler {
 
     /**
      * Handles a click event within the inventory.
+     * 
      * @param event The click event to handle.
      */
     public void handleOnInventoryClick(InventoryClickEvent event) {
@@ -101,6 +109,7 @@ public class PaginationHandler {
 
     /**
      * Handles a click event within the inventory.
+     * 
      * @param event The click event to handle.
      */
     public void handleOnInventoryClick(InventoryClickEvent event, Inventory previousInventory) {
@@ -138,8 +147,10 @@ public class PaginationHandler {
 
     /**
      * Gets the PaginationItemType of an item, if it exists in the fixed items.
+     * 
      * @param item The item to get the type of.
-     * @return The PaginationItemType of the item, or null if it is not a fixed item.
+     * @return The PaginationItemType of the item, or null if it is not a fixed
+     *         item.
      */
     private PaginationItemType getItemType(ItemStack item) {
         for (PaginationItemType type : PaginationItemType.values()) {
