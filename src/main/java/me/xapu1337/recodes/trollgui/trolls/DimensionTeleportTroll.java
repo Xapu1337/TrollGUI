@@ -4,25 +4,19 @@ import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import me.xapu1337.recodes.trollgui.inventories.MenuSelectionInventory;
 import me.xapu1337.recodes.trollgui.types.Troll;
-import me.xapu1337.recodes.trollgui.types.TrollAttributes;
-import me.xapu1337.recodes.trollgui.types.TrollMetaData;
+import me.xapu1337.recodes.trollgui.types.TrollName;
 import me.xapu1337.recodes.trollgui.utilities.ItemStackBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
 import java.util.List;
 
+@TrollName("dimensionTeleport")
 public class DimensionTeleportTroll extends Troll {
 
         /**
          * @return
          */
-        @Override
-        public TrollMetaData setMetaData() {
-                return (new TrollMetaData(XMaterial.ENDER_PEARL, services)
-                                .setTrollName("dimensionTeleport")
-                                .setAttributes(TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS));
-        }
 
         /**
          * The method that gets executed on item click

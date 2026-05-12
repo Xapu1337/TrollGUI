@@ -1,25 +1,17 @@
 package me.xapu1337.recodes.trollgui.trolls;
 
-import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XPotion;
 import com.cryptomorin.xseries.XSound;
 import com.cryptomorin.xseries.particles.XParticle;
 
 import me.xapu1337.recodes.trollgui.types.Troll;
-import me.xapu1337.recodes.trollgui.types.TrollMetaData;
+import me.xapu1337.recodes.trollgui.types.TrollName;
 import org.bukkit.SoundCategory;
 
 import java.util.Objects;
 
+@TrollName("scarePlayer")
 public class ScareTroll extends Troll {
-
-    @Override
-    public TrollMetaData setMetaData() {
-        return (new TrollMetaData(XMaterial.CARVED_PUMPKIN, services)
-                .setTrollName("scarePlayer")
-
-        );
-    }
 
     @Override
     public void execute() {

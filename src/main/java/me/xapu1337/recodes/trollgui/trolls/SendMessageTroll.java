@@ -1,21 +1,16 @@
 package me.xapu1337.recodes.trollgui.trolls;
 
-import com.cryptomorin.xseries.XMaterial;
 import me.xapu1337.recodes.trollgui.cores.TrollCore;
 import me.xapu1337.recodes.trollgui.types.Troll;
-import me.xapu1337.recodes.trollgui.types.TrollMetaData;
+import me.xapu1337.recodes.trollgui.types.TrollName;
 import me.xapu1337.recodes.trollgui.utilities.MessageCollector;
 
+@TrollName("sendMessage")
 public class SendMessageTroll extends Troll {
 
     /**
      * @return
      */
-    @Override
-    public TrollMetaData setMetaData() {
-        return (new TrollMetaData(XMaterial.PAPER, services)
-                .setTrollName("sendMessage"));
-    }
 
     @Override
     public void execute() {

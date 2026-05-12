@@ -1,27 +1,17 @@
 package me.xapu1337.recodes.trollgui.trolls;
 
-import com.cryptomorin.xseries.XMaterial;
 
 import me.xapu1337.recodes.trollgui.cores.TrollCore;
 import me.xapu1337.recodes.trollgui.types.Troll;
-import me.xapu1337.recodes.trollgui.types.TrollAttributes;
-import me.xapu1337.recodes.trollgui.types.TrollMetaData;
+import me.xapu1337.recodes.trollgui.types.TrollName;
 import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Random;
 
+@TrollName("randomLook")
 public class RandomLookTroll extends Troll {
     Random random = new Random();
-
-    @Override
-    public TrollMetaData setMetaData() {
-        return (new TrollMetaData(XMaterial.BARRIER, services)
-                .setTrollName("randomLook")
-                .setAttributes(TrollAttributes.POSSIBLE_KICK)
-
-        );
-    }
 
     @Override
     public void execute() {
@@ -32,7 +22,7 @@ public class RandomLookTroll extends Troll {
             private int i = 0;
 
             public void run() {
-                if (i >= TrollCore.getInstance().getConfig()
+                if (i >= services.config()
                         .getInt("menus.troll-menu.items.trolls.randomLook.options.randomLookTime") * 20) {
                     loc.setPitch(restorePitch);
                     loc.setYaw(restoreYaw);

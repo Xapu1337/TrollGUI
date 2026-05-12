@@ -1,20 +1,12 @@
 package me.xapu1337.recodes.trollgui.trolls;
 
-import com.cryptomorin.xseries.XMaterial;
 
 import me.xapu1337.recodes.trollgui.types.Troll;
-import me.xapu1337.recodes.trollgui.types.TrollMetaData;
+import me.xapu1337.recodes.trollgui.types.TrollName;
 import org.bukkit.ChatColor;
 
+@TrollName("fakeOperator")
 public class FakeOperatorTroll extends Troll {
-
-    @Override
-    public TrollMetaData setMetaData() {
-        return (new TrollMetaData(XMaterial.COMMAND_BLOCK, services)
-                .setTrollName("fakeOperator")
-
-        );
-    }
 
     @Override
     public void execute() {

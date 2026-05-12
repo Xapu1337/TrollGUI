@@ -1,23 +1,15 @@
 package me.xapu1337.recodes.trollgui.trolls;
 
-import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 
 import me.xapu1337.recodes.trollgui.inventories.PlayerSelectorInventory;
 import me.xapu1337.recodes.trollgui.types.Troll;
-import me.xapu1337.recodes.trollgui.types.TrollAttributes;
-import me.xapu1337.recodes.trollgui.types.TrollMetaData;
+import me.xapu1337.recodes.trollgui.types.TrollName;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+@TrollName("swapPlayerInventory")
 public class SwapPlayerInventoryTroll extends Troll {
-
-    @Override
-    public TrollMetaData setMetaData() {
-        return (new TrollMetaData(XMaterial.CHEST, services)
-                .setTrollName("swapPlayerInventory")
-                .setAttributes(TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS));
-    }
 
     @Override
     public void execute() {

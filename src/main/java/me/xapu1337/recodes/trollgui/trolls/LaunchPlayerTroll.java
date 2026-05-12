@@ -1,10 +1,8 @@
 package me.xapu1337.recodes.trollgui.trolls;
 
-import com.cryptomorin.xseries.XMaterial;
 
 import me.xapu1337.recodes.trollgui.types.Troll;
-import me.xapu1337.recodes.trollgui.types.TrollAttributes;
-import me.xapu1337.recodes.trollgui.types.TrollMetaData;
+import me.xapu1337.recodes.trollgui.types.TrollName;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
@@ -13,20 +11,12 @@ import org.bukkit.entity.Firework;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.util.Vector;
 
+@TrollName("launchPlayer")
 public class LaunchPlayerTroll extends Troll {
 
     // Variables
     private Firework firework;
     private FireworkMeta fireworkMeta;
-
-    @Override
-    public TrollMetaData setMetaData() {
-        return (new TrollMetaData(XMaterial.FIREWORK_ROCKET, services)
-                .setTrollName("launchPlayer")
-                .setAttributes(TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS)
-
-        );
-    }
 
     @Override
     public void execute() {

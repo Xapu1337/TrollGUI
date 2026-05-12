@@ -2,21 +2,12 @@ package me.xapu1337.recodes.trollgui.trolls;
 
 import com.cryptomorin.xseries.XMaterial;
 import me.xapu1337.recodes.trollgui.types.Troll;
-import me.xapu1337.recodes.trollgui.types.TrollAttributes;
-import me.xapu1337.recodes.trollgui.types.TrollMetaData;
+import me.xapu1337.recodes.trollgui.types.TrollName;
 import org.bukkit.Location;
 import org.bukkit.entity.Item;
 
+@TrollName("dropItem")
 public class DropItemTroll extends Troll {
-
-    @Override
-    public TrollMetaData setMetaData() {
-        return (new TrollMetaData(XMaterial.WATER_BUCKET, services)
-                .setTrollName("dropItem")
-                .setAttributes(TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS)
-
-        );
-    }
 
     /**
      * Executed from the TrollGUI Class everything inside this function gets

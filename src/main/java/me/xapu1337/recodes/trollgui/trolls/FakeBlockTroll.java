@@ -2,21 +2,23 @@ package me.xapu1337.recodes.trollgui.trolls;
 
 import com.cryptomorin.xseries.XMaterial;
 
-import me.xapu1337.recodes.trollgui.cores.TrollCore;
 import me.xapu1337.recodes.trollgui.types.Troll;
 import me.xapu1337.recodes.trollgui.types.TrollAttributes;
 import me.xapu1337.recodes.trollgui.types.TrollMetaData;
+import me.xapu1337.recodes.trollgui.utilities.Services;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 
 public class FakeBlockTroll extends Troll {
 
-    private final XMaterial customMatForFakeBlock;
-    private final Material resolvedMaterial;
+    private XMaterial customMatForFakeBlock;
+    private Material resolvedMaterial;
 
-    public FakeBlockTroll() {
-        String configBlock = TrollCore.getInstance().getConfig()
+    @Override
+    public void injectServices(Services services) {
+        super.injectServices(services);
+        String configBlock = services.config()
                 .getString("menus.troll-menu.items.trolls.fakeBlock.options.block", "TNT");
         this.customMatForFakeBlock = XMaterial.matchXMaterial(configBlock != null ? configBlock : "TNT")
                 .orElse(XMaterial.TNT);
@@ -33,7 +35,7 @@ public class FakeBlockTroll extends Troll {
 
     @Override
     public void execute() {
-        int rad = TrollCore.getInstance().getConfig().getInt("menus.troll-menu.items.trolls.fakeBlock.options.radius");
+        int rad = services.config().getInt("menus.troll-menu.items.trolls.fakeBlock.options.radius");
         BlockData fakeBlockData = resolvedMaterial.createBlockData();
 
         try {

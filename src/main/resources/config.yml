@@ -79,112 +79,184 @@ menus:
         burnPlayer:
           lore: '&7Summon Ragnarok the god of fire to punish him!'
           name: '&6Burn the player'
+          material: BLAZE_POWDER
+          attributes:
+            - POSSIBLE_DEATH_OR_ITEM_LOSS
           options:
             burnTime: 7 # x seconds until the player stops burning.
         closeGUI:
           lore: '&7Closes the inventory (or any GUI) the player has open'
           name: '&cClose inventory'
+          material: BARRIER
         clutches:
           lore: '&7Opens a menu full of challenges the player has to complete'
           name: '&6Clutches'
         dimensionTeleport:
           lore: '&7Select the dimension you want the player to teleport to'
           name: '&6Dimension teleport'
+          material: ENDER_PEARL
+          attributes:
+            - POSSIBLE_DEATH_OR_ITEM_LOSS
         dropAll:
           lore: '&7"Who tf did cut a hole in my pants?!"'
           name: '&8Drop all items from Player'
+          material: CAULDRON
+          attributes:
+            - POSSIBLE_DEATH_OR_ITEM_LOSS
         dropItem:
           lore: '&7Makes the hand from the player slippy'
           name: '&8Drop the item from players hand'
+          material: WATER_BUCKET
+          attributes:
+            - POSSIBLE_DEATH_OR_ITEM_LOSS
         debug:
           lore: '&7Debugs the player'
           name: '&cDebug'
         explodePlayer:
           lore: '&7Do you also smell gunpowder?'
           name: '&4Explode the player'
+          material: TNT
+          attributes:
+            - POSSIBLE_DESTRUCTION
+            - POSSIBLE_DEATH_OR_ITEM_LOSS
+            - POSSIBLE_CRASH_OR_FREEZE
           options:
             explodeRadius: 10 # The radius of the explosion. (Please keep this value LOW! High values can easily crash the server usually anything > 200 crashes)
             explodeRandomness: true # Uses the value above as the highest value and 1 as the lowest value, Exploding radius is somewhere between 1 and explodeRadius.
         fakeBlock:
           lore: '&7"HEY SOMEONES IS DESTROYING SOMETHING!" oh... nvm.'
           name: '&eFake Blocks (Clientside)'
+          material: TNT
           options:
             block: 'TNT' # Use https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html as a reference. (If the custom block is invalid TNT will be the default)
             radius: 5 # Same as explodeRadius, Keep this LOW! High values tend to either crash the server OR that the player gets disconnected due to a timeout.
         fakeClear:
           lore: '&7Wipes the player inventory for ${config:MenuItems.trollMenu.trolls.fakeClear.options.fakeClearDelay} seconds.' # PLACEHOLDERS: %TIME%
           name: '&eFake clear players inventory'
+          material: PUFFERFISH
           options:
             fakeClearDelay: 10 # x seconds until all items return to the inventory.
         fakeOperator:
           lore: '&7Will send a fake OP / DEOP message to the player'
           name: '&bFake OP / DEOP The player'
+          material: COMMAND_BLOCK
         fakeTimeout:
           lore: '&7Makes the player believe that they got a timeout'
           name: '&eFake timeout player'
+          material: LEAD
+          attributes:
+            - POSSIBLE_KICK
         freezePlayer:
           lore: '&7Make the player AFK involuntary'
           name: '&bFreeze Player'
+          material: SNOWBALL
+          attributes:
+            - POSSIBLE_CRASH_OR_FREEZE
         giveAllBadEffects:
           lore: '&7How did we get here? minus the good effects'
           name: '&5&lGive all bad effects'
+          material: SPLASH_POTION
+          attributes:
+            - POSSIBLE_DEATH_OR_ITEM_LOSS
           options:
             effectDuration: 10 # x seconds until the effect wears off.
         giveAllEffects:
           lore: '&7How did we get here?'
           name: '&5&lGive all effects'
+          material: POTION
+          attributes:
+            - POSSIBLE_DEATH_OR_ITEM_LOSS
           options:
             effectDuration: 10 # x seconds until the effect wears off.
         invSee:
           lore: '&7DID YOU STEAL MY DIAMONDS?!!'
           name: '&6Open the inventory from the player'
+          material: TRAPPED_CHEST
+          attributes:
+            - POSSIBLE_DEATH_OR_ITEM_LOSS
         invShare:
           lore: '&7"Ohh... What''s that?"'
           name: '&9Open inventory to everyone'
+          material: ENDER_CHEST
+          attributes:
+            - POSSIBLE_DEATH_OR_ITEM_LOSS
         launchPlayer:
           lore: '&7Let the player touch the sky'
           name: '&6Launch Player'
+          material: FIREWORK_ROCKET
+          attributes:
+            - POSSIBLE_DEATH_OR_ITEM_LOSS
         lavaBed:
           lore: '&7Spawns a cozy warm bed made of lava'
           name: '&6Lava Bed'
+          material: LAVA_BUCKET
+          attributes:
+            - POSSIBLE_DEATH_OR_ITEM_LOSS
+            - POSSIBLE_DESTRUCTION
         noBreak:
           lore: '&7Disables the breaking ability of the player'
           name: '&7No Break'
+          material: STONE
         noBuild:
           lore: '&7Disables the building ability of the player'
           name: '&7No Build'
+          material: GRASS_BLOCK
         noDrop:
           lore: '&7Disables the dropping ability of the player'
           name: '&7No Drop'
+          material: DROPPER
         postedCringe:
           lore: '&7"I think I just posted cringe!"'
           name: '&cPost Cringe'
+          material: COMMAND_BLOCK_MINECART
+          attributes:
+            - POSSIBLE_DEATH_OR_ITEM_LOSS
         randomLook:
           lore: '&7Makes the player look in random locations'
           name: '&cRandom look'
+          material: BARRIER
+          attributes:
+            - POSSIBLE_KICK
           options:
             randomLookTime: 10 # x seconds until the player stops looking in random locations.
         reverseMessage:
           lore: '&7Do you are have a stroke'
           name: '&9Reverse send message'
+          material: PAPER
         scarePlayer:
           lore: '&7Spooky Scary Skeletons'
           name: '&5Scare Player'
+          material: CARVED_PUMPKIN
         sendMessage:
           lore: '&7Allows you to chat as the player (one time use)'
           name: '&9Send message as player'
+          material: PAPER
         swapPlayerInventory:
           lore: '&7Swap the player inventory with another player'
           name: '&6Swap player inventories'
+          material: CHEST
+          attributes:
+            - POSSIBLE_DEATH_OR_ITEM_LOSS
         swapPlayers:
           lore: '&7Swap the player with another player'
           name: '&6Swap with another player'
+          material: EMERALD
+          attributes:
+            - POSSIBLE_DEATH_OR_ITEM_LOSS
+            - POSSIBLE_CRASH_OR_FREEZE
         thunder:
           lore: '&7Truly godlike powers!'
           name: '&3Thor / Strike Player'
+          material: PRISMARINE_SHARD
+          attributes:
+            - POSSIBLE_DEATH_OR_ITEM_LOSS
+            - POSSIBLE_DESTRUCTION
         voidTeleport:
           lore: '&7Teleport to the void'
           name: '&6Void Teleport'
+          material: BEDROCK
+          attributes:
+            - POSSIBLE_DEATH_OR_ITEM_LOSS
       clickable:
         randomTroll:
           lore: '&7Select a random troll to use'

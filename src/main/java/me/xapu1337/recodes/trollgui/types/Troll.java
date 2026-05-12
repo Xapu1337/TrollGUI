@@ -31,7 +31,6 @@ public abstract class Troll {
     }
 
     public <T extends Troll> T Init() {
-        this.trollMetaData = setMetaData();
         services.debug().logObject(this.trollMetaData);
         ItemMeta itemMeta = this.trollMetaData.getItemMeta();
         services.debug().logObject(itemMeta);
@@ -41,7 +40,9 @@ public abstract class Troll {
         return (T) this;
     }
 
-    public abstract TrollMetaData setMetaData();
+    public TrollMetaData setMetaData() {
+        return null;
+    }
 
     public Player getCaller() {
         return caller;

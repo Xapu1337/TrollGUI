@@ -1,24 +1,13 @@
 package me.xapu1337.recodes.trollgui.trolls;
 
-import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XPotion;
-import me.xapu1337.recodes.trollgui.cores.TrollCore;
 import me.xapu1337.recodes.trollgui.types.Troll;
-import me.xapu1337.recodes.trollgui.types.TrollAttributes;
-import me.xapu1337.recodes.trollgui.types.TrollMetaData;
+import me.xapu1337.recodes.trollgui.types.TrollName;
 
 import java.util.Objects;
 
+@TrollName("giveAllBadEffects")
 public class GiveAllBadEffects extends Troll {
-
-    @Override
-    public TrollMetaData setMetaData() {
-        return (new TrollMetaData(XMaterial.SPLASH_POTION, services)
-                .setTrollName("giveAllBadEffects")
-                .setAttributes(TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS)
-
-        );
-    }
 
     @Override
     public void execute() {
@@ -28,7 +17,7 @@ public class GiveAllBadEffects extends Troll {
                 return;
 
             getVictim().addPotionEffect(Objects.requireNonNull(effect.buildPotionEffect(
-                    TrollCore.getInstance().getConfig()
+                    services.config()
                             .getInt("menus.troll-menu.items.trolls.giveAllBadEffects.options.effectDuration") * 20,
                     0)));
         });

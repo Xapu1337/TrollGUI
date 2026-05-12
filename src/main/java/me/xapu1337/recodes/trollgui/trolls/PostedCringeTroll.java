@@ -1,26 +1,18 @@
 package me.xapu1337.recodes.trollgui.trolls;
 
-import com.cryptomorin.xseries.XMaterial;
 
 import me.xapu1337.recodes.trollgui.cores.TrollCore;
 import me.xapu1337.recodes.trollgui.types.Troll;
-import me.xapu1337.recodes.trollgui.types.TrollAttributes;
-import me.xapu1337.recodes.trollgui.types.TrollMetaData;
+import me.xapu1337.recodes.trollgui.types.TrollName;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 
+@TrollName("postedCringe")
 public class PostedCringeTroll extends Troll {
 
     // Variables
     List<String> postedCringeMessages;
-
-    @Override
-    public TrollMetaData setMetaData() {
-        return (new TrollMetaData(XMaterial.COMMAND_BLOCK_MINECART, services)
-                .setTrollName("postedCringe")
-                .setAttributes(TrollAttributes.POSSIBLE_DEATH_OR_ITEM_LOSS));
-    }
 
     /**
      * The method that gets executed on item click
@@ -28,7 +20,7 @@ public class PostedCringeTroll extends Troll {
     @Override
     public void execute() {
 
-        postedCringeMessages = TrollCore.getInstance().getConfig().getStringList("messages.sequences.postedCringe");
+        postedCringeMessages = services.config().getStringList("messages.sequences.postedCringe");
 
         // If the list is empty, insert the default messages
         if (postedCringeMessages.size() == 0) {

@@ -1,23 +1,15 @@
 package me.xapu1337.recodes.trollgui.trolls;
 
-import com.cryptomorin.xseries.XMaterial;
 
 import me.xapu1337.recodes.trollgui.cores.TrollCore;
 import me.xapu1337.recodes.trollgui.types.Troll;
-import me.xapu1337.recodes.trollgui.types.TrollMetaData;
+import me.xapu1337.recodes.trollgui.types.TrollName;
 import me.xapu1337.recodes.trollgui.utilities.TrollVariableStorage;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 
+@TrollName("fakeClear")
 public class FakeClearTroll extends Troll {
-
-    @Override
-    public TrollMetaData setMetaData() {
-        return (new TrollMetaData(XMaterial.PUFFERFISH, services)
-                .setTrollName("fakeClear")
-
-        );
-    }
 
     /**
      * the:
@@ -59,7 +51,7 @@ public class FakeClearTroll extends Troll {
                 TrollVariableStorage.removePermanentVariable(
                         getVictim().getUniqueId() + "-FC-" + getTrollMetaData().getTrollName());
                 services.toggles().removePlayer(getVictim().getUniqueId());
-            }, ((long) 10 * TrollCore.getInstance().getConfig()
+            }, ((long) 10 * services.config()
                     .getInt("menus.troll-menu.items.trolls.fakeClear.options.fakeClearDelay")));
         }
 
