@@ -1,12 +1,12 @@
 package me.xapu1337.recodes.trollgui.trolls;
 
 
+import com.cryptomorin.xseries.XEntityType;
 import me.xapu1337.recodes.trollgui.types.Troll;
 import me.xapu1337.recodes.trollgui.types.TrollName;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.util.Vector;
@@ -14,7 +14,6 @@ import org.bukkit.util.Vector;
 @TrollName("launchPlayer")
 public class LaunchPlayerTroll extends Troll {
 
-    // Variables
     private Firework firework;
     private FireworkMeta fireworkMeta;
 
@@ -26,7 +25,7 @@ public class LaunchPlayerTroll extends Troll {
 
         getVictim().setVelocity(upVec);
 
-        firework = (Firework) fireworkSpawn.getWorld().spawnEntity(fireworkSpawn, EntityType.FIREWORK);
+        firework = (Firework) fireworkSpawn.getWorld().spawnEntity(fireworkSpawn, XEntityType.FIREWORK_ROCKET.get());
 
         fireworkMeta = firework.getFireworkMeta();
 

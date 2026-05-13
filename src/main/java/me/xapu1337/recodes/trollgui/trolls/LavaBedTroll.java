@@ -22,7 +22,6 @@ public class LavaBedTroll extends Troll {
         Location bottom = getVictim().getLocation();
         List<Location> lavaLocations = new ArrayList<>();
 
-        // a 3x3 grid of lava blocks below the player
         for (int x = -1; x <= 1; x++) {
             for (int z = -1; z <= 1; z++) {
                 Location loc = bottom.clone().add(x, -1, z);
@@ -34,7 +33,6 @@ public class LavaBedTroll extends Troll {
         getVictim().playSound(getVictim().getLocation(),
                 Objects.requireNonNull(XSound.BLOCK_FIRE_EXTINGUISH.parseSound()), 3f, 1f);
 
-        // Restore blocks after 5 seconds so the world isn't permanently griefed
         Bukkit.getScheduler().runTaskLater(TrollCore.getInstance(),
                 () -> lavaLocations.forEach(loc -> loc.getBlock().setType(Material.AIR)),
                 5 * 20L);

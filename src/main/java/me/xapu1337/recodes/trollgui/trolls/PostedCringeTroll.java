@@ -11,12 +11,8 @@ import java.util.List;
 @TrollName("postedCringe")
 public class PostedCringeTroll extends Troll {
 
-    // Variables
     List<String> postedCringeMessages;
 
-    /**
-     * The method that gets executed on item click
-     */
     @Override
     public void execute() {
 

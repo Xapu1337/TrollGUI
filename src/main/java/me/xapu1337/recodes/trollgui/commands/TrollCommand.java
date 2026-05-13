@@ -13,12 +13,10 @@ import org.bukkit.entity.Player;
 public class TrollCommand {
 
     public boolean hasPermission(Player player) {
-        if (TrollCore.getInstance().getConfig().getBoolean("advancedPermission.enabled")) {
-            String playerName = TrollCore.getInstance().getConfig().getString("advancedPermission.name");
-            if (playerName == null || playerName.isEmpty())
-                return false;
-            if (player.getName().equalsIgnoreCase(playerName))
-                return true;
+        if (TrollCore.getInstance().getConfig().getBoolean("settings.advancedPermission.enabled")) {
+            String playerName = TrollCore.getInstance().getConfig().getString("settings.advancedPermission.name");
+            if (playerName == null || playerName.isEmpty()) return false;
+            return player.getName().equalsIgnoreCase(playerName);
         }
         return player.hasPermission("ms3.use");
     }
@@ -34,7 +32,7 @@ public class TrollCommand {
                                 .executesPlayer((player, args) -> {
                                     player.sendMessage(
                                             services.messages().setClassPlaceholders(this.getClass(), "test", "awogus")
-                                                    .$((String) args[0]));
+                                                    .$((String) args.get(0)));
                                 })
                                 .executesConsole((ConsoleCommandExecutor) (consoleCommandSender, objects) -> CommandAPI
                                         .failWithString("")))
@@ -51,10 +49,6 @@ public class TrollCommand {
                             },
                             services)
                             .getInventory());
-                    services.loader().getTrolls().stream().findFirst()
-                            .ifPresent(troll -> troll.setCaller(player).setVictim(player).execute());
-                    services.loader().getTrolls().stream().findFirst()
-                            .ifPresent(troll -> player.getInventory().addItem(troll.setMetaData().getItem()));
                 })
                 .executesConsole(
                         (ConsoleCommandExecutor) (consoleCommandSender, objects) -> CommandAPI.failWithString(""))

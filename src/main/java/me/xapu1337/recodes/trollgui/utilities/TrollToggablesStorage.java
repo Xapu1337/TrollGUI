@@ -36,12 +36,9 @@ public class TrollToggablesStorage {
                 id -> new ConcurrentHashMap<>());
         debug.l("Toggling " + toggleName + " for " + playerUUID);
         Boolean currentValue = playerTogglesMap.get(toggleName);
-        debug.l("Current value: " + currentValue);
         boolean newValue = currentValue == null || !currentValue;
-        debug.l("New value: " + newValue);
         playerTogglesMap.put(toggleName, newValue);
-        debug.l("Toggled " + toggleName + " for " + playerUUID + " to " + newValue);
-        debug.logObject(playerTogglesMap);
+        debug.l("Toggle %s: %s → %s", toggleName, currentValue, newValue);
         return newValue;
     }
 

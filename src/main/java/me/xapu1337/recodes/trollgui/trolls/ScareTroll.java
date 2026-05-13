@@ -15,7 +15,7 @@ public class ScareTroll extends Troll {
 
     @Override
     public void execute() {
-        getVictim().spawnParticle(XParticle.getParticle("MOB_APPEARANCE"), getVictim().getLocation(), 1, 0, 0, 0, 0);
+        getVictim().spawnParticle(XParticle.ELDER_GUARDIAN.get(), getVictim().getLocation(), 1, 0, 0, 0, 0);
 
         getVictim().playSound(getVictim().getLocation(),
                 Objects.requireNonNull(XSound.ENTITY_ELDER_GUARDIAN_CURSE.parseSound()), SoundCategory.MASTER, 1, 1);

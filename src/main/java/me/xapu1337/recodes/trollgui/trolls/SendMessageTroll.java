@@ -8,10 +8,6 @@ import me.xapu1337.recodes.trollgui.utilities.MessageCollector;
 @TrollName("sendMessage")
 public class SendMessageTroll extends Troll {
 
-    /**
-     * @return
-     */
-
     @Override
     public void execute() {
         getCaller().sendMessage(" \n ");

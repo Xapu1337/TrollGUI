@@ -84,7 +84,7 @@ public class ItemStackBuilder {
 
             // Add enchantment effect to the item
             meta.addEnchant(XEnchantment.KNOCKBACK.getEnchant(), 1, true);
-        }
+        }+
 
         itemStack.setItemMeta(meta);
         return itemStack;

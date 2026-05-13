@@ -51,6 +51,13 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <manifestEntries>
+                                        <Paperweight-Mappings-Version>1.21.11-R0.1-SNAPSHOT</Paperweight-Mappings-Version>
+                                    </manifestEntries>
+                                </transformer>
+                            </transformers>
                             <relocations>
 
                                 <relocation>
@@ -70,10 +77,22 @@
                             </relocations>
                             <filters>
                                 <filter>
+                                    <artifact>com.github.cryptomorin:XSeries</artifact>
+                                    <includes>
+                                        <include>**</include>
+                                    </includes>
+                                </filter>
+                                <filter>
                                     <artifact>*:*</artifact>
                                     <excludes>
                                         <exclude>com/cryptomorin/xseries/XBiome*</exclude>
                                     </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>dev.jorel:commandapi-paper-shade</artifact>
+                                    <includes>
+                                        <include>**</include>
+                                    </includes>
                                 </filter>
                             </filters>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
@@ -96,19 +115,23 @@
             <id>spigotmc-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
+        <repository>
+            <id>papermc-repo</id>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
+        </repository>
     </repositories>
 
     <dependencies>
         <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.19.4-R0.1-SNAPSHOT</version>
+            <groupId>io.papermc.paper</groupId>
+            <artifactId>paper-api</artifactId>
+            <version>1.21.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.github.cryptomorin</groupId>
             <artifactId>XSeries</artifactId>
-            <version>9.3.1</version>
+            <version>13.6.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -120,13 +143,13 @@
         <dependency>
             <groupId>io.github.classgraph</groupId>
             <artifactId>classgraph</artifactId>
-            <version>4.8.157</version>
+            <version>4.8.184</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>dev.jorel</groupId>
-            <artifactId>commandapi-shade</artifactId>
-            <version>8.8.0</version>
+            <artifactId>commandapi-paper-shade</artifactId>
+            <version>11.2.0</version>
         </dependency>
     </dependencies>
 </project>

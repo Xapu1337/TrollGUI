@@ -33,7 +33,6 @@ public abstract class Troll {
     public <T extends Troll> T Init() {
         services.debug().logObject(this.trollMetaData);
         ItemMeta itemMeta = this.trollMetaData.getItemMeta();
-        services.debug().logObject(itemMeta);
         itemMeta.getPersistentDataContainer().set(trollClassKey, PersistentDataType.STRING, getClass().getName());
         this.trollMetaData.setItemMeta(itemMeta);
 
@@ -87,18 +86,16 @@ public abstract class Troll {
         if (services.toggles().hasToggle(victim.getUniqueId(), trollMetaData.getTrollName())) {
             services.debug().log("Troll is toggled");
             ItemMeta itemMeta = trollMetaData.getItemMeta();
-            services.debug().logObject(itemMeta);
             itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-            itemMeta.addEnchant(XEnchantment.DURABILITY.getEnchant(), 1, true);
+            itemMeta.addEnchant(XEnchantment.UNBREAKING.getEnchant(), 1, true);
             getTrollMetaData().setItemMeta(itemMeta);
             if (gui != null)
                 gui.builder.build();
         } else {
             services.debug().log("Troll is not toggled");
             ItemMeta itemMeta = trollMetaData.getItemMeta();
-            services.debug().logObject(itemMeta);
             itemMeta.removeItemFlags(ItemFlag.HIDE_ENCHANTS);
-            itemMeta.removeEnchant(XEnchantment.DURABILITY.getEnchant());
+            itemMeta.removeEnchant(XEnchantment.UNBREAKING.getEnchant());
             getTrollMetaData().setItemMeta(itemMeta);
             if (gui != null)
                 gui.builder.build();

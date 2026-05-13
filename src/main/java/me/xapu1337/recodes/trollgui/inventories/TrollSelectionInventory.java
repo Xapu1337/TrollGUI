@@ -137,13 +137,12 @@ public class TrollSelectionInventory implements Listener, InventoryHolder {
         if (!fetchedTroll.isPresent() || fetchedTroll.get().getTrollMetaData() == null)
             return;
 
-        fetchedTroll
-                .get()
+        Troll troll = fetchedTroll.get()
                 .setVictim(victim)
                 .setCaller(caller)
-                .setCallingGUI(this)
-                .checkToggled()
-                .execute();
+                .setCallingGUI(this);
+        troll.execute();
+        troll.checkToggled();
 
     }
 

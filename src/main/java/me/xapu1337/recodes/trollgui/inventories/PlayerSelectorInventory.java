@@ -169,6 +169,7 @@ public class PlayerSelectorInventory implements Listener, InventoryHolder {
         if (target == null)
             return;
         player.closeInventory();
-        onClick.accept((Player) event.getWhoClicked(), target);
+        Bukkit.getScheduler().runTask(me.xapu1337.recodes.trollgui.cores.TrollCore.getInstance(),
+                () -> onClick.accept((Player) event.getWhoClicked(), target));
     }
 }

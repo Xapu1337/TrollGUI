@@ -1,21 +1,20 @@
-package me.xapu1337.recodes.trollgui.trolls;
+// package me.xapu1337.recodes.trollgui.trolls;
 
-import com.cryptomorin.xseries.XMaterial;
-import me.xapu1337.recodes.trollgui.types.Troll;
-import me.xapu1337.recodes.trollgui.types.TrollMetaData;
+// import com.cryptomorin.xseries.XMaterial;
+// import me.xapu1337.recodes.trollgui.types.Troll;
+// import me.xapu1337.recodes.trollgui.types.TrollMetaData;
 
-public class ExampleTroll extends Troll {
+// public class ExampleTroll extends Troll {
 
-    @Override
-    public TrollMetaData setMetaData() {
-        return new TrollMetaData(XMaterial.COMMAND_BLOCK, services)
-                .setTrollName("debug");
-    }
+//     @Override
+//     public TrollMetaData setMetaData() {
+//         return new TrollMetaData(XMaterial.COMMAND_BLOCK, services)
+//                 .setTrollName("debug");
+//     }
 
-    @Override
-    public void execute() {
-        // do something
-        getCaller().sendMessage("Hello World!");
-        getVictim().sendMessage("Hello!");
-    };
-}
+//     @Override
+//     public void execute() {
+//         getCaller().sendMessage("Hello World!");
+//         getVictim().sendMessage("Hello!");
+//     };
+// }

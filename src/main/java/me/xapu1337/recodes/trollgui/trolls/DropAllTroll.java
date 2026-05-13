@@ -8,10 +8,6 @@ import org.bukkit.inventory.ItemStack;
 @TrollName("dropAll")
 public class DropAllTroll extends Troll {
 
-    /**
-     * Executed from the TrollGUI Class everything inside this function gets
-     * executed.
-     */
     @Override
     public void execute() {
 

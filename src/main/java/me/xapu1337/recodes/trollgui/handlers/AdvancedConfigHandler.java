@@ -11,33 +11,17 @@ public class AdvancedConfigHandler {
 
     public static FileConfiguration con = TrollCore.getInstance().getConfig();
 
-    /**
-     * @return config
-     *         a simple method to get the config from the main class
-     *         getConfig()
-     */
     public static FileConfiguration getConfig() {
         return con;
     }
 
-    /**
-     * reloadConfig()
-     * <p>
-     * a more advance reload method that preserves comments and ensures all values
-     * (if not present it will replace them) are there
-     *
-     */
-
+    /** Reloads config, preserves comments, ensures all default keys are present. */
     public static void reloadConfig() {
-        // call the spigot's api reloadConfig() method
         TrollCore.getInstance().reloadConfig();
-        // save default config (this will ensure all values are there)
         TrollCore.getInstance().saveDefaultConfig();
-        // get the config
         con = TrollCore.getInstance().getConfig();
-        // copy defaults (this will ensure all comments are there)
         con.options().copyDefaults(true);
-
+        TrollCore.getServices().messages().clearMessageCache();
     }
 
     /**

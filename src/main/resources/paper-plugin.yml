@@ -1,4 +1,5 @@
 name: ms3
 version: ${project.version}
 main: me.xapu1337.recodes.trollgui.cores.TrollCore
-api-version: 1.17
+api-version: '1.17'
+description: TrollGUI Plugin

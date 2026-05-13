@@ -4,6 +4,7 @@ import com.cryptomorin.xseries.XMaterial;
 import me.xapu1337.recodes.trollgui.utilities.ItemStackBuilder;
 import me.xapu1337.recodes.trollgui.utilities.Services;
 
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -21,7 +22,8 @@ public class TrollMetaData {
 
     public TrollMetaData(XMaterial material, Services services) {
         this.services = services;
-        this.itemStack = new ItemStackBuilder(material, services).build();
+        ItemStack built = new ItemStackBuilder(material, services).build();
+        this.itemStack = built != null ? built : new ItemStack(Material.BARRIER);
         this.itemMeta = this.itemStack.getItemMeta();
         setDefaults();
     }
@@ -91,9 +93,7 @@ public class TrollMetaData {
             lore.add(attribute.getAttributeLore(services.messages()));
         }
         itemMeta.setLore(lore);
-        services.debug().logObject(itemMeta);
         itemStack.setItemMeta(itemMeta);
-        services.debug().logObject(itemStack);
         return this;
     }
 }

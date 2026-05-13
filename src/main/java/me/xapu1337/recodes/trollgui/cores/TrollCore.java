@@ -1,7 +1,7 @@
 package me.xapu1337.recodes.trollgui.cores;
 
 import dev.jorel.commandapi.CommandAPI;
-import dev.jorel.commandapi.CommandAPIConfig;
+import dev.jorel.commandapi.CommandAPIPaperConfig;
 import me.xapu1337.recodes.trollgui.commands.TrollCommand;
 import me.xapu1337.recodes.trollgui.loaders.TrollLoader;
 import me.xapu1337.recodes.trollgui.utilities.*;
@@ -32,12 +32,18 @@ public class TrollCore extends JavaPlugin implements Listener {
         return instance;
     }
 
+    public static Services getServices() {
+        return instance.services;
+    }
+
     @Override
     public void onEnable() {
         super.onEnable();
 
+        saveDefaultConfig();
+
         MessageUtils messages = new MessageUtils();
-        DebuggingUtil debug = new DebuggingUtil(messages);
+        DebuggingUtil debug = new DebuggingUtil(messages, getConfig());
         Utils utils = new Utils();
 
         TrollToggablesStorage toggles = new TrollToggablesStorage(debug);
@@ -45,7 +51,7 @@ public class TrollCore extends JavaPlugin implements Listener {
         services = new Services(debug, messages, utils, toggles, trollLoader, getConfig());
         trollLoader.refreshTrolls(services);
 
-        CommandAPI.onEnable(this);
+        CommandAPI.onEnable();
 
         new TrollCommand(services);
 
@@ -64,12 +70,11 @@ public class TrollCore extends JavaPlugin implements Listener {
     public void onLoad() {
         super.onLoad();
 
-        CommandAPI.onLoad(new CommandAPIConfig().silentLogs(true));
+        CommandAPI.onLoad(new CommandAPIPaperConfig(this).silentLogs(true));
     }
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
-        services.debug().l("MoveEvent");
         Player player = event.getPlayer();
         if (services.toggles().hasToggle(player.getUniqueId(), "freezePlayer")) {
             event.setCancelled(true);
@@ -78,7 +83,6 @@ public class TrollCore extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
-        services.debug().l("BlockBreakEvent");
         Player player = event.getPlayer();
         if (services.toggles().hasToggle(player.getUniqueId(), "noBreak")) {
             event.setCancelled(true);
@@ -87,7 +91,6 @@ public class TrollCore extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
-        services.debug().l("BlockPlaceEvent");
         Player player = event.getPlayer();
         if (services.toggles().hasToggle(player.getUniqueId(), "noBuild")) {
             event.setCancelled(true);
@@ -96,7 +99,6 @@ public class TrollCore extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onPlayerDrop(PlayerDropItemEvent event) {
-        services.debug().l("DropEvent");
         Player player = event.getPlayer();
         if (services.toggles().hasToggle(player.getUniqueId(), "noDrop")) {
             event.setCancelled(true);
@@ -105,7 +107,6 @@ public class TrollCore extends JavaPlugin implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
-        services.debug().l("ChatEvent");
         Player player = event.getPlayer();
         MessageCollector collector = MessageCollector.getCollector(player);
         if (collector != null) {

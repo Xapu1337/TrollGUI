@@ -9,10 +9,6 @@ import org.bukkit.entity.Item;
 @TrollName("dropItem")
 public class DropItemTroll extends Troll {
 
-    /**
-     * Executed from the TrollGUI Class everything inside this function gets
-     * executed.
-     */
     @Override
     public void execute() {
         if (getVictim().getInventory().getItemInMainHand() == null

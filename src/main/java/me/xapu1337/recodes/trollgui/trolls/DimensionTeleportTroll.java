@@ -14,13 +14,6 @@ import java.util.List;
 @TrollName("dimensionTeleport")
 public class DimensionTeleportTroll extends Troll {
 
-        /**
-         * @return
-         */
-
-        /**
-         * The method that gets executed on item click
-         */
         @Override
         public void execute() {
                 getCaller().sendMessage(" \n ");
@@ -28,23 +21,23 @@ public class DimensionTeleportTroll extends Troll {
                 getCaller().sendMessage(" \n ");
                 getCaller().openInventory(
                                 new MenuSelectionInventory.Builder(services)
-                                                .item(new ItemStackBuilder(XMaterial.GRASS, services)
+                                                .item(new ItemStackBuilder(XMaterial.SHORT_GRASS, services)
                                                                 .withDisplayName(
                                                                                 "{config:menus.dimension-selector.overworld.name}")
                                                                 .withLore(List.of(
-                                                                                "{config:menus.dimension-selector.overworld.lore"))
+                                                                                "{config:menus.dimension-selector.overworld.lore}"))
                                                                 .build(), "world")
                                                 .item(new ItemStackBuilder(XMaterial.NETHERRACK, services)
                                                                 .withDisplayName(
                                                                                 "{config:menus.dimension-selector.nether.name}")
                                                                 .withLore(List.of(
-                                                                                "{config:menus.dimension-selector.nether.lore"))
+                                                                                "{config:menus.dimension-selector.nether.lore}"))
                                                                 .build(), "world_nether")
                                                 .item(new ItemStackBuilder(XMaterial.END_STONE, services)
                                                                 .withDisplayName(
                                                                                 "{config:menus.dimension-selector.end.name}")
                                                                 .withLore(List.of(
-                                                                                "{config:menus.dimension-selector.end.lore"))
+                                                                                "{config:menus.dimension-selector.end.lore}"))
                                                                 .build(), "world_theend")
                                                 .onClick((caller, clickedItemName) -> {
                                                         services.messages().setClassPlaceholders(this.getClass(),

@@ -11,10 +11,6 @@ import java.util.Random;
 public class ExplodePlayerTroll extends Troll {
     Random random = new Random();
 
-    /**
-     * Executed from the TrollGUI Class everything inside this function gets
-     * executed.
-     */
     @Override
     public void execute() {
         World victimWorld = getVictim().getWorld();

@@ -5,9 +5,6 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-/**
- * Represents an item type that can be used for pagination.
- */
 public enum PaginationItemType {
     NEXT_PAGE(XMaterial.ARROW, "&aNext Page"),
     PREVIOUS_PAGE(XMaterial.ARROW, "&cPrevious Page"),
